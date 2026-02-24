@@ -10,15 +10,19 @@
   
   /* --- Modais --- */
   .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; }
-  .modal-box { background-color: #1e1e24; padding: 40px; border-radius: 10px; border: 1px solid #333; text-align: center; width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; }
-  .modal-box.large { width: 750px; text-align: left; padding: 30px; }
+  .modal-box { background-color: #1e1e24; padding: 40px; border-radius: 10px; border: 1px solid #333; text-align: center; width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; }
+  .modal-box.large { width: 800px; text-align: left; padding: 30px; }
   .modal-box h2 { margin-top: 0; margin-bottom: 20px; text-align: center; }
-  .modal-box input[type="text"], .modal-box select { width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #5c5c77; background-color: #2b2b36; color: white; }
+  
+  .modal-box input[type="text"], .modal-box select, .modal-box textarea { 
+    width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px; 
+    border: 1px solid #5c5c77; background-color: #2b2b36; color: white; font-family: inherit;
+  }
+  .modal-box textarea { resize: vertical; min-height: 80px; }
   
   .modal-box button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 45%; }
   .modal-box button:hover { background-color: #45a049; }
   .auth-btn-google { background-color: #4285F4 !important; width: 100% !important; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 12px !important; }
-  .auth-btn-google:hover { background-color: #357ae8 !important; }
   .btn-cancel { background-color: #ff5252 !important; margin-left: 5%; }
   #auth-error { color: #ff5252; font-size: 0.9rem; margin-top: 10px; display: none; text-align: center; }
 
@@ -28,6 +32,7 @@
   .logo-title img { height: 45px; }
   h2 { margin: 0; color: #ffffff; letter-spacing: 1px; }
   
+  .filters-container { display: flex; gap: 10px; flex-wrap: wrap; }
   .controls-bar { display: flex; gap: 10px; align-items: center; background: #1e1e24; padding: 8px 15px; border-radius: 8px; border: 1px solid #333; }
   .controls-bar select { background: #2b2b36; color: white; border: 1px solid #5c5c77; padding: 6px; border-radius: 4px; outline: none; }
   
@@ -38,20 +43,14 @@
   /* --- Cartões --- */
   .card { background-color: #2b2b36; padding: 15px; border-radius: 6px; cursor: grab; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 5px solid #5c5c77; position: relative; display: flex; flex-direction: column; gap: 10px; }
   .card:active { transform: scale(0.98); }
-  .task-text { font-size: 1rem; font-weight: 500; margin-right: 20px; }
   
-  /* Cores de Prioridade */
-  .priority-emergente { border-left-color: #ff5252; } 
-  .priority-muito_urgente { border-left-color: #ff9800; }
-  .priority-urgente { border-left-color: #ffeb3b; } 
-  .priority-pouco_urgente { border-left-color: #4caf50; } 
-  .priority-sem_prazo { border-left-color: #2196f3; }
+  .task-title { font-size: 1.1rem; font-weight: bold; margin: 0 20px 0 0; color: #fff; }
+  .task-desc { font-size: 0.85rem; color: #ccc; margin: 0; line-height: 1.4; }
   
-  .bg-emergente { background-color: #ff5252; color: white; } 
-  .bg-muito_urgente { background-color: #ff9800; color: #121212; }
-  .bg-urgente { background-color: #ffeb3b; color: #121212; } 
-  .bg-pouco_urgente { background-color: #4caf50; color: white; } 
-  .bg-sem_prazo { background-color: #2196f3; color: white; }
+  .priority-emergente { border-left-color: #ff5252; } .priority-muito_urgente { border-left-color: #ff9800; }
+  .priority-urgente { border-left-color: #ffeb3b; } .priority-pouco_urgente { border-left-color: #4caf50; } .priority-sem_prazo { border-left-color: #2196f3; }
+  .bg-emergente { background-color: #ff5252; color: white; } .bg-muito_urgente { background-color: #ff9800; color: #121212; }
+  .bg-urgente { background-color: #ffeb3b; color: #121212; } .bg-pouco_urgente { background-color: #4caf50; color: white; } .bg-sem_prazo { background-color: #2196f3; color: white; }
 
   .tag-container { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .info-tag { font-size: 0.7rem; color: #aaa; background-color: #1a1a20; padding: 4px 6px; border-radius: 4px; }
@@ -61,14 +60,18 @@
   .assignee-select:hover { background-color: #22222a; color: #fff; }
   .priority-select { font-weight: bold; text-transform: uppercase; appearance: none; }
   
-  /* Metadados do Cartão (Datas) */
+  /* Metadados e Atrasos */
   .meta-dates { font-size: 0.65rem; color: #888; display: flex; flex-direction: column; gap: 3px; background: #22222a; padding: 6px; border-radius: 4px; }
   .meta-dates strong { color: #aaa; }
   .overdue-alert { color: #ff5252; font-weight: bold; animation: blink 2s infinite; }
   @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
+  /* Áreas Interativas do Cartão */
   .workers-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
   .worker-badge { font-size: 0.7rem; background-color: #3f51b5; color: white; padding: 3px 6px; border-radius: 10px; }
+  
+  .comment-box { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; background: #1e1e24; padding: 10px; border-radius: 6px; }
+  .comment-box textarea { width: 95%; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #121212; color: #fff; font-size: 0.8rem; resize: vertical; min-height: 40px; }
 
   .delete-btn { position: absolute; top: 8px; right: 8px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: #1a1a20; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
   .delete-btn:hover { background: #ff5252; color: white; }
@@ -85,10 +88,11 @@
   /* --- UI do Painel Admin --- */
   .admin-section { background-color: #2b2b36; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
   .admin-section h3 { margin-top: 0; color: #FF9800; border-bottom: 1px solid #444; padding-bottom: 10px; }
-  .user-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #444; flex-wrap: wrap; gap: 10px; }
+  .user-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 0; border-bottom: 1px dashed #444; flex-direction: column; gap: 10px; }
   .user-item:last-child { border-bottom: none; }
-  .user-info { display: flex; flex-direction: column; gap: 3px; min-width: 200px; }
-  .user-perms { background: #1a1a20; padding: 8px 12px; border-radius: 6px; display: flex; gap: 15px; font-size: 0.85rem; color: #ccc; align-items: center; flex-wrap: wrap; }
+  .user-header { display: flex; justify-content: space-between; width: 100%; align-items: center; }
+  .user-perms { background: #1a1a20; padding: 10px; border-radius: 6px; display: flex; gap: 10px; flex-direction: column; font-size: 0.85rem; color: #ccc; width: 100%; box-sizing: border-box; }
+  .perm-group { display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; padding-top: 5px; margin-top: 5px; }
   .user-actions button { width: auto; padding: 6px 12px; margin: 0 0 0 5px; font-size: 0.8rem; }
   .btn-edit { background-color: #2196f3; } .btn-approve { background-color: #4CAF50; } .btn-disable { background-color: #ff9800; }
   .tag-status { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
@@ -101,7 +105,7 @@
   .sector-item span.del-sec { color: #ff5252; margin-left: 10px; cursor: pointer; font-weight: bold; }
 
   /* Controlo de Telas */
-  #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal { display: none; }
+  #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal, #finish-modal { display: none; }
 </style>
 </head>
 <body>
@@ -164,7 +168,9 @@
   <div class="overlay" id="task-modal">
     <div class="modal-box">
       <h2>Nova Atividade</h2>
-      <input type="text" id="new-task-text" style="width: 90%;" placeholder="Descreva a tarefa...">
+      <input type="text" id="new-task-title" style="width: 90%; font-weight: bold;" placeholder="Título da Tarefa">
+      <textarea id="new-task-desc" style="width: 90%;" placeholder="Descrição detalhada da tarefa..."></textarea>
+      
       <select id="new-task-assignee" style="width: 96%;"><option value="">Selecione o Setor</option></select>
       <select id="new-task-priority" style="width: 96%;">
         <option value="emergente">🔴 Emergente (5 dias)</option>
@@ -180,6 +186,23 @@
     </div>
   </div>
 
+  <div class="overlay" id="finish-modal">
+    <div class="modal-box">
+      <h2>Finalizar Tarefa</h2>
+      <select id="finish-status" style="width: 96%; font-weight: bold;">
+        <option value="100% Concluído">✅ 100% Concluído</option>
+        <option value="Parcialmente Concluído">⚠️ Parcialmente Concluído</option>
+        <option value="Não Concluído">❌ Não Concluído</option>
+      </select>
+      <textarea id="finish-response" style="width: 90%; margin-top: 15px;" placeholder="Resposta da conclusão ou justificativa..."></textarea>
+      
+      <div style="display: flex; justify-content: center; gap: 10px; width: 96%; margin: 0 auto;">
+        <button style="width: 50%;" onclick="confirmarFinalizacao()">Confirmar</button>
+        <button style="width: 50%; margin-left: 0;" class="btn-cancel" onclick="fecharFinishModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <div id="main-app">
     <div class="header-container">
       <div class="logo-title">
@@ -188,16 +211,22 @@
       </div>
       
       <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-        <div class="controls-bar">
-          <label for="filter-priority" style="font-size: 0.85rem; color: #aaa;">Filtro:</label>
-          <select id="filter-priority" onchange="renderizarTarefas()">
-            <option value="todos">Todas as Prioridades</option>
-            <option value="emergente">🔴 Emergente</option>
-            <option value="muito_urgente">🟠 Muito Urgente</option>
-            <option value="urgente">🟡 Urgente</option>
-            <option value="pouco_urgente">🟢 Pouco Urgente</option>
-            <option value="sem_prazo">🔵 Sem Prazo</option>
-          </select>
+        <div class="filters-container">
+          <div class="controls-bar">
+            <label for="filter-priority" style="font-size: 0.85rem; color: #aaa;">Prioridade:</label>
+            <select id="filter-priority" onchange="renderizarTarefas()">
+              <option value="todos">Todas</option>
+              <option value="emergente">🔴 Emergente</option><option value="muito_urgente">🟠 Muito Urgente</option>
+              <option value="urgente">🟡 Urgente</option><option value="pouco_urgente">🟢 Pouco Urgente</option>
+              <option value="sem_prazo">🔵 Sem Prazo</option>
+            </select>
+          </div>
+          <div class="controls-bar">
+            <label for="filter-sector" style="font-size: 0.85rem; color: #aaa;">Setor:</label>
+            <select id="filter-sector" onchange="renderizarTarefas()">
+              <option value="todos">Todos os Meus Setores</option>
+              </select>
+          </div>
         </div>
 
         <span id="user-display" style="color: #888; font-size: 0.9rem;"></span>
@@ -220,9 +249,7 @@
     import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-    // ==========================================
     const EMAIL_ADMIN_MESTRE = "leovitorjipa@gmail.com"; 
-    // ==========================================
 
     const firebaseConfig = {
       apiKey: "AIzaSyAT5ZBcmUiEHf92ogl0Tu51TxNTw4NOCGI",
@@ -240,7 +267,9 @@
 
     let userRole = "user";
     let userPerms = { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false };
+    let userSectors = []; // Setores que o usuário tem acesso
     let loggedUserName = ""; 
+    let currentTaskToFinish = null;
     
     let tarefasGlobais = [];
     let setoresGlobais = [];
@@ -286,7 +315,8 @@
           status: isMasterAdmin ? 'aprovado' : 'pendente',
           role: isMasterAdmin ? 'admin' : 'user',
           nome: user.displayName || user.email.split('@')[0],
-          permissoes: { gerenciarSetores: isMasterAdmin, concluirTarefas: isMasterAdmin, apagarTarefas: isMasterAdmin }
+          permissoes: { gerenciarSetores: isMasterAdmin, concluirTarefas: isMasterAdmin, apagarTarefas: isMasterAdmin },
+          setoresPermitidos: [] // Nova lista de setores autorizados
         });
         ouvirAlteracaoStatus(user.uid);
       } else {
@@ -310,6 +340,7 @@
           loggedUserName = userData.nome;
           userRole = userData.role;
           userPerms = userData.permissoes || { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false };
+          userSectors = userData.setoresPermitidos || [];
           
           document.getElementById("user-display").innerText = "👤 " + loggedUserName;
           
@@ -370,15 +401,28 @@
       unsubscribeSetores = onSnapshot(collection(db, "setores"), (snapshot) => {
         setoresGlobais = [];
         snapshot.forEach(doc => setoresGlobais.push({ id: doc.id, nome: doc.data().nome }));
-        atualizarDropdownNovaTarefa();
-        if(document.getElementById("admin-modal").style.display === "flex") renderizarSetoresAdmin();
+        atualizarDropdownsSetor();
+        if(document.getElementById("admin-modal").style.display === "flex") {
+          renderizarSetoresAdmin();
+          carregarTodosUsuarios(); // Atualiza as caixinhas nos usuários se um setor novo entrar
+        }
       });
     }
 
-    function atualizarDropdownNovaTarefa() {
-      const select = document.getElementById("new-task-assignee");
-      select.innerHTML = '<option value="">Selecione o Setor</option>';
-      setoresGlobais.forEach(setor => { select.innerHTML += `<option value="${setor.nome}">${setor.nome}</option>`; });
+    function atualizarDropdownsSetor() {
+      const selectNova = document.getElementById("new-task-assignee");
+      const selectFiltro = document.getElementById("filter-sector");
+      
+      selectNova.innerHTML = '<option value="">Selecione o Setor</option>';
+      selectFiltro.innerHTML = '<option value="todos">Todos os Meus Setores</option>';
+      
+      setoresGlobais.forEach(setor => { 
+        selectNova.innerHTML += `<option value="${setor.nome}">${setor.nome}</option>`; 
+        // No filtro, só mostra os setores que o usuário tem acesso (se não for admin)
+        if (userRole === 'admin' || userSectors.includes(setor.nome)) {
+          selectFiltro.innerHTML += `<option value="${setor.nome}">${setor.nome}</option>`;
+        }
+      });
     }
 
     window.adicionarSetor = async () => {
@@ -406,40 +450,70 @@
         const user = docSnap.data();
         const uid = docSnap.id;
         const perms = user.permissoes || {};
+        const permittedSectors = user.setoresPermitidos || [];
         
         let statusTag = user.status === 'pendente' ? '<span class="tag-status status-pendente">Aguardando</span>' : 
                         user.status === 'aprovado' ? '<span class="tag-status status-aprovado">Ativo</span>' : '<span class="tag-status status-inativo">Inativo</span>';
 
-        let botoesHtml = `<button class="btn-edit" onclick="editarNomeUsuario('${uid}', '${user.nome}')">Alterar Nome</button>`;
+        let botoesHtml = `<button class="btn-edit" onclick="editarNomeUsuario('${uid}', '${user.nome}')">Nome</button>`;
         if (user.status === 'pendente') botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Aprovar</button>`;
         else if (user.status === 'aprovado' && user.role !== 'admin') botoesHtml += `<button class="btn-disable" onclick="alterarStatusUsuario('${uid}', 'inativo')">Desativar</button>`;
         else if (user.status === 'inativo') botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Reativar</button>`;
 
         let disabledCheck = user.role === 'admin' ? 'disabled checked' : '';
-        let chkSetor = perms.gerenciarSetores ? 'checked' : '';
-        let chkConcluir = perms.concluirTarefas ? 'checked' : '';
-        let chkApagar = perms.apagarTarefas ? 'checked' : '';
+        
+        // Caixas de Ações
+        let checksAcoes = `
+          <div class="perm-group">
+            <strong style="color:white; width: 100%;">Poderes Administrativos:</strong>
+            <label><input type="checkbox" ${disabledCheck} ${perms.gerenciarSetores ? 'checked' : ''} onchange="togglePermissao('${uid}', 'gerenciarSetores', this.checked)"> Setores Gerais</label>
+            <label><input type="checkbox" ${disabledCheck} ${perms.concluirTarefas ? 'checked' : ''} onchange="togglePermissao('${uid}', 'concluirTarefas', this.checked)"> Concluir</label>
+            <label><input type="checkbox" ${disabledCheck} ${perms.apagarTarefas ? 'checked' : ''} onchange="togglePermissao('${uid}', 'apagarTarefas', this.checked)"> Apagar</label>
+          </div>
+        `;
+
+        // Caixas de Setores Permitidos
+        let checksSetores = `<div class="perm-group"><strong style="color:white; width: 100%;">Acesso aos Setores:</strong>`;
+        if (setoresGlobais.length === 0) checksSetores += `<span style="color:#888;">Nenhum setor criado.</span>`;
+        setoresGlobais.forEach(s => {
+          let checkedSec = permittedSectors.includes(s.nome) ? 'checked' : '';
+          checksSetores += `<label><input type="checkbox" ${disabledCheck} ${checkedSec} onchange="toggleAcessoSetor('${uid}', '${s.nome}', this.checked)"> ${s.nome}</label>`;
+        });
+        checksSetores += `</div>`;
 
         listaDiv.innerHTML += `
           <div class="user-item">
-            <div class="user-info">
-              <strong style="color: white; font-size: 1.1rem;">${user.nome} ${user.role === 'admin' ? '⭐' : ''}</strong>
-              <span style="color: #888; font-size: 0.8rem;">${user.email} ${statusTag}</span>
+            <div class="user-header">
+              <div class="user-info">
+                <strong style="color: white; font-size: 1.1rem;">${user.nome} ${user.role === 'admin' ? '⭐' : ''}</strong>
+                <span style="color: #888; font-size: 0.8rem;">${user.email} ${statusTag}</span>
+              </div>
+              <div class="user-actions">${botoesHtml}</div>
             </div>
             
             <div class="user-perms">
-              <label><input type="checkbox" ${disabledCheck} ${chkSetor} onchange="togglePermissao('${uid}', 'gerenciarSetores', this.checked)"> Setores</label>
-              <label><input type="checkbox" ${disabledCheck} ${chkConcluir} onchange="togglePermissao('${uid}', 'concluirTarefas', this.checked)"> Concluir</label>
-              <label><input type="checkbox" ${disabledCheck} ${chkApagar} onchange="togglePermissao('${uid}', 'apagarTarefas', this.checked)"> Apagar</label>
+              ${checksAcoes}
+              ${checksSetores}
             </div>
-
-            <div class="user-actions">${botoesHtml}</div>
           </div>
         `;
       });
     }
 
     window.togglePermissao = async (uid, campo, valor) => { await updateDoc(doc(db, "usuarios", uid), { [`permissoes.${campo}`]: valor }); };
+    
+    // Nova função para gerir o Array de Setores Permitidos
+    window.toggleAcessoSetor = async (uid, nomeSetor, adicionar) => {
+      const userRef = doc(db, "usuarios", uid);
+      const userSnap = await getDoc(userRef);
+      let atuais = userSnap.data().setoresPermitidos || [];
+      
+      if (adicionar && !atuais.includes(nomeSetor)) atuais.push(nomeSetor);
+      else if (!adicionar) atuais = atuais.filter(s => s !== nomeSetor);
+      
+      await updateDoc(userRef, { setoresPermitidos: atuais });
+    };
+
     window.editarNomeUsuario = async (uid, nomeAtual) => {
       const novoNome = prompt("Novo nome:", nomeAtual);
       if (novoNome && novoNome.trim()) { await updateDoc(doc(db, "usuarios", uid), { nome: novoNome.trim() }); carregarTodosUsuarios(); }
@@ -463,9 +537,19 @@
       document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>";
       document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
 
-      const filtro = document.getElementById("filter-priority").value;
+      const filtroPrio = document.getElementById("filter-priority").value;
+      const filtroSetor = document.getElementById("filter-sector").value;
+      
       let filtradas = tarefasGlobais.filter(t => t.status !== 'historico');
-      if(filtro !== 'todos') filtradas = filtradas.filter(t => t.priority === filtro);
+      
+      // Filtra visualmente os setores que o usuário tem acesso (se não for admin)
+      if (userRole !== 'admin') {
+        filtradas = filtradas.filter(t => !t.assignee || t.assignee === "" || userSectors.includes(t.assignee));
+      }
+
+      // Filtros do Dropdown superior
+      if(filtroPrio !== 'todos') filtradas = filtradas.filter(t => t.priority === filtroPrio);
+      if(filtroSetor !== 'todos') filtradas = filtradas.filter(t => t.assignee === filtroSetor);
 
       filtradas.sort((a, b) => (configPrioridade[a.priority]?.ordem || 99) - (configPrioridade[b.priority]?.ordem || 99));
 
@@ -481,19 +565,33 @@
     function renderizarHistorico() {
       const div = document.getElementById("history-list");
       div.innerHTML = "";
-      const historico = tarefasGlobais.filter(t => t.status === 'historico');
+      
+      let historico = tarefasGlobais.filter(t => t.status === 'historico');
+      
+      // Aplica restrição visual também no histórico
+      if (userRole !== 'admin') {
+        historico = historico.filter(t => !t.assignee || t.assignee === "" || userSectors.includes(t.assignee));
+      }
       
       if(historico.length === 0) { div.innerHTML = "<p style='color:#888; text-align:center;'>Nenhuma tarefa concluída ainda.</p>"; return; }
       
-      // Ordena por data de conclusão (mais recentes primeiro)
       historico.sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
 
       historico.forEach(task => {
+        let statusIcon = task.completionStatus === '100% Concluído' ? '✅' : task.completionStatus === 'Parcialmente Concluído' ? '⚠️' : '❌';
+
         div.innerHTML += `
-          <div class="card priority-${task.priority}" style="cursor: default; flex-direction: row; justify-content: space-between; align-items: center; border-left-color: #555;">
-            <div style="display: flex; flex-direction: column; gap: 5px;">
-              <span class="task-text" style="text-decoration: line-through; color: #888;">${task.text}</span>
-              <div class="tag-container">
+          <div class="card priority-${task.priority}" style="cursor: default; flex-direction: row; justify-content: space-between; align-items: flex-start; border-left-color: #555;">
+            <div style="display: flex; flex-direction: column; gap: 5px; width: 80%;">
+              <h4 style="margin:0; color:#aaa; text-decoration: line-through;">${task.title || task.text}</h4>
+              <p style="margin:0; font-size: 0.8rem; color: #888;">${task.description || ''}</p>
+              
+              <div style="background: #1e1e24; padding: 8px; border-radius: 4px; margin-top: 5px;">
+                <strong style="font-size: 0.8rem; color: white;">${statusIcon} ${task.completionStatus || 'Finalizado'}</strong>
+                <p style="margin: 3px 0 0 0; font-size: 0.8rem; color: #ccc; font-style: italic;">"${task.completionResponse || 'Sem detalhes adiconais.'}"</p>
+              </div>
+
+              <div class="tag-container" style="margin-top: 5px;">
                 <span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span>
                 <span class="info-tag" style="background: #2196f3; color: white;">Finalizado por: ${task.completedBy || 'Desconhecido'}</span>
               </div>
@@ -507,10 +605,12 @@
     }
 
     window.handleCreateTask = async () => {
-      const text = document.getElementById("new-task-text").value;
+      const title = document.getElementById("new-task-title").value;
+      const desc = document.getElementById("new-task-desc").value;
       const assignee = document.getElementById("new-task-assignee").value;
       const priority = document.getElementById("new-task-priority").value;
-      if (!text.trim()) return alert("Descreva a tarefa!");
+      
+      if (!title.trim()) return alert("Dê um título para a tarefa!");
 
       const agora = Date.now();
       let prazo = null;
@@ -519,10 +619,10 @@
       }
 
       await addDoc(collection(db, "tarefas"), { 
-        text: text, assignee: assignee, priority: priority, 
+        title: title, description: desc, assignee: assignee, priority: priority, 
         creator: loggedUserName, status: "todo",
         createdAt: agora, deadline: prazo,
-        workers: [] 
+        workers: [], doingComment: ""
       });
       fecharModal();
     };
@@ -537,11 +637,7 @@
       while (!targetColumn.classList.contains('column')) { targetColumn = targetColumn.parentElement; }
       
       let updates = { status: targetColumn.id };
-      
-      // Se moveu para Em Andamento pela 1ª vez
-      if(targetColumn.id === 'doing' && !task.startedAt) {
-        updates.startedAt = Date.now();
-      }
+      if(targetColumn.id === 'doing' && !task.startedAt) updates.startedAt = Date.now();
       
       await updateDoc(doc(db, "tarefas", taskId), updates);
     };
@@ -562,14 +658,37 @@
       await updateDoc(doc(db, "tarefas", taskId), { workers: arrayWorkers });
     };
 
-    window.marcarComoConcluido = async (taskId) => {
-      if(confirm("Confirmar a conclusão desta missão?")) {
-        await updateDoc(doc(db, "tarefas", taskId), { 
-          status: 'historico', 
-          completedAt: Date.now(),
-          completedBy: loggedUserName 
-        });
-      }
+    window.salvarComentario = async (taskId) => {
+      const text = document.getElementById(`comment-${taskId}`).value;
+      await updateDoc(doc(db, "tarefas", taskId), { doingComment: text });
+      alert("Comentário atualizado!");
+    };
+
+    // Fluxo de Finalização Modal
+    window.abrirFinalizacao = (taskId) => {
+      currentTaskToFinish = taskId;
+      document.getElementById("finish-status").value = "100% Concluído";
+      document.getElementById("finish-response").value = "";
+      document.getElementById("finish-modal").style.display = "flex";
+    };
+    
+    window.fecharFinishModal = () => { document.getElementById("finish-modal").style.display = "none"; currentTaskToFinish = null; };
+
+    window.confirmarFinalizacao = async () => {
+      if(!currentTaskToFinish) return;
+      
+      const statusFinal = document.getElementById("finish-status").value;
+      const resposta = document.getElementById("finish-response").value;
+
+      await updateDoc(doc(db, "tarefas", currentTaskToFinish), { 
+        status: 'historico', 
+        completedAt: Date.now(),
+        completedBy: loggedUserName,
+        completionStatus: statusFinal,
+        completionResponse: resposta
+      });
+      
+      fecharFinishModal();
     };
     
     window.reativarTarefa = async (taskId) => { await updateDoc(doc(db, "tarefas", taskId), { status: 'done' }); };
@@ -579,12 +698,9 @@
       const newPrio = sel.value;
       let updates = { priority: newPrio };
       
-      // Recalcula o prazo ao mudar de prioridade
-      if (newPrio === 'sem_prazo') {
-        updates.deadline = null;
-      } else if (task.createdAt) {
-        updates.deadline = task.createdAt + (configPrioridade[newPrio].dias * 24 * 60 * 60 * 1000);
-      }
+      if (newPrio === 'sem_prazo') updates.deadline = null;
+      else if (task.createdAt) updates.deadline = task.createdAt + (configPrioridade[newPrio].dias * 24 * 60 * 60 * 1000);
+      
       await updateDoc(doc(db, "tarefas", taskId), updates); 
     };
     
@@ -594,7 +710,11 @@
       if(confirm("Deseja excluir permanentemente esta tarefa?")) await deleteDoc(doc(db, "tarefas", taskId)); 
     };
 
-    window.abrirModal = () => { document.getElementById("task-modal").style.display = "flex"; document.getElementById("new-task-text").value = ""; };
+    window.abrirModal = () => { 
+      document.getElementById("task-modal").style.display = "flex"; 
+      document.getElementById("new-task-title").value = ""; 
+      document.getElementById("new-task-desc").value = ""; 
+    };
     window.fecharModal = () => { document.getElementById("task-modal").style.display = "none"; };
     window.allowDrop = (ev) => { ev.preventDefault(); }; window.drag = (ev) => { ev.dataTransfer.getData("text"); ev.dataTransfer.setData("text", ev.target.id); };
 
@@ -605,7 +725,7 @@
       let opcoesSetores = `<option value="">👤 Atribuir...</option>`;
       setoresGlobais.forEach(s => { opcoesSetores += `<option value="${s.nome}" ${taskData.assignee===s.nome?'selected':''}>${s.nome}</option>`; });
 
-      // Lógica de Prazos e Atrasos
+      // Lógica de Prazos (com correção para tarefas antigas sem createdAt)
       let prazoHtml = `<span>Prazo: Sem prazo definido</span>`;
       if (taskData.deadline && taskData.priority !== 'sem_prazo') {
         const diff = Date.now() - taskData.deadline;
@@ -615,22 +735,31 @@
         } else {
           prazoHtml = `<span>Prazo: <strong>${new Date(taskData.deadline).toLocaleDateString('pt-BR')}</strong></span>`;
         }
+      } else if (taskData.priority !== 'sem_prazo' && !taskData.createdAt) {
+         prazoHtml = `<span style="color:#ff9800;">⚠️ Tarefa antiga (Sem data geradora)</span>`;
       }
 
-      // Lógica do botão Concluir
       let btnConcluirHtml = "";
       if (taskData.status === 'done' && (userPerms.concluirTarefas || userRole === 'admin')) {
-        btnConcluirHtml = `<button class="btn-action-task" onclick="marcarComoConcluido('${taskData.id}')">✔ Finalizar Missão</button>`;
+        btnConcluirHtml = `<button class="btn-action-task" onclick="abrirFinalizacao('${taskData.id}')">✔ Finalizar Missão</button>`;
       }
 
-      // Lógica de Participantes (Em Andamento)
       let workersHtml = "";
       if (taskData.status === 'doing') {
         let btnParticipar = `<button class="btn-action-task btn-join" onclick="assumirTarefa('${taskData.id}')">🙋‍♂️ Assumir Tarefa</button>`;
         const arrayWorkers = taskData.workers || [];
+        let caixaComentario = "";
         
         if (arrayWorkers.includes(loggedUserName)) {
           btnParticipar = `<button class="btn-action-task" style="background:#555;" onclick="sairDaTarefa('${taskData.id}')">Sair da Tarefa</button>`;
+          
+          caixaComentario = `
+            <div class="comment-box">
+              <label style="font-size: 0.75rem; color: #aaa;">Andamento / Comentário:</label>
+              <textarea id="comment-${taskData.id}" placeholder="Escreva aqui o que está a ser feito...">${taskData.doingComment || ''}</textarea>
+              <button class="btn-action-task" style="background: #2196f3; width: 100%;" onclick="salvarComentario('${taskData.id}')">Salvar Comentário</button>
+            </div>
+          `;
         }
         
         let workersBadges = "";
@@ -638,27 +767,30 @@
         
         workersHtml = `
           <div style="border-top: 1px dashed #555; padding-top: 10px; margin-top: 5px;">
-            ${btnParticipar}
-            <div class="workers-list">${workersBadges}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              ${btnParticipar}
+              <div class="workers-list">${workersBadges}</div>
+            </div>
+            ${caixaComentario}
           </div>
         `;
       }
 
-      // Botão Excluir (Só aparece se tiver permissão)
       let btnDeleteHtml = "";
       if (userRole === 'admin' || userPerms.apagarTarefas) {
         btnDeleteHtml = `<span class="delete-btn" title="Apagar Tarefa" onclick="removeTask('${taskData.id}')">&times;</span>`;
       }
 
       card.innerHTML = `
-        <span class="task-text">${taskData.text}</span>
+        <h4 class="task-title">${taskData.title || taskData.text}</h4>
+        ${taskData.description ? `<p class="task-desc">${taskData.description}</p>` : ''}
         
-        <div class="tag-container">
+        <div class="tag-container" style="margin-top: 5px;">
           <select class="priority-select bg-${taskData.priority}" onchange="changePriority(this, '${taskData.id}')">
             <option value="emergente" ${taskData.priority==='emergente'?'selected':''}>Emergente</option>
-            <option value="muito_urgente" ${taskData.priority==='muito_urgente'?'selected':''}>Muito Urgente</option>
+            <option value="muito_urgente" ${taskData.priority==='muito_urgente'?'selected':''}>Muito Urg.</option>
             <option value="urgente" ${taskData.priority==='urgente'?'selected':''}>Urgente</option>
-            <option value="pouco_urgente" ${taskData.priority==='pouco_urgente'?'selected':''}>Pouco Urgente</option>
+            <option value="pouco_urgente" ${taskData.priority==='pouco_urgente'?'selected':''}>Pouco Urg.</option>
             <option value="sem_prazo" ${taskData.priority==='sem_prazo'?'selected':''}>Sem Prazo</option>
           </select>
           <select class="assignee-select" onchange="changeAssignee(this, '${taskData.id}')">${opcoesSetores}</select>
