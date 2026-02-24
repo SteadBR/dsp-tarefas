@@ -10,7 +10,7 @@
   
   /* Bloqueios Anti-Plágio Visuais */
   * { user-select: none; -webkit-user-select: none; }
-  input, textarea, select { user-select: text; -webkit-user-select: text; }
+  input, textarea, select, .chat-input-editable { user-select: text; -webkit-user-select: text; }
 
   /* --- Modais --- */
   .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; }
@@ -67,6 +67,7 @@
   .assignee-select:disabled { cursor: not-allowed; opacity: 0.6; }
   .priority-select { font-weight: bold; text-transform: uppercase; appearance: none; }
   
+  /* Metadados e Atrasos */
   .meta-dates { font-size: 0.65rem; color: #888; display: flex; flex-direction: column; gap: 3px; background: #22222a; padding: 6px; border-radius: 4px; }
   .overdue-alert { color: #ff5252; font-weight: bold; animation: blink 2s infinite; }
   @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
@@ -74,31 +75,48 @@
   .workers-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; margin-bottom: 5px; }
   .worker-badge { font-size: 0.7rem; background-color: #3f51b5; color: white; padding: 3px 6px; border-radius: 10px; }
   
-  /* --- Sub-tarefas e Chat --- */
-  .subtasks-container, .chat-container { background: #1e1e24; padding: 10px; border-radius: 6px; margin-top: 5px; border: 1px solid #333; }
-  .subtasks-container strong, .chat-container strong { font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  /* --- Sub-tarefas --- */
+  .subtasks-container { background: #1e1e24; padding: 10px; border-radius: 6px; margin-top: 5px; border: 1px solid #333; }
+  .subtasks-container strong { font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
   
-  .subtask-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #ddd; margin-bottom: 6px; }
+  .subtask-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #ddd; margin-bottom: 6px; background: #22222a; padding: 6px; border-radius: 4px; }
   .subtask-text { flex: 1; word-wrap: break-word; }
   .subtask-text.completed { text-decoration: line-through; color: #666; }
-  .subtask-item input[type="checkbox"] { cursor: pointer; width: 14px; height: 14px; margin: 0; }
+  .subtask-item input[type="checkbox"] { cursor: pointer; width: 15px; height: 15px; margin: 0; }
   
-  .subtask-input-area, .chat-input-area { display: flex; gap: 5px; margin-top: 5px; }
-  .subtask-input-area input, .chat-input-area input { flex: 1; padding: 6px 8px; font-size: 0.75rem; border-radius: 4px; border: 1px solid #555; background: #121212; color: #fff; margin: 0; }
-  .subtask-input-area button, .chat-input-area button { background: #4CAF50; color: white; border: none; padding: 0 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; margin: 0; }
+  .subtask-order-controls { display: flex; flex-direction: column; font-size: 0.75rem; color: #666; cursor: pointer; }
+  .subtask-order-controls span:hover { color: #fff; }
+
+  .subtask-input-area { display: flex; gap: 5px; margin-top: 10px; }
+  .subtask-input-area input { flex: 1; padding: 6px 8px; font-size: 0.75rem; border-radius: 4px; border: 1px solid #555; background: #121212; color: #fff; margin: 0; }
+  .subtask-input-area button { background: #4CAF50; color: white; border: none; padding: 0 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; margin: 0; }
   
-  /* Chat: Exibição e Formatação */
+  /* --- Chat (Diário) --- */
+  .chat-container { background: #1e1e24; padding: 10px; border-radius: 6px; margin-top: 5px; border: 1px solid #333; }
+  .chat-container strong { font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
   .chat-toolbar { display: flex; gap: 5px; margin-top: 10px; margin-bottom: 5px; }
-  .chat-toolbar button { background: #333; color: #fff; border: 1px solid #555; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; width: auto; margin: 0; }
+  .chat-toolbar button { background: #333; color: #fff; border: 1px solid #555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; width: auto; margin: 0; }
   .chat-toolbar button:hover { background: #555; }
 
-  .chat-messages { max-height: 130px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 5px; }
+  /* Editor de Texto Rico e Expansível */
+  .chat-input-editable { 
+    flex: 1; min-height: 35px; max-height: 150px; overflow-y: auto; background: #121212; color: #fff; 
+    border: 1px solid #555; border-radius: 4px; padding: 8px; font-size: 0.8rem; outline: none; word-wrap: break-word; 
+  }
+  .chat-input-editable:empty:before { content: attr(placeholder); color: #888; pointer-events: none; display: block; }
+  .chat-input-area { display: flex; gap: 5px; align-items: flex-end; }
+  .chat-input-area button { background: #4CAF50; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; margin: 0; height: 35px; }
+
+  .chat-messages { max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 5px; }
   .chat-messages::-webkit-scrollbar { width: 4px; }
   .chat-messages::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
   
   .chat-message { background: #22222a; padding: 8px; border-radius: 4px; border-left: 3px solid #9c27b0; }
   .chat-meta { display: block; font-size: 0.65rem; color: #888; margin-bottom: 4px; }
   .chat-text { font-size: 0.8rem; color: #ddd; word-wrap: break-word; line-height: 1.3; }
+
+  /* ---------------------------------------- */
 
   .delete-btn { position: absolute; top: 8px; right: 8px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: #1a1a20; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
   .delete-btn:hover { background: #ff5252; color: white; }
@@ -125,7 +143,6 @@
   .tag-status { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
   .status-pendente { background-color: #ff9800; color: #121212; } .status-aprovado { background-color: #4caf50; color: white; } .status-inativo { background-color: #ff5252; color: white; }
 
-  /* Restauração do Layout de Setores e Filtros */
   .add-sector-container { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
   .add-sector-container input { margin: 0; width: 70%; }
   .add-sector-container button { margin: 0; width: 30%; }
@@ -144,6 +161,9 @@
   #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal, #finish-modal { display: none; }
 </style>
 <script>
+  // ==========================================
+  // SCRIPTS ANTI-PLÁGIO
+  // ==========================================
   document.addEventListener('contextmenu', event => event.preventDefault());
   document.addEventListener('keydown', function(e) {
     if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) { e.preventDefault(); return false; }
@@ -180,7 +200,7 @@
           <input type="text" id="novo-setor-nome" placeholder="Nome do novo setor...">
           <button onclick="adicionarSetor()">Adicionar</button>
         </div>
-        <div id="sectors-list"></div>
+        <div id="sectors-list" style="margin-top:10px;"></div>
       </div>
 
       <div class="admin-section" id="bloco-usuarios" style="display: none;">
@@ -606,33 +626,43 @@
       await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs });
     };
     window.toggleSubtarefa = async (taskId, subtaskId) => {
-      const task = tarefasGlobais.find(t => t.id === taskId); const subs = task.subtasks || [];
+      const task = tarefasGlobais.find(t => t.id === taskId); let subs = task.subtasks || [];
       const sub = subs.find(s => s.id === subtaskId);
-      if(sub) { sub.isCompleted = !sub.isCompleted; await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs }); }
+      if(sub) { 
+        sub.isCompleted = !sub.isCompleted; 
+        // Reordena: mantém as pendentes em cima, as concluídas em baixo.
+        let pendentes = subs.filter(s => !s.isCompleted);
+        let concluidas = subs.filter(s => s.isCompleted);
+        subs = [...pendentes, ...concluidas];
+        await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs }); 
+      }
     };
     window.excluirSubtarefa = async (taskId, subtaskId) => {
       const task = tarefasGlobais.find(t => t.id === taskId); const subs = (task.subtasks || []).filter(s => s.id !== subtaskId);
       await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs });
     };
+    window.moverSubtarefa = async (taskId, subtaskId, direcao) => {
+      const task = tarefasGlobais.find(t => t.id === taskId); let subs = [...(task.subtasks || [])];
+      const index = subs.findIndex(s => s.id === subtaskId);
+      if (index < 0) return;
+      const newIndex = index + direcao;
+      if (newIndex < 0 || newIndex >= subs.length) return;
+      [subs[index], subs[newIndex]] = [subs[newIndex], subs[index]];
+      await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs });
+    };
 
-    // Chat
+    // Chat (Diário de Bordo)
     window.adicionarComentario = async (taskId) => {
-      const input = document.getElementById(`chat-input-${taskId}`); const text = input.value.trim(); if(!text) return;
+      const input = document.getElementById(`chat-input-${taskId}`); const text = input.innerHTML.trim(); if(!text || text === '<br>') return;
       const task = tarefasGlobais.find(t => t.id === taskId); const comments = task.comments || [];
       comments.push({ id: gerarIdUnico(), user: loggedUserName, text, timestamp: Date.now() });
       await updateDoc(doc(db, "tarefas", taskId), { comments: comments });
+      input.innerHTML = '';
     };
     window.excluirComentario = async (taskId, commentId) => {
-      if(!confirm("Deseja apagar esta mensagem do diário?")) return;
+      if(!confirm("Deseja apagar esta mensagem permanentemente?")) return;
       const task = tarefasGlobais.find(t => t.id === taskId); const comments = (task.comments || []).filter(c => c.id !== commentId);
       await updateDoc(doc(db, "tarefas", taskId), { comments: comments });
-    };
-    window.formatarTextoChat = (taskId, tag) => {
-      const input = document.getElementById(`chat-input-${taskId}`); if(!input) return;
-      const start = input.selectionStart, end = input.selectionEnd, text = input.value;
-      const selected = text.substring(start, end), before = text.substring(0, start), after = text.substring(end, text.length);
-      input.value = `${before}<${tag}>${selected}</${tag}>${after}`; input.focus();
-      input.selectionStart = input.selectionEnd = start === end ? start + tag.length + 2 : start + (tag.length * 2) + 5 + selected.length;
     };
 
     window.abrirFinalizacao = (taskId) => {
@@ -688,35 +718,52 @@
         let btnParticipar = isMe ? `<button class="btn-action-task" style="background:#555;" onclick="sairDaTarefa('${taskData.id}')">Sair da Tarefa</button>` : `<button class="btn-action-task btn-join" onclick="assumirTarefa('${taskData.id}')">🙋‍♂️ Assumir Tarefa</button>`;
         let workersBadges = (taskData.workers || []).map(w => `<span class="worker-badge">${w}</span>`).join("");
         
+        // --- SUBTAREFAS INTERATIVAS ---
         let subtasksHtml = ""; const subs = taskData.subtasks || [];
         if(subs.length > 0 || isMe) {
-            let subsList = subs.map(s => `
+            let subsList = subs.map((s, index) => {
+              let ctrlHtml = isMe ? `
+                <div class="subtask-order-controls">
+                  <span onclick="moverSubtarefa('${taskData.id}', '${s.id}', -1)" title="Mover para Cima">▲</span>
+                  <span onclick="moverSubtarefa('${taskData.id}', '${s.id}', 1)" title="Mover para Baixo">▼</span>
+                </div>` : '';
+              return `
                 <div class="subtask-item">
+                    ${ctrlHtml}
                     <input type="checkbox" ${s.isCompleted ? 'checked' : ''} ${!isMe ? 'disabled' : `onchange="toggleSubtarefa('${taskData.id}', '${s.id}')"`}>
                     <span class="subtask-text ${s.isCompleted ? 'completed' : ''}">${s.text}</span>
                     ${isMe ? `<span style="color:#ff5252; cursor:pointer; font-weight:bold; margin-left:auto;" onclick="excluirSubtarefa('${taskData.id}', '${s.id}')">&times;</span>` : ''}
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
+            
             let addSubHtml = isMe ? `<div class="subtask-input-area"><input type="text" id="subtask-input-${taskData.id}" placeholder="Nova sub-tarefa..." onkeydown="if(event.key==='Enter') adicionarSubtarefa('${taskData.id}')"><button type="button" onclick="adicionarSubtarefa('${taskData.id}')">+</button></div>` : '';
             subtasksHtml = `<div class="subtasks-container"><strong>📋 Sub-tarefas</strong><div class="subtasks-list">${subsList}</div>${addSubHtml}</div>`;
         }
 
+        // --- CHAT INTERATIVO E WYSIWYG ---
         let chatHtml = ""; const comments = taskData.comments || [];
         if(comments.length > 0 || isMe) {
             let chatList = comments.map(c => {
                 let btnDelChat = (c.user === loggedUserName || userRole === 'admin') ? `<span style="color:#ff5252; cursor:pointer; font-weight:bold; margin-left:auto;" onclick="excluirComentario('${taskData.id}', '${c.id}')">&times;</span>` : '';
-                return `<div class="chat-message"><div style="display:flex; justify-content:space-between; align-items:center;"><span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span>${btnDelChat}</div><span class="chat-text">${c.text}</span></div>`;
+                return `
+                  <div class="chat-message">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span>
+                      ${btnDelChat}
+                    </div>
+                    <span class="chat-text">${c.text}</span>
+                  </div>`;
             }).join('');
             
             let addChatHtml = isMe ? `
                 <div class="chat-toolbar">
-                   <button type="button" title="Negrito" onclick="formatarTextoChat('${taskData.id}', 'b')"><b>B</b></button>
-                   <button type="button" title="Itálico" onclick="formatarTextoChat('${taskData.id}', 'i')"><i>I</i></button>
-                   <button type="button" title="Sublinhado" onclick="formatarTextoChat('${taskData.id}', 'u')"><u>U</u></button>
-                   <button type="button" title="Tachado" onclick="formatarTextoChat('${taskData.id}', 's')"><s>S</s></button>
+                   <button type="button" title="Negrito" onclick="document.execCommand('bold',false,null)"><b>B</b></button>
+                   <button type="button" title="Itálico" onclick="document.execCommand('italic',false,null)"><i>I</i></button>
+                   <button type="button" title="Sublinhado" onclick="document.execCommand('underline',false,null)"><u>U</u></button>
+                   <button type="button" title="Tachado" onclick="document.execCommand('strikeThrough',false,null)"><s>S</s></button>
                 </div>
                 <div class="chat-input-area">
-                    <input type="text" id="chat-input-${taskData.id}" placeholder="Escreva uma nota..." onkeydown="if(event.key==='Enter') adicionarComentario('${taskData.id}')">
+                    <div id="chat-input-${taskData.id}" contenteditable="true" class="chat-input-editable" placeholder="Escreva uma nota..."></div>
                     <button type="button" onclick="adicionarComentario('${taskData.id}')">Enviar</button>
                 </div>
             ` : '';
@@ -732,7 +779,13 @@
         }
         let chatHtml = ""; const comments = taskData.comments || [];
         if(comments.length > 0) {
-            let chatList = comments.map(c => `<div class="chat-message"><div style="display:flex; justify-content:space-between; align-items:center;"><span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span></div><span class="chat-text">${c.text}</span></div>`).join('');
+            let chatList = comments.map(c => `
+              <div class="chat-message">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span>
+                </div>
+                <span class="chat-text">${c.text}</span>
+              </div>`).join('');
             chatHtml = `<div class="chat-container"><strong>💬 Diário da Tarefa</strong><div class="chat-messages">${chatList}</div></div>`;
         }
         if(subtasksHtml || chatHtml) workersHtml = `<div style="border-top: 1px dashed #555; padding-top: 10px; margin-top: 5px;">${subtasksHtml}${chatHtml}</div>`;
