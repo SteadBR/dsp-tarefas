@@ -3,35 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quadro Kanban - Sistema Preparado para DB</title>
+<title>Painel de Missões - Equipe</title>
 <style>
   body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     background-color: #121212; color: #e0e0e0; margin: 0; padding: 30px; 
   }
   
-  /* --- Modais --- */
+  /* --- Modais (Login e Nova Tarefa) --- */
   .overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(18, 18, 18, 0.95); z-index: 1000;
     display: flex; justify-content: center; align-items: center;
   }
   .modal-box {
-    background-color: #1e1e24; padding: 30px; border-radius: 10px;
+    background-color: #1e1e24; padding: 40px; border-radius: 10px;
     border: 1px solid #333; text-align: center; width: 350px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   }
+  .modal-box h2 { margin-top: 0; margin-bottom: 20px; }
   .modal-box input, .modal-box select {
     width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px;
     border: 1px solid #5c5c77; background-color: #2b2b36; color: white;
   }
+  
+  /* --- Botões de Login --- */
   .modal-box button {
     padding: 10px 20px; background-color: #4CAF50; color: white; border: none;
     border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px;
+    width: 45%;
   }
   .modal-box button:hover { background-color: #45a049; }
-  .btn-cancel { background-color: #ff5252 !important; margin-left: 10px; }
+  .auth-btn-secondary { background-color: #5c5c77 !important; margin-left: 5%; }
+  .auth-btn-secondary:hover { background-color: #4a4a60 !important; }
+  
+  /* Botão do Google */
+  .auth-btn-google {
+    background-color: #4285F4 !important; 
+    width: 95% !important; 
+    margin-top: 15px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .auth-btn-google:hover { background-color: #357ae8 !important; }
+
+  .btn-cancel { background-color: #ff5252 !important; margin-left: 5%; }
   .btn-cancel:hover { background-color: #ff0000 !important; }
+  
+  #auth-error { color: #ff5252; font-size: 0.9rem; margin-top: 10px; display: none; }
 
   /* --- Estrutura do Quadro --- */
   .header-container {
@@ -55,18 +78,15 @@
   .card:active { cursor: grabbing; transform: scale(0.98); }
   .task-text { font-size: 1rem; font-weight: 500; }
   
-  /* --- Cores de Prioridade (Bordas) --- */
   .priority-vermelho { border-left-color: #ff5252; }
   .priority-laranja { border-left-color: #ff9800; }
   .priority-amarelo { border-left-color: #ffeb3b; }
   .priority-verde { border-left-color: #4caf50; }
   .priority-azul { border-left-color: #2196f3; }
 
-  /* Etiquetas */
   .tag-container { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .info-tag { font-size: 0.75rem; color: #aaa; background-color: #1a1a20; padding: 4px 8px; border-radius: 4px; }
   
-  /* Input para Atribuição Editável no Cartão */
   .assignee-input {
     font-size: 0.75rem; color: #aaa; background-color: #1a1a20; 
     padding: 4px 8px; border-radius: 4px; border: 1px dashed transparent; 
@@ -77,7 +97,6 @@
   }
   .assignee-input::placeholder { color: #666; }
 
-  /* Select de Prioridade no Cartão */
   .priority-select {
     font-size: 0.75rem; font-weight: bold; padding: 4px 8px; border-radius: 4px;
     border: none; outline: none; cursor: pointer; text-transform: uppercase; appearance: none;
@@ -93,9 +112,41 @@
     font-weight: bold; cursor: pointer; font-size: 1.2rem;
   }
   .add-btn { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+  .logout-btn { padding: 8px 15px; background-color: #ff5252; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+  .logout-btn:hover { background-color: #ff0000; }
+  
+  /* Esconde o painel principal até fazer login */
+  #main-app { display: none; }
 </style>
 </head>
 <body>
+
+  <div class="overlay" id="login-overlay">
+    <div class="modal-box">
+      <h2>Acesso Restrito</h2>
+      <input type="email" id="auth-email" placeholder="O seu E-mail">
+      <input type="password" id="auth-password" placeholder="A sua Palavra-passe">
+      <div id="auth-error"></div>
+      <div>
+        <button onclick="realizarLogin()">Entrar</button>
+        <button class="auth-btn-secondary" onclick="realizarCadastro()">Criar Conta</button>
+      </div>
+      
+      <div style="margin: 20px 0; border-top: 1px solid #444; position: relative;">
+        <span style="background-color: #1e1e24; padding: 0 10px; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; color: #888;">OU</span>
+      </div>
+
+      <button class="auth-btn-google" onclick="realizarLoginGoogle()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
+          <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+          <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+          <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+          <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+        </svg>
+        Entrar com o Google
+      </button>
+    </div>
+  </div>
 
   <div class="overlay" id="task-modal" style="display: none;">
     <div class="modal-box">
@@ -110,75 +161,220 @@
         <option value="azul">Não Urgente</option>
       </select>
       <div>
-        <button onclick="handleCreateTask()">Salvar</button>
-        <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+        <button style="width: 45%;" onclick="handleCreateTask()">Guardar</button>
+        <button style="width: 45%;" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
       </div>
     </div>
   </div>
 
-  <div class="header-container">
-    <h2>Painel Geral</h2>
-    <div style="display: flex; gap: 15px; align-items: center;">
-      <span id="user-display" style="color: #888; font-size: 0.9rem;"></span>
-      <button class="add-btn" onclick="abrirModal()">+ Nova Tarefa</button>
+  <div id="main-app">
+    <div class="header-container">
+      <h2>Painel Geral</h2>
+      <div style="display: flex; gap: 15px; align-items: center;">
+        <span id="user-display" style="color: #888; font-size: 0.9rem;"></span>
+        <button class="add-btn" onclick="abrirModal()">+ Nova Tarefa</button>
+        <button class="logout-btn" onclick="realizarLogout()">Sair</button>
+      </div>
     </div>
-  </div>
-  
-  <div class="board">
-    <div class="column" id="todo" ondrop="handleDrop(event)" ondragover="allowDrop(event)">
-      <h3>A Fazer</h3>
-    </div>
-    <div class="column" id="doing" ondrop="handleDrop(event)" ondragover="allowDrop(event)">
-      <h3>Em Andamento</h3>
-    </div>
-    <div class="column" id="done" ondrop="handleDrop(event)" ondragover="allowDrop(event)">
-      <h3>Concluído</h3>
+    
+    <div class="board">
+      <div class="column" id="todo" ondrop="handleDrop(event)" ondragover="allowDrop(event)">
+        <h3>A Fazer</h3>
+      </div>
+      <div class="column" id="doing" ondrop="handleDrop(event)" ondragover="allowDrop(event)">
+        <h3>Em Andamento</h3>
+      </div>
+      <div class="column" id="done" ondrop="handleDrop(event)" ondragover="allowDrop(event)">
+        <h3>Concluído</h3>
+      </div>
     </div>
   </div>
 
-  <script>
-    // Usuário logado simulado
-    const loggedUser = "Admin Sistema"; 
-    document.getElementById("user-display").innerText = "Logado como: " + loggedUser;
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    
+    // IMPORTANTE: Adicionada a importação do GoogleAuthProvider e signInWithPopup
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-    // --- 1. SIMULAÇÃO DE BANCO DE DADOS (API MOCKS) ---
-    const api = {
-      createTask: async (taskData) => {
-        console.log("Ação para DB: Criando tarefa...", taskData);
-        return true; 
-      },
-      updateTaskStatus: async (taskId, newStatus) => {
-        console.log(`Ação para DB: Movendo tarefa ${taskId} para a coluna ${newStatus}`);
-        return true;
-      },
-      updateTaskPriority: async (taskId, newPriority) => {
-        console.log(`Ação para DB: Atualizando prioridade da tarefa ${taskId} para ${newPriority}`);
-        return true;
-      },
-      updateTaskAssignee: async (taskId, newAssignee) => { // <-- NOVA FUNÇÃO DE DB
-        console.log(`Ação para DB: Atualizando responsável da tarefa ${taskId} para '${newAssignee}'`);
-        return true;
-      },
-      deleteTask: async (taskId) => {
-        console.log(`Ação para DB: Deletando tarefa ${taskId}`);
-        return true;
+    // As suas chaves do projeto dsp-tarefas
+    const firebaseConfig = {
+      apiKey: "AIzaSyAT5ZBcmUiEHf92ogl0Tu51TxNTw4NOCGI",
+      authDomain: "dsp-tarefas.firebaseapp.com",
+      projectId: "dsp-tarefas",
+      storageBucket: "dsp-tarefas.firebasestorage.app",
+      messagingSenderId: "493044649098",
+      appId: "1:493044649098:web:4116ef03599cdbadf17173"
+    };
+
+    // Inicialização
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app); 
+    
+    // Instância do Provedor do Google
+    const googleProvider = new GoogleAuthProvider();
+
+    let loggedUserEmail = ""; 
+    let unsubscribeSnapshot = null; 
+
+    // --- LÓGICA DE AUTENTICAÇÃO ---
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Se a conta for do Google, o nome costuma vir em user.displayName. 
+        // Se for e-mail comum, pegamos a primeira parte do e-mail.
+        loggedUserEmail = user.displayName || user.email;
+        
+        document.getElementById("user-display").innerText = "👤 " + loggedUserEmail;
+        document.getElementById("login-overlay").style.display = "none";
+        document.getElementById("main-app").style.display = "block";
+        
+        iniciarEscutaDasTarefas();
+      } else {
+        document.getElementById("login-overlay").style.display = "flex";
+        document.getElementById("main-app").style.display = "none";
+        document.getElementById("auth-error").style.display = "none";
+        
+        if(unsubscribeSnapshot) unsubscribeSnapshot();
+      }
+    });
+
+    window.realizarCadastro = async () => {
+      const email = document.getElementById("auth-email").value;
+      const pass = document.getElementById("auth-password").value;
+      const errorDiv = document.getElementById("auth-error");
+      
+      try {
+        await createUserWithEmailAndPassword(auth, email, pass);
+      } catch (error) {
+        errorDiv.innerText = "Erro ao criar conta: A palavra-passe deve ter 6+ caracteres.";
+        errorDiv.style.display = "block";
       }
     };
 
-    // --- 2. RENDERIZAÇÃO E LÓGICA DE INTERFACE ---
-    function abrirModal() {
+    window.realizarLogin = async () => {
+      const email = document.getElementById("auth-email").value;
+      const pass = document.getElementById("auth-password").value;
+      const errorDiv = document.getElementById("auth-error");
+
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (error) {
+        errorDiv.innerText = "E-mail ou palavra-passe incorretos.";
+        errorDiv.style.display = "block";
+      }
+    };
+
+    // --- NOVA FUNÇÃO: LOGIN COM GOOGLE ---
+    window.realizarLoginGoogle = async () => {
+      const errorDiv = document.getElementById("auth-error");
+      try {
+        await signInWithPopup(auth, googleProvider);
+        // O onAuthStateChanged vai detetar o sucesso automaticamente
+      } catch (error) {
+        errorDiv.innerText = "Erro no login com o Google: " + error.message;
+        errorDiv.style.display = "block";
+      }
+    };
+
+    window.realizarLogout = async () => {
+      await signOut(auth);
+    };
+
+    // --- FUNÇÕES DE CONEXÃO COM O FIREBASE (FIRESTORE) ---
+
+    function iniciarEscutaDasTarefas() {
+      unsubscribeSnapshot = onSnapshot(collection(db, "tarefas"), (snapshot) => {
+        document.getElementById("todo").innerHTML = "<h3>A Fazer</h3>";
+        document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>";
+        document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
+
+        snapshot.forEach((docSnapshot) => {
+          const taskData = docSnapshot.data();
+          taskData.id = docSnapshot.id;
+          const card = buildCardElement(taskData);
+          
+          const column = document.getElementById(taskData.status);
+          if(column) column.appendChild(card);
+        });
+      });
+    }
+
+    window.handleCreateTask = async () => {
+      const text = document.getElementById("new-task-text").value;
+      const assignee = document.getElementById("new-task-assignee").value;
+      const priority = document.getElementById("new-task-priority").value;
+
+      if (!text.trim()) return alert("Descreva a tarefa!");
+
+      // Limpa o nome do criador para ficar mais estético (se for e-mail, corta no @)
+      let creatorName = loggedUserEmail;
+      if (creatorName.includes("@")) {
+        creatorName = creatorName.split("@")[0];
+      }
+
+      await addDoc(collection(db, "tarefas"), {
+        text: text,
+        assignee: assignee,
+        priority: priority,
+        creator: creatorName,
+        status: "todo" 
+      });
+
+      fecharModal();
+    };
+
+    window.handleDrop = async (ev) => {
+      ev.preventDefault();
+      const taskId = ev.dataTransfer.getData("text");
+      let targetColumn = ev.target;
+      
+      while (!targetColumn.classList.contains('column')) { 
+        targetColumn = targetColumn.parentElement; 
+      }
+      
+      await updateDoc(doc(db, "tarefas", taskId), {
+        status: targetColumn.id
+      });
+    };
+
+    window.changePriority = async (selectElement, taskId) => {
+      const newPriority = selectElement.value;
+      await updateDoc(doc(db, "tarefas", taskId), { priority: newPriority });
+    };
+
+    window.changeAssignee = async (inputElement, taskId) => {
+      const newAssignee = inputElement.value.trim();
+      await updateDoc(doc(db, "tarefas", taskId), { assignee: newAssignee });
+    };
+
+    window.removeTask = async (taskId) => {
+      if(confirm("Deseja realmente excluir esta tarefa do banco de dados?")) {
+        await deleteDoc(doc(db, "tarefas", taskId));
+      }
+    };
+
+    // --- FUNÇÕES DE INTERFACE (UI) ---
+    window.abrirModal = () => {
       document.getElementById("task-modal").style.display = "flex";
       document.getElementById("new-task-text").value = "";
       document.getElementById("new-task-assignee").value = "";
-    }
-    function fecharModal() { document.getElementById("task-modal").style.display = "none"; }
+    };
+    
+    window.fecharModal = () => { 
+      document.getElementById("task-modal").style.display = "none"; 
+    };
+
+    window.allowDrop = (ev) => { ev.preventDefault(); };
+    window.drag = (ev) => { ev.dataTransfer.setData("text", ev.target.id); };
 
     function buildCardElement(taskData) {
       const card = document.createElement("div");
       card.className = `card priority-${taskData.priority}`;
       card.draggable = true;
       card.id = taskData.id;
-      card.ondragstart = (ev) => ev.dataTransfer.setData("text", ev.target.id);
+      card.ondragstart = window.drag;
 
       card.innerHTML = `
         <span class="task-text">${taskData.text}</span>
@@ -198,84 +394,10 @@
                  
           <span class="info-tag" title="Criador">✍️ ${taskData.creator}</span>
         </div>
-        <span class="delete-btn" onclick="removeTask(this, '${taskData.id}')">&times;</span>
+        <span class="delete-btn" onclick="removeTask('${taskData.id}')">&times;</span>
       `;
       return card;
     }
-
-    async function handleCreateTask() {
-      const text = document.getElementById("new-task-text").value;
-      const assignee = document.getElementById("new-task-assignee").value;
-      const priority = document.getElementById("new-task-priority").value;
-
-      if (!text.trim()) return alert("Descreva a tarefa!");
-
-      const newTask = {
-        id: "task_" + Date.now(),
-        text: text,
-        assignee: assignee,
-        priority: priority,
-        creator: loggedUser,
-        status: "todo"
-      };
-
-      await api.createTask(newTask);
-      const cardEl = buildCardElement(newTask);
-      document.getElementById("todo").appendChild(cardEl);
-      fecharModal();
-    }
-
-    async function changePriority(selectElement, taskId) {
-      const newPriority = selectElement.value;
-      const card = document.getElementById(taskId);
-      card.className = `card priority-${newPriority}`;
-      selectElement.className = `priority-select bg-${newPriority}`;
-      await api.updateTaskPriority(taskId, newPriority);
-    }
-
-    // --- NOVA FUNÇÃO: Mudar Atribuição ---
-    async function changeAssignee(inputElement, taskId) {
-      const newAssignee = inputElement.value.trim();
-      // Envia atualização para o Banco (Simulado)
-      await api.updateTaskAssignee(taskId, newAssignee);
-    }
-
-    function allowDrop(ev) { ev.preventDefault(); }
-    
-    async function handleDrop(ev) {
-      ev.preventDefault();
-      const taskId = ev.dataTransfer.getData("text");
-      const card = document.getElementById(taskId);
-      let targetColumn = ev.target;
-      
-      while (!targetColumn.classList.contains('column')) { 
-        targetColumn = targetColumn.parentElement; 
-      }
-      
-      targetColumn.appendChild(card);
-      await api.updateTaskStatus(taskId, targetColumn.id);
-    }
-
-    async function removeTask(btnElement, taskId) {
-      if(confirm("Deseja realmente excluir?")) {
-        await api.deleteTask(taskId);
-        btnElement.parentElement.remove();
-      }
-    }
-
-    // Carga inicial
-    window.onload = () => {
-      const dbSimulado = [
-        { id: "task_1", text: "Conter o avanço das Máculas no Bosque", assignee: "Senhores do Bosque", priority: "vermelho", creator: "Admin Sistema", status: "todo" },
-        { id: "task_2", text: "Revisar os limites do Pacto de Sangue e Sombra", assignee: "Conselho de Luna", priority: "amarelo", creator: "Admin Sistema", status: "todo" },
-        { id: "task_3", text: "Reunião de aliança com os Uivos da Lâmina", assignee: "Líderes", priority: "verde", creator: "Admin Sistema", status: "doing" }
-      ];
-
-      dbSimulado.forEach(task => {
-        const card = buildCardElement(task);
-        document.getElementById(task.status).appendChild(card);
-      });
-    };
   </script>
 </body>
 </html>
