@@ -9,8 +9,8 @@
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px 30px; }
   
   /* Bloqueios Anti-Plágio Visuais */
-  * { user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
-  input, textarea, select { user-select: text; -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; }
+  * { user-select: none; -webkit-user-select: none; }
+  input, textarea, select { user-select: text; -webkit-user-select: text; }
 
   /* --- Modais --- */
   .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; }
@@ -74,7 +74,7 @@
   .workers-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; margin-bottom: 5px; }
   .worker-badge { font-size: 0.7rem; background-color: #3f51b5; color: white; padding: 3px 6px; border-radius: 10px; }
   
-  /* --- Novos Estilos: Sub-tarefas e Chat --- */
+  /* --- Sub-tarefas e Chat --- */
   .subtasks-container, .chat-container { background: #1e1e24; padding: 10px; border-radius: 6px; margin-top: 5px; border: 1px solid #333; }
   .subtasks-container strong, .chat-container strong { font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
   
@@ -83,20 +83,22 @@
   .subtask-text.completed { text-decoration: line-through; color: #666; }
   .subtask-item input[type="checkbox"] { cursor: pointer; width: 14px; height: 14px; margin: 0; }
   
-  .subtask-input-area, .chat-input-area { display: flex; gap: 5px; margin-top: 10px; }
+  .subtask-input-area, .chat-input-area { display: flex; gap: 5px; margin-top: 5px; }
   .subtask-input-area input, .chat-input-area input { flex: 1; padding: 6px 8px; font-size: 0.75rem; border-radius: 4px; border: 1px solid #555; background: #121212; color: #fff; margin: 0; }
   .subtask-input-area button, .chat-input-area button { background: #4CAF50; color: white; border: none; padding: 0 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; margin: 0; }
   
+  /* Chat: Exibição e Formatação */
+  .chat-toolbar { display: flex; gap: 5px; margin-top: 10px; margin-bottom: 5px; }
+  .chat-toolbar button { background: #333; color: #fff; border: 1px solid #555; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; width: auto; margin: 0; }
+  .chat-toolbar button:hover { background: #555; }
+
   .chat-messages { max-height: 130px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 5px; }
-  /* Personalização fina da barra de rolagem do chat */
   .chat-messages::-webkit-scrollbar { width: 4px; }
   .chat-messages::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
   
   .chat-message { background: #22222a; padding: 8px; border-radius: 4px; border-left: 3px solid #9c27b0; }
   .chat-meta { display: block; font-size: 0.65rem; color: #888; margin-bottom: 4px; }
   .chat-text { font-size: 0.8rem; color: #ddd; word-wrap: break-word; line-height: 1.3; }
-
-  /* ---------------------------------------- */
 
   .delete-btn { position: absolute; top: 8px; right: 8px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: #1a1a20; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
   .delete-btn:hover { background: #ff5252; color: white; }
@@ -113,6 +115,7 @@
   
   /* --- UI do Painel Admin --- */
   .admin-section { background-color: #2b2b36; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+  .admin-section h3 { margin-top: 0; color: #FF9800; border-bottom: 1px solid #444; padding-bottom: 10px; }
   .user-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 0; border-bottom: 1px dashed #444; flex-direction: column; gap: 10px; }
   .user-item:last-child { border-bottom: none; }
   .user-header { display: flex; justify-content: space-between; width: 100%; align-items: center; }
@@ -121,6 +124,13 @@
   .user-actions button { width: auto; padding: 6px 12px; margin: 0 0 0 5px; font-size: 0.8rem; }
   .tag-status { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
   .status-pendente { background-color: #ff9800; color: #121212; } .status-aprovado { background-color: #4caf50; color: white; } .status-inativo { background-color: #ff5252; color: white; }
+
+  /* Restauração do Layout de Setores e Filtros */
+  .add-sector-container { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
+  .add-sector-container input { margin: 0; width: 70%; }
+  .add-sector-container button { margin: 0; width: 30%; }
+  .sector-item { display: inline-flex; align-items: center; background-color: #1a1a20; padding: 6px 12px; border-radius: 20px; margin: 5px; font-size: 0.9rem; border: 1px solid #333;}
+  .sector-item span.del-sec { color: #ff5252; margin-left: 10px; cursor: pointer; font-weight: bold; }
 
   .admin-filter-bar { display: flex; gap: 10px; margin-bottom: 15px; background: #1a1a20; padding: 10px; border-radius: 8px; align-items: center; }
   .admin-filter-bar input, .admin-filter-bar select { margin: 0; border: 1px solid #555; background: #22222a; color: white; padding: 8px; border-radius: 4px; }
@@ -166,8 +176,11 @@
       
       <div class="admin-section" id="bloco-setores" style="display: none;">
         <h3>Gestão de Setores</h3>
-        <div style="display:flex; gap:10px;"><input type="text" id="novo-setor-nome" placeholder="Novo setor..."><button onclick="adicionarSetor()">Adicionar</button></div>
-        <div id="sectors-list" style="margin-top:10px;"></div>
+        <div class="add-sector-container">
+          <input type="text" id="novo-setor-nome" placeholder="Nome do novo setor...">
+          <button onclick="adicionarSetor()">Adicionar</button>
+        </div>
+        <div id="sectors-list"></div>
       </div>
 
       <div class="admin-section" id="bloco-usuarios" style="display: none;">
@@ -484,7 +497,8 @@
       const start = (historyPage - 1) * limit, paginated = historico.slice(start, start + limit);
 
       document.getElementById("page-info").innerText = `Página ${historyPage} de ${totalPages}`;
-      document.getElementById("btn-prev").disabled = historyPage === 1; document.getElementById("btn-next").disabled = historyPage >= totalPages;
+      document.getElementById("btn-prev").disabled = historyPage === 1;
+      document.getElementById("btn-next").disabled = historyPage >= totalPages;
 
       paginated.forEach(task => {
         let statusIcon = task.completionStatus === '100% Concluído' ? '✅' : task.completionStatus === 'Parcialmente Concluído' ? '⚠️' : '❌';
@@ -499,20 +513,21 @@
         }
         let btnDelete = (userRole === 'admin' || userPerms.apagarTarefas) ? `<span class="delete-btn" title="Apagar Tarefa" onclick="removeTask('${task.id}')">&times;</span>` : "";
         
-        // Bloqueio visual para sub-tarefas e chat no histórico (Somente leitura)
-        let subtasksHtml = "";
-        const subs = task.subtasks || [];
+        let subtasksHtml = ""; const subs = task.subtasks || [];
         if(subs.length > 0) {
             let subsList = subs.map(s => `<div class="subtask-item"><input type="checkbox" ${s.isCompleted ? 'checked' : ''} disabled><span class="subtask-text ${s.isCompleted ? 'completed' : ''}">${s.text}</span></div>`).join('');
             subtasksHtml = `<div class="subtasks-container"><strong>📋 Sub-tarefas</strong><div class="subtasks-list">${subsList}</div></div>`;
         }
 
-        let chatHtml = "";
-        const comments = task.comments || [];
-        // Suporte legado para o comentário antigo
-        if (comments.length === 0 && task.doingComment) comments.push({ user: "Sistema (Antigo)", text: task.doingComment, timestamp: task.createdAt });
+        let chatHtml = ""; const comments = task.comments || [];
         if(comments.length > 0) {
-            let chatList = comments.map(c => `<div class="chat-message"><span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span><span class="chat-text">${c.text}</span></div>`).join('');
+            let chatList = comments.map(c => `
+              <div class="chat-message">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span>
+                </div>
+                <span class="chat-text">${c.text}</span>
+              </div>`).join('');
             chatHtml = `<div class="chat-container"><strong>💬 Diário da Tarefa</strong><div class="chat-messages">${chatList}</div></div>`;
         }
 
@@ -583,30 +598,41 @@
       arrayWorkers = arrayWorkers.filter(nome => nome !== loggedUserName); await updateDoc(doc(db, "tarefas", taskId), { workers: arrayWorkers });
     };
 
-    // Novas Ações: Chat e Sub-tarefas
-    window.adicionarComentario = async (taskId) => {
-      const input = document.getElementById(`chat-input-${taskId}`); const text = input.value.trim(); if(!text) return;
-      const task = tarefasGlobais.find(t => t.id === taskId); const comments = task.comments || [];
-      comments.push({ user: loggedUserName, text, timestamp: Date.now() });
-      await updateDoc(doc(db, "tarefas", taskId), { comments: comments });
-    };
-
+    // Sub-tarefas
     window.adicionarSubtarefa = async (taskId) => {
       const input = document.getElementById(`subtask-input-${taskId}`); const text = input.value.trim(); if(!text) return;
       const task = tarefasGlobais.find(t => t.id === taskId); const subs = task.subtasks || [];
       subs.push({ id: gerarIdUnico(), text, isCompleted: false });
       await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs });
     };
-
     window.toggleSubtarefa = async (taskId, subtaskId) => {
       const task = tarefasGlobais.find(t => t.id === taskId); const subs = task.subtasks || [];
       const sub = subs.find(s => s.id === subtaskId);
       if(sub) { sub.isCompleted = !sub.isCompleted; await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs }); }
     };
-
     window.excluirSubtarefa = async (taskId, subtaskId) => {
       const task = tarefasGlobais.find(t => t.id === taskId); const subs = (task.subtasks || []).filter(s => s.id !== subtaskId);
       await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs });
+    };
+
+    // Chat
+    window.adicionarComentario = async (taskId) => {
+      const input = document.getElementById(`chat-input-${taskId}`); const text = input.value.trim(); if(!text) return;
+      const task = tarefasGlobais.find(t => t.id === taskId); const comments = task.comments || [];
+      comments.push({ id: gerarIdUnico(), user: loggedUserName, text, timestamp: Date.now() });
+      await updateDoc(doc(db, "tarefas", taskId), { comments: comments });
+    };
+    window.excluirComentario = async (taskId, commentId) => {
+      if(!confirm("Deseja apagar esta mensagem do diário?")) return;
+      const task = tarefasGlobais.find(t => t.id === taskId); const comments = (task.comments || []).filter(c => c.id !== commentId);
+      await updateDoc(doc(db, "tarefas", taskId), { comments: comments });
+    };
+    window.formatarTextoChat = (taskId, tag) => {
+      const input = document.getElementById(`chat-input-${taskId}`); if(!input) return;
+      const start = input.selectionStart, end = input.selectionEnd, text = input.value;
+      const selected = text.substring(start, end), before = text.substring(0, start), after = text.substring(end, text.length);
+      input.value = `${before}<${tag}>${selected}</${tag}>${after}`; input.focus();
+      input.selectionStart = input.selectionEnd = start === end ? start + tag.length + 2 : start + (tag.length * 2) + 5 + selected.length;
     };
 
     window.abrirFinalizacao = (taskId) => {
@@ -627,10 +653,7 @@
     window.changeAssignee = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { assignee: sel.value }); };
     window.removeTask = async (taskId) => { if(confirm("Deseja excluir permanentemente esta tarefa?")) await deleteDoc(doc(db, "tarefas", taskId)); };
 
-    window.abrirModal = () => { 
-      document.getElementById("task-modal").style.display = "flex"; document.getElementById("new-task-title").value = ""; 
-      document.getElementById("new-task-tags").value = ""; document.getElementById("new-task-desc").value = ""; 
-    };
+    window.abrirModal = () => { document.getElementById("task-modal").style.display = "flex"; document.getElementById("new-task-title").value = ""; document.getElementById("new-task-tags").value = ""; document.getElementById("new-task-desc").value = ""; };
     window.fecharModal = () => { document.getElementById("task-modal").style.display = "none"; };
     window.allowDrop = (ev) => { ev.preventDefault(); }; window.drag = (ev) => { ev.dataTransfer.getData("text"); ev.dataTransfer.setData("text", ev.target.id); };
 
@@ -665,9 +688,7 @@
         let btnParticipar = isMe ? `<button class="btn-action-task" style="background:#555;" onclick="sairDaTarefa('${taskData.id}')">Sair da Tarefa</button>` : `<button class="btn-action-task btn-join" onclick="assumirTarefa('${taskData.id}')">🙋‍♂️ Assumir Tarefa</button>`;
         let workersBadges = (taskData.workers || []).map(w => `<span class="worker-badge">${w}</span>`).join("");
         
-        // --- SUBTAREFAS INTERATIVAS ---
-        let subtasksHtml = "";
-        const subs = taskData.subtasks || [];
+        let subtasksHtml = ""; const subs = taskData.subtasks || [];
         if(subs.length > 0 || isMe) {
             let subsList = subs.map(s => `
                 <div class="subtask-item">
@@ -676,30 +697,24 @@
                     ${isMe ? `<span style="color:#ff5252; cursor:pointer; font-weight:bold; margin-left:auto;" onclick="excluirSubtarefa('${taskData.id}', '${s.id}')">&times;</span>` : ''}
                 </div>
             `).join('');
-            
-            let addSubHtml = isMe ? `
-                <div class="subtask-input-area">
-                    <input type="text" id="subtask-input-${taskData.id}" placeholder="Nova sub-tarefa..." onkeydown="if(event.key==='Enter') adicionarSubtarefa('${taskData.id}')">
-                    <button type="button" onclick="adicionarSubtarefa('${taskData.id}')">+</button>
-                </div>
-            ` : '';
+            let addSubHtml = isMe ? `<div class="subtask-input-area"><input type="text" id="subtask-input-${taskData.id}" placeholder="Nova sub-tarefa..." onkeydown="if(event.key==='Enter') adicionarSubtarefa('${taskData.id}')"><button type="button" onclick="adicionarSubtarefa('${taskData.id}')">+</button></div>` : '';
             subtasksHtml = `<div class="subtasks-container"><strong>📋 Sub-tarefas</strong><div class="subtasks-list">${subsList}</div>${addSubHtml}</div>`;
         }
 
-        // --- CHAT INTERATIVO ---
-        let chatHtml = "";
-        const comments = taskData.comments || [];
-        // Suporte legado
-        if (comments.length === 0 && taskData.doingComment) comments.push({ user: "Sistema (Antigo)", text: taskData.doingComment, timestamp: taskData.createdAt });
+        let chatHtml = ""; const comments = taskData.comments || [];
         if(comments.length > 0 || isMe) {
-            let chatList = comments.map(c => `
-                <div class="chat-message">
-                    <span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span>
-                    <span class="chat-text">${c.text}</span>
-                </div>
-            `).join('');
+            let chatList = comments.map(c => {
+                let btnDelChat = (c.user === loggedUserName || userRole === 'admin') ? `<span style="color:#ff5252; cursor:pointer; font-weight:bold; margin-left:auto;" onclick="excluirComentario('${taskData.id}', '${c.id}')">&times;</span>` : '';
+                return `<div class="chat-message"><div style="display:flex; justify-content:space-between; align-items:center;"><span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span>${btnDelChat}</div><span class="chat-text">${c.text}</span></div>`;
+            }).join('');
             
             let addChatHtml = isMe ? `
+                <div class="chat-toolbar">
+                   <button type="button" title="Negrito" onclick="formatarTextoChat('${taskData.id}', 'b')"><b>B</b></button>
+                   <button type="button" title="Itálico" onclick="formatarTextoChat('${taskData.id}', 'i')"><i>I</i></button>
+                   <button type="button" title="Sublinhado" onclick="formatarTextoChat('${taskData.id}', 'u')"><u>U</u></button>
+                   <button type="button" title="Tachado" onclick="formatarTextoChat('${taskData.id}', 's')"><s>S</s></button>
+                </div>
                 <div class="chat-input-area">
                     <input type="text" id="chat-input-${taskData.id}" placeholder="Escreva uma nota..." onkeydown="if(event.key==='Enter') adicionarComentario('${taskData.id}')">
                     <button type="button" onclick="adicionarComentario('${taskData.id}')">Enviar</button>
@@ -708,29 +723,16 @@
             chatHtml = `<div class="chat-container"><strong>💬 Diário da Tarefa</strong><div class="chat-messages">${chatList}</div>${addChatHtml}</div>`;
         }
         
-        workersHtml = `
-          <div style="border-top: 1px dashed #555; padding-top: 10px; margin-top: 5px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              ${btnParticipar}
-              <div class="workers-list">${workersBadges}</div>
-            </div>
-            ${subtasksHtml}
-            ${chatHtml}
-          </div>
-        `;
+        workersHtml = `<div style="border-top: 1px dashed #555; padding-top: 10px; margin-top: 5px;"><div style="display:flex; justify-content:space-between; align-items:center;">${btnParticipar}<div class="workers-list">${workersBadges}</div></div>${subtasksHtml}${chatHtml}</div>`;
       } else if (taskData.status === 'done') {
-        // MODO SOMENTE LEITURA PARA A COLUNA CONCLUÍDO
-        let subtasksHtml = "";
-        const subs = taskData.subtasks || [];
+        let subtasksHtml = ""; const subs = taskData.subtasks || [];
         if(subs.length > 0) {
             let subsList = subs.map(s => `<div class="subtask-item"><input type="checkbox" ${s.isCompleted ? 'checked' : ''} disabled><span class="subtask-text ${s.isCompleted ? 'completed' : ''}">${s.text}</span></div>`).join('');
             subtasksHtml = `<div class="subtasks-container"><strong>📋 Sub-tarefas</strong><div class="subtasks-list">${subsList}</div></div>`;
         }
-        let chatHtml = "";
-        const comments = taskData.comments || [];
-        if (comments.length === 0 && taskData.doingComment) comments.push({ user: "Sistema (Antigo)", text: taskData.doingComment, timestamp: taskData.createdAt });
+        let chatHtml = ""; const comments = taskData.comments || [];
         if(comments.length > 0) {
-            let chatList = comments.map(c => `<div class="chat-message"><span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span><span class="chat-text">${c.text}</span></div>`).join('');
+            let chatList = comments.map(c => `<div class="chat-message"><div style="display:flex; justify-content:space-between; align-items:center;"><span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span></div><span class="chat-text">${c.text}</span></div>`).join('');
             chatHtml = `<div class="chat-container"><strong>💬 Diário da Tarefa</strong><div class="chat-messages">${chatList}</div></div>`;
         }
         if(subtasksHtml || chatHtml) workersHtml = `<div style="border-top: 1px dashed #555; padding-top: 10px; margin-top: 5px;">${subtasksHtml}${chatHtml}</div>`;
