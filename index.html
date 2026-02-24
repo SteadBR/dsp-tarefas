@@ -110,6 +110,14 @@
   .sector-item { display: inline-flex; align-items: center; background-color: #1a1a20; padding: 6px 12px; border-radius: 20px; margin: 5px; font-size: 0.9rem; }
   .sector-item span.del-sec { color: #ff5252; margin-left: 10px; cursor: pointer; font-weight: bold; }
 
+  /* --- Novos Estilos para Histórico e Paginação --- */
+  .history-header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #1a1a20; padding: 10px; border-radius: 8px; border: 1px solid #333; }
+  .pagination-controls { display: flex; gap: 10px; align-items: center; }
+  .btn-page { background: #333; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+  .btn-page:disabled { opacity: 0.3; cursor: not-allowed; }
+  .btn-conferido { background-color: #2196f3 !important; }
+  .badge-conferido { background: #2196f3; color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 10px; }
+
   /* Controle de Telas */
   #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal, #finish-modal { display: none; }
 </style>
@@ -191,7 +199,26 @@
   <div class="overlay" id="history-modal">
     <div class="modal-box large">
       <h2>Histórico de Concluídas ✔️</h2>
+      
+      <div class="history-header-controls">
+        <div>
+          <label style="font-size: 0.85rem;">Exibir: </label>
+          <select id="history-limit" onchange="resetarPaginaERenderizar()" style="background:#2b2b36; color:white; border:1px solid #5c5c77; padding:6px; border-radius:4px; width: auto; margin:0;">
+            <option value="10">10 tarefas</option>
+            <option value="25">25 tarefas</option>
+            <option value="50">50 tarefas</option>
+            <option value="9999">Todas</option>
+          </select>
+        </div>
+        <div class="pagination-controls">
+          <button class="btn-page" id="btn-prev" onclick="mudarPagina(-1)">Anterior</button>
+          <span id="page-info" style="font-size: 0.85rem;">Página 1</span>
+          <button class="btn-page" id="btn-next" onclick="mudarPagina(1)">Próxima</button>
+        </div>
+      </div>
+
       <div id="history-list" style="margin-top: 20px;"></div>
+      
       <div style="text-align: center; margin-top: 20px;">
         <button class="btn-cancel" style="width: 200px; margin: 0;" onclick="fecharHistorico()">Fechar Histórico</button>
       </div>
@@ -303,6 +330,7 @@
     let userSectors = []; 
     let loggedUserName = ""; 
     let currentTaskToFinish = null;
+    let historyPage = 1;
     
     let tarefasGlobais = [];
     let setoresGlobais = [];
@@ -587,11 +615,14 @@
       });
     };
 
-    window.abrirHistorico = () => { document.getElementById("history-modal").style.display = "flex"; renderizarHistorico(); };
+    window.abrirHistorico = () => { historyPage = 1; document.getElementById("history-modal").style.display = "flex"; renderizarHistorico(); };
     window.fecharHistorico = () => { document.getElementById("history-modal").style.display = "none"; };
+    window.resetarPaginaERenderizar = () => { historyPage = 1; renderizarHistorico(); };
+    window.mudarPagina = (v) => { historyPage += v; renderizarHistorico(); };
 
     function renderizarHistorico() {
       const div = document.getElementById("history-list");
+      const limit = parseInt(document.getElementById("history-limit").value);
       div.innerHTML = "";
       
       let historico = tarefasGlobais.filter(t => t.status === 'historico');
@@ -604,34 +635,62 @@
       
       historico.sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
 
-      historico.forEach(task => {
+      const totalPages = Math.ceil(historico.length / limit) || 1;
+      const start = (historyPage - 1) * limit;
+      const paginated = historico.slice(start, start + limit);
+
+      document.getElementById("page-info").innerText = `Página ${historyPage} de ${totalPages}`;
+      document.getElementById("btn-prev").disabled = historyPage === 1;
+      document.getElementById("btn-next").disabled = historyPage >= totalPages;
+
+      paginated.forEach(task => {
         let statusIcon = task.completionStatus === '100% Concluído' ? '✅' : task.completionStatus === 'Parcialmente Concluído' ? '⚠️' : '❌';
         let participantes = (task.workers && task.workers.length > 0) ? task.workers.join(', ') : 'Nenhum';
 
-        div.innerHTML += `
-          <div class="card priority-${task.priority}" style="cursor: default; flex-direction: row; justify-content: space-between; align-items: flex-start; border-left-color: #555;">
-            <div style="display: flex; flex-direction: column; gap: 5px; width: 80%;">
-              <h4 style="margin:0; color:#aaa; text-decoration: line-through;">${task.title || task.text}</h4>
-              <p style="margin:0; font-size: 0.8rem; color: #888;">${task.description || ''}</p>
-              
-              <div style="background: #1e1e24; padding: 8px; border-radius: 4px; margin-top: 5px;">
-                <strong style="font-size: 0.8rem; color: white;">${statusIcon} ${task.completionStatus || 'Finalizado'}</strong>
-                <p style="margin: 3px 0 0 0; font-size: 0.8rem; color: #ccc; font-style: italic;">"${task.completionResponse || 'Sem detalhes adicionais.'}"</p>
-              </div>
+        let conferidoTag = task.conferido ? `<span class="badge-conferido">CONFERIDO</span>` : "";
+        let btnConferir = (userRole === 'admin' && !task.conferido) ? `<button class="btn-action-task btn-conferido" onclick="marcarConferido('${task.id}')">Conferir</button>` : "";
+        let btnDelete = (userRole === 'admin' || userPerms.apagarTarefas) ? `<span class="delete-btn" title="Apagar Tarefa" onclick="removeTask('${task.id}')">&times;</span>` : "";
 
-              <div class="tag-container" style="margin-top: 5px;">
-                <span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span>
-                <span class="info-tag">Equipe: ${participantes}</span>
-                <span class="info-tag" style="background: #2196f3; color: white;">Finalizado por: ${task.completedBy || 'Desconhecido'}</span>
-              </div>
-              <div class="meta-dates" style="margin-top: 5px;">
+        div.innerHTML += `
+          <div class="card priority-${task.priority}" style="cursor: default; flex-direction: column; border-left-color: #555;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <h4 style="margin:0; color:#fff;">${task.title || task.text} ${conferidoTag}</h4>
+              ${btnDelete}
+            </div>
+            
+            <p style="margin:5px 0 0 0; font-size: 0.8rem; color: #888;">${task.description || ''}</p>
+            
+            <div style="background: #1e1e24; padding: 8px; border-radius: 4px; margin-top: 10px;">
+              <strong style="font-size: 0.8rem; color: white;">${statusIcon} ${task.completionStatus || 'Finalizado'}</strong>
+              <p style="margin: 3px 0 0 0; font-size: 0.8rem; color: #ccc; font-style: italic;">"${task.completionResponse || 'Sem detalhes adicionais.'}"</p>
+            </div>
+
+            <div class="tag-container" style="margin-top: 10px;">
+              <span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span>
+              <span class="info-tag">Equipe: ${participantes}</span>
+              <span class="info-tag" style="background: #2196f3; color: white;">Finalizado por: ${task.completedBy || 'Desconhecido'}</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+              <div class="meta-dates" style="margin: 0;">
                 <span>Concluída em: <strong>${formatarData(task.completedAt)}</strong></span>
               </div>
+              <div style="display: flex; gap: 5px;">
+                ${btnConferir}
+                <button onclick="reativarTarefa('${task.id}')" class="btn-action-task" style="background: #5c5c77;">Desfazer</button>
+              </div>
             </div>
-            <button onclick="reativarTarefa('${task.id}')" class="btn-action-task" style="background: #5c5c77;">Desfazer</button>
+            
           </div>`;
       });
     }
+
+    window.marcarConferido = async (taskId) => {
+      if(confirm("Deseja marcar esta tarefa como conferida para pontuação?")) {
+        await updateDoc(doc(db, "tarefas", taskId), { conferido: true });
+      }
+    };
 
     window.handleCreateTask = async () => {
       const title = document.getElementById("new-task-title").value;
