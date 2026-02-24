@@ -50,8 +50,14 @@
   
   .task-title { font-size: 1.1rem; font-weight: bold; margin: 0 20px 0 0; color: #fff; line-height: 1.2; }
   .task-desc { font-size: 0.85rem; color: #ccc; margin: 0; line-height: 1.4; }
-  .task-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; }
-  .tag-visual { background-color: #e1f5fe; color: #0277bd; font-size: 0.65rem; padding: 2px 6px; border-radius: 12px; font-weight: bold; }
+  
+  /* --- Tags Dinâmicas --- */
+  .task-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; align-items: center; }
+  .tag-visual { background-color: #e1f5fe; color: #0277bd; font-size: 0.65rem; padding: 2px 6px; border-radius: 12px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+  .add-tag-btn { background-color: #333; color: #ccc; border: 1px dashed #555; cursor: pointer; padding: 2px 8px; }
+  .add-tag-btn:hover { background-color: #444; color: #fff; }
+  .tag-remove { color: #ff5252; cursor: pointer; font-weight: bold; font-size: 0.7rem; }
+  .tag-remove:hover { color: #ff0000; }
   
   .priority-emergente { border-left-color: #ff5252; } .priority-muito_urgente { border-left-color: #ff9800; }
   .priority-urgente { border-left-color: #ffeb3b; } .priority-pouco_urgente { border-left-color: #4caf50; } .priority-sem_prazo { border-left-color: #2196f3; }
@@ -161,9 +167,6 @@
   #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal, #finish-modal { display: none; }
 </style>
 <script>
-  // ==========================================
-  // SCRIPTS ANTI-PLÁGIO
-  // ==========================================
   document.addEventListener('contextmenu', event => event.preventDefault());
   document.addEventListener('keydown', function(e) {
     if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) { e.preventDefault(); return false; }
@@ -245,7 +248,7 @@
     <div class="modal-box">
       <h2>Nova Atividade</h2>
       <input type="text" id="new-task-title" style="width: 90%; font-weight: bold;" placeholder="Título da Tarefa">
-      <input type="text" id="new-task-tags" style="width: 90%; font-size: 0.8rem;" placeholder="Tags Opcionais (Ex: Urgente, Revisão)...">
+      <input type="text" id="new-task-tags" style="width: 90%; font-size: 0.8rem;" placeholder="Tags Iniciais (Ex: Urgente, Revisão)...">
       <textarea id="new-task-desc" style="width: 90%;" placeholder="Descrição detalhada..."></textarea>
       
       <select id="new-task-assignee" style="width: 96%;"><option value="">Selecione o Setor</option></select>
@@ -580,6 +583,27 @@
     window.marcarConferido = async (taskId) => { await updateDoc(doc(db, "tarefas", taskId), { conferido: true }); };
     window.desmarcarConferido = async (taskId) => { await updateDoc(doc(db, "tarefas", taskId), { conferido: false }); };
 
+    window.adicionarNovaTag = async (taskId) => {
+      const novaTagInput = prompt("Digite a nova tag (ou separe por vírgulas para inserir várias):");
+      if (novaTagInput && novaTagInput.trim()) {
+        const task = tarefasGlobais.find(t => t.id === taskId);
+        let arrayTags = task.tags || [];
+        const novasTags = novaTagInput.split(",").map(t => t.trim()).filter(t => t && !arrayTags.includes(t));
+        if (novasTags.length > 0) {
+          arrayTags = [...arrayTags, ...novasTags];
+          await updateDoc(doc(db, "tarefas", taskId), { tags: arrayTags });
+        }
+      }
+    };
+    
+    window.removerTag = async (taskId, tagText) => {
+      if (confirm(`Deseja remover a tag #${tagText}?`)) {
+        const task = tarefasGlobais.find(t => t.id === taskId);
+        let arrayTags = (task.tags || []).filter(t => t !== tagText);
+        await updateDoc(doc(db, "tarefas", taskId), { tags: arrayTags });
+      }
+    };
+
     window.handleCreateTask = async () => {
       const title = document.getElementById("new-task-title").value;
       const desc = document.getElementById("new-task-desc").value;
@@ -630,7 +654,6 @@
       const sub = subs.find(s => s.id === subtaskId);
       if(sub) { 
         sub.isCompleted = !sub.isCompleted; 
-        // Reordena: mantém as pendentes em cima, as concluídas em baixo.
         let pendentes = subs.filter(s => !s.isCompleted);
         let concluidas = subs.filter(s => s.isCompleted);
         subs = [...pendentes, ...concluidas];
@@ -697,7 +720,9 @@
       let opcoesSetores = `<option value="">👤 Atribuir...</option>`;
       setoresGlobais.forEach(s => { opcoesSetores += `<option value="${s.nome}" ${taskData.assignee===s.nome?'selected':''}>${s.nome}</option>`; });
 
-      let tagsHtml = (taskData.tags || []).map(t => `<span class="tag-visual">#${t}</span>`).join("");
+      // -- TAGS: Renderiza visual com "x" e botão "+ Add Tag" --
+      let tagsHtml = (taskData.tags || []).map(t => `<span class="tag-visual">#${t} <span class="tag-remove" title="Remover Tag" onclick="removerTag('${taskData.id}', '${t}')">&times;</span></span>`).join("");
+      tagsHtml += `<span class="tag-visual add-tag-btn" title="Adicionar Nova Tag" onclick="adicionarNovaTag('${taskData.id}')">+ Add Tag</span>`;
 
       let prazoHtml = `<span>Prazo: Sem prazo definido</span>`;
       if (taskData.deadline && taskData.priority !== 'sem_prazo') {
