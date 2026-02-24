@@ -7,7 +7,7 @@
 <style>
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 30px; }
   
-  /* --- Modais (Login, Pendente, Nova Tarefa, Admin) --- */
+  /* --- Modais --- */
   .overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(18, 18, 18, 0.95); z-index: 1000;
@@ -16,11 +16,11 @@
   .modal-box {
     background-color: #1e1e24; padding: 40px; border-radius: 10px;
     border: 1px solid #333; text-align: center; width: 350px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;
   }
-  .modal-box.large { width: 500px; }
-  .modal-box h2 { margin-top: 0; margin-bottom: 20px; }
-  .modal-box input, .modal-box select {
+  .modal-box.large { width: 650px; text-align: left; padding: 30px; }
+  .modal-box h2 { margin-top: 0; margin-bottom: 20px; text-align: center; }
+  .modal-box input[type="text"], .modal-box select {
     width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px;
     border: 1px solid #5c5c77; background-color: #2b2b36; color: white;
   }
@@ -31,15 +31,10 @@
     border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 45%;
   }
   .modal-box button:hover { background-color: #45a049; }
-  
-  .auth-btn-google {
-    background-color: #4285F4 !important; width: 100% !important; margin-top: 15px; 
-    display: flex; justify-content: center; align-items: center; gap: 10px; padding: 12px !important;
-  }
+  .auth-btn-google { background-color: #4285F4 !important; width: 100% !important; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 12px !important; }
   .auth-btn-google:hover { background-color: #357ae8 !important; }
-  
   .btn-cancel { background-color: #ff5252 !important; margin-left: 5%; }
-  #auth-error { color: #ff5252; font-size: 0.9rem; margin-top: 10px; display: none; }
+  #auth-error { color: #ff5252; font-size: 0.9rem; margin-top: 10px; display: none; text-align: center; }
 
   /* --- Estrutura do Quadro --- */
   .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -60,10 +55,10 @@
   .tag-container { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .info-tag { font-size: 0.75rem; color: #aaa; background-color: #1a1a20; padding: 4px 8px; border-radius: 4px; }
   
-  .assignee-input, .priority-select { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; outline: none; }
-  .assignee-input { color: #aaa; background-color: #1a1a20; border: 1px dashed transparent; width: 110px; }
-  .assignee-input:hover { border-color: #5c5c77; background-color: #22222a; color: #fff; }
-  .priority-select { font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; appearance: none; }
+  .assignee-select, .priority-select { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; outline: none; border: none; cursor: pointer; }
+  .assignee-select { color: #aaa; background-color: #1a1a20; width: auto; max-width: 130px; }
+  .assignee-select:hover { background-color: #22222a; color: #fff; }
+  .priority-select { font-weight: bold; text-transform: uppercase; appearance: none; }
   
   .bg-vermelho { background-color: #ff5252; color: white; } .bg-laranja { background-color: #ff9800; color: #121212; }
   .bg-amarelo { background-color: #ffeb3b; color: #121212; } .bg-verde { background-color: #4caf50; color: white; } .bg-azul { background-color: #2196f3; color: white; }
@@ -73,13 +68,31 @@
   .logout-btn { padding: 8px 15px; background-color: #ff5252; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
   .admin-btn { background-color: #FF9800; } .admin-btn:hover { background-color: #e68a00; }
   
-  /* Elementos de UI dos utilizadores pendentes */
-  .pending-user-item { background-color: #2b2b36; padding: 15px; border-radius: 6px; margin-bottom: 10px; text-align: left; }
-  .pending-user-item input { width: calc(100% - 24px); margin-top: 5px; margin-bottom: 10px; }
-  .pending-user-item button { width: 100%; margin: 0; }
+  /* --- UI do Painel Admin --- */
+  .admin-section { background-color: #2b2b36; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+  .admin-section h3 { margin-top: 0; color: #FF9800; border-bottom: 1px solid #444; padding-bottom: 10px; }
+  
+  /* Lista de Utilizadores */
+  .user-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #444; }
+  .user-item:last-child { border-bottom: none; }
+  .user-info { display: flex; flex-direction: column; gap: 3px; }
+  .user-actions button { width: auto; padding: 6px 12px; margin: 0 0 0 5px; font-size: 0.8rem; }
+  .btn-edit { background-color: #2196f3; } .btn-edit:hover { background-color: #1976D2; }
+  .btn-approve { background-color: #4CAF50; } .btn-disable { background-color: #ff9800; }
+  .tag-status { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+  .status-pendente { background-color: #ff9800; color: #121212; }
+  .status-aprovado { background-color: #4caf50; color: white; }
+  .status-inativo { background-color: #ff5252; color: white; }
+
+  /* Adicionar Setor */
+  .add-sector-container { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
+  .add-sector-container input { margin: 0; width: 70%; }
+  .add-sector-container button { margin: 0; width: 30%; }
+  .sector-item { display: inline-flex; align-items: center; background-color: #1a1a20; padding: 6px 12px; border-radius: 20px; margin: 5px; font-size: 0.9rem; }
+  .sector-item span.del-sec { color: #ff5252; margin-left: 10px; cursor: pointer; font-weight: bold; }
 
   /* Controlo de Telas */
-  #main-app, #pending-overlay, #admin-modal { display: none; }
+  #main-app, #pending-overlay, #admin-modal, #task-modal { display: none; }
 </style>
 </head>
 <body>
@@ -88,16 +101,9 @@
     <div class="modal-box">
       <h2>Acesso Restrito</h2>
       <p style="color: #aaa; margin-bottom: 25px;">Utilize a sua conta Google para entrar ou solicitar acesso ao painel de missões.</p>
-      
       <div id="auth-error"></div>
-      
       <button class="auth-btn-google" onclick="realizarLoginGoogle()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
-          <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
-          <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
-          <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
-          <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
         Entrar com o Google
       </button>
     </div>
@@ -105,8 +111,8 @@
 
   <div class="overlay" id="pending-overlay">
     <div class="modal-box">
-      <h2>Aguardando Aprovação ⏳</h2>
-      <p style="color: #aaa; margin-bottom: 25px;">A sua conta foi criada, mas um administrador precisa autorizar o seu acesso e registar o seu nome oficial para usar o quadro de missões.</p>
+      <h2>Acesso Bloqueado ⏳</h2>
+      <p style="color: #aaa; margin-bottom: 25px;">A sua conta está a aguardar aprovação ou foi desativada pelo administrador.</p>
       <button class="logout-btn" style="width: 100%; padding: 12px;" onclick="realizarLogout()">Sair da Conta</button>
     </div>
   </div>
@@ -114,30 +120,49 @@
   <div class="overlay" id="admin-modal">
     <div class="modal-box large">
       <h2>Painel de Administração</h2>
-      <p style="color: #aaa; margin-top: -10px; margin-bottom: 20px;">Aprovar novos utilizadores</p>
       
-      <div id="pending-users-list">
+      <div class="admin-section">
+        <h3>Gestão de Setores</h3>
+        <div class="add-sector-container">
+          <input type="text" id="novo-setor-nome" placeholder="Nome do novo setor (Ex: Marketing, Arte)...">
+          <button onclick="adicionarSetor()">Adicionar</button>
         </div>
+        <div id="sectors-list">
+          </div>
+      </div>
 
-      <button class="btn-cancel" style="width: 100%; margin-left: 0; margin-top: 20px;" onclick="fecharAdmin()">Fechar Painel</button>
+      <div class="admin-section">
+        <h3>Gestão de Utilizadores</h3>
+        <div id="users-list">
+          </div>
+      </div>
+
+      <div style="text-align: center;">
+        <button class="btn-cancel" style="width: 200px; margin: 0;" onclick="fecharAdmin()">Fechar Painel</button>
+      </div>
     </div>
   </div>
 
-  <div class="overlay" id="task-modal" style="display: none;">
+  <div class="overlay" id="task-modal">
     <div class="modal-box">
       <h2>Nova Atividade</h2>
-      <input type="text" id="new-task-text" placeholder="Descreva a tarefa...">
-      <input type="text" id="new-task-assignee" placeholder="Atribuir a (Ex: Arte, João)...">
-      <select id="new-task-priority">
+      <input type="text" id="new-task-text" style="width: 90%;" placeholder="Descreva a tarefa...">
+      
+      <select id="new-task-assignee" style="width: 96%;">
+        <option value="">Selecione o Setor/Responsável</option>
+        </select>
+
+      <select id="new-task-priority" style="width: 96%;">
         <option value="vermelho">Emergência</option>
         <option value="laranja">Muito Urgente</option>
         <option value="amarelo">Urgente</option>
         <option value="verde" selected>Pouco Urgente</option>
         <option value="azul">Não Urgente</option>
       </select>
-      <div>
-        <button style="width: 45%;" onclick="handleCreateTask()">Guardar</button>
-        <button style="width: 45%;" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+      
+      <div style="display: flex; justify-content: center; gap: 10px; width: 96%; margin: 0 auto;">
+        <button style="width: 50%;" onclick="handleCreateTask()">Guardar</button>
+        <button style="width: 50%; margin-left: 0;" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
       </div>
     </div>
   </div>
@@ -162,11 +187,10 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
     // ==========================================
-    // CONFIGURAÇÃO DO ADMINISTRADOR MESTRE
     const EMAIL_ADMIN_MESTRE = "leovitorjipa@gmail.com"; 
     // ==========================================
 
@@ -185,10 +209,14 @@
     const googleProvider = new GoogleAuthProvider();
 
     let loggedUserName = ""; 
-    let unsubscribeSnapshot = null; 
+    let unsubscribeTarefas = null; 
+    let unsubscribeSetores = null;
     let unsubscribeUserCheck = null;
+    
+    // Variável global para guardar os setores e usar nos cartões
+    let setoresGlobais = [];
 
-    // --- LÓGICA DE AUTENTICAÇÃO E AUTORIZAÇÃO ---
+    // --- AUTENTICAÇÃO E AUTORIZAÇÃO ---
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         document.getElementById("login-overlay").style.display = "none";
@@ -211,7 +239,6 @@
           role: isMasterAdmin ? 'admin' : 'user',
           nome: user.displayName || user.email.split('@')[0] 
         });
-        
         ouvirAlteracaoStatus(user.uid);
       } else {
         ouvirAlteracaoStatus(user.uid);
@@ -224,7 +251,7 @@
       unsubscribeUserCheck = onSnapshot(doc(db, "usuarios", uid), (docSnap) => {
         const userData = docSnap.data();
         
-        if (userData.status === 'pendente') {
+        if (userData.status === 'pendente' || userData.status === 'inativo') {
           ocultarTudo();
           document.getElementById("pending-overlay").style.display = "flex";
         } else if (userData.status === 'aprovado') {
@@ -238,6 +265,8 @@
             document.getElementById("btn-admin").style.display = "inline-block";
           }
           
+          // Inicia escutas de dados do Firestore
+          iniciarEscutaSetores();
           iniciarEscutaDasTarefas();
         }
       });
@@ -248,7 +277,8 @@
       document.getElementById("main-app").style.display = "none";
       document.getElementById("pending-overlay").style.display = "none";
       document.getElementById("auth-error").style.display = "none";
-      if(unsubscribeSnapshot) unsubscribeSnapshot();
+      if(unsubscribeTarefas) unsubscribeTarefas();
+      if(unsubscribeSetores) unsubscribeSetores();
     }
 
     window.realizarLoginGoogle = async () => {
@@ -260,72 +290,131 @@
     window.realizarLogout = async () => {
       if(unsubscribeUserCheck) unsubscribeUserCheck();
       await signOut(auth);
-      // Recarrega a página para garantir que todas as variáveis sejam limpas
       window.location.reload();
     };
 
-    // --- FUNÇÕES DO PAINEL DE ADMINISTRAÇÃO ---
+    // --- PAINEL DE ADMINISTRAÇÃO: SETORES E USUÁRIOS ---
     window.abrirAdmin = async () => {
       document.getElementById("admin-modal").style.display = "flex";
-      carregarUsuariosPendentes();
+      carregarTodosUsuarios();
+      renderizarSetoresAdmin();
+    };
+    window.fecharAdmin = () => { document.getElementById("admin-modal").style.display = "none"; };
+
+    // Setores
+    function iniciarEscutaSetores() {
+      unsubscribeSetores = onSnapshot(collection(db, "setores"), (snapshot) => {
+        setoresGlobais = [];
+        snapshot.forEach(doc => setoresGlobais.push({ id: doc.id, nome: doc.data().nome }));
+        
+        // Atualiza os selects em toda a tela
+        atualizarDropdownNovaTarefa();
+        // Renderiza no Admin se estiver aberto
+        if(document.getElementById("admin-modal").style.display === "flex") {
+          renderizarSetoresAdmin();
+        }
+      });
+    }
+
+    function atualizarDropdownNovaTarefa() {
+      const select = document.getElementById("new-task-assignee");
+      select.innerHTML = '<option value="">Selecione o Setor/Responsável</option>';
+      setoresGlobais.forEach(setor => {
+        select.innerHTML += `<option value="${setor.nome}">${setor.nome}</option>`;
+      });
+    }
+
+    window.adicionarSetor = async () => {
+      const input = document.getElementById("novo-setor-nome");
+      const nome = input.value.trim();
+      if (!nome) return alert("Digite um nome para o setor.");
+      await addDoc(collection(db, "setores"), { nome: nome });
+      input.value = "";
     };
 
-    window.fecharAdmin = () => {
-      document.getElementById("admin-modal").style.display = "none";
+    window.excluirSetor = async (id) => {
+      if(confirm("Tem certeza que deseja excluir este setor?")) {
+        await deleteDoc(doc(db, "setores", id));
+      }
     };
 
-    async function carregarUsuariosPendentes() {
-      const listaDiv = document.getElementById("pending-users-list");
-      listaDiv.innerHTML = "Carregando...";
-
-      const q = query(collection(db, "usuarios"), where("status", "==", "pendente"));
-      const querySnapshot = await getDocs(q);
-      
-      listaDiv.innerHTML = "";
-      
-      if (querySnapshot.empty) {
-        listaDiv.innerHTML = "<p style='color: #4CAF50;'>Não há utilizadores aguardando aprovação.</p>";
+    function renderizarSetoresAdmin() {
+      const div = document.getElementById("sectors-list");
+      div.innerHTML = "";
+      if (setoresGlobais.length === 0) {
+        div.innerHTML = "<span style='color: #888;'>Nenhum setor cadastrado.</span>";
         return;
       }
+      setoresGlobais.forEach(setor => {
+        div.innerHTML += `<div class="sector-item">${setor.nome} <span class="del-sec" onclick="excluirSetor('${setor.id}')" title="Excluir">&times;</span></div>`;
+      });
+    }
 
+    // Usuários
+    async function carregarTodosUsuarios() {
+      const listaDiv = document.getElementById("users-list");
+      listaDiv.innerHTML = "Carregando...";
+
+      const querySnapshot = await getDocs(collection(db, "usuarios"));
+      listaDiv.innerHTML = "";
+      
       querySnapshot.forEach((documento) => {
         const user = documento.data();
         const uid = documento.id;
         
+        let statusTag = '';
+        if(user.status === 'pendente') statusTag = '<span class="tag-status status-pendente">Aguardando</span>';
+        else if(user.status === 'aprovado') statusTag = '<span class="tag-status status-aprovado">Ativo</span>';
+        else statusTag = '<span class="tag-status status-inativo">Inativo</span>';
+
+        // Botões de Ação
+        let botoesHtml = `<button class="btn-edit" onclick="editarNomeUsuario('${uid}', '${user.nome}')">Alterar Nome</button>`;
+        
+        if (user.status === 'pendente') {
+          botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Aprovar</button>`;
+        } else if (user.status === 'aprovado') {
+          // Evita que o Admin se desative acidentalmente
+          if (user.role !== 'admin') {
+            botoesHtml += `<button class="btn-disable" onclick="alterarStatusUsuario('${uid}', 'inativo')">Desativar</button>`;
+          }
+        } else if (user.status === 'inativo') {
+          botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Reativar</button>`;
+        }
+
         listaDiv.innerHTML += `
-          <div class="pending-user-item" id="item-${uid}">
-            <div style="color: #aaa; font-size: 0.8rem;">E-mail: <strong style="color: white;">${user.email}</strong></div>
-            <input type="text" id="nome-${uid}" placeholder="Digite o nome oficial do utilizador..." value="${user.nome}">
-            <button onclick="aprovarUsuario('${uid}')">Autorizar Acesso</button>
+          <div class="user-item">
+            <div class="user-info">
+              <strong style="color: white; font-size: 1.1rem;">${user.nome} ${user.role === 'admin' ? '⭐' : ''}</strong>
+              <span style="color: #888; font-size: 0.8rem;">${user.email} ${statusTag}</span>
+            </div>
+            <div class="user-actions">
+              ${botoesHtml}
+            </div>
           </div>
         `;
       });
     }
 
-    window.aprovarUsuario = async (uid) => {
-      const nomeOficial = document.getElementById(`nome-${uid}`).value;
-      if (!nomeOficial.trim()) {
-        alert("Por favor, digite o nome oficial do utilizador antes de aprovar.");
-        return;
-      }
-
-      await updateDoc(doc(db, "usuarios", uid), {
-        status: "aprovado",
-        nome: nomeOficial
-      });
-
-      document.getElementById(`item-${uid}`).remove();
-      
-      // Verifica se a lista ficou vazia após aprovar
-      const listaDiv = document.getElementById("pending-users-list");
-      if (listaDiv.children.length === 0) {
-        listaDiv.innerHTML = "<p style='color: #4CAF50;'>Não há utilizadores aguardando aprovação.</p>";
+    window.editarNomeUsuario = async (uid, nomeAtual) => {
+      const novoNome = prompt("Digite o novo nome oficial do utilizador:", nomeAtual);
+      if (novoNome && novoNome.trim() !== "") {
+        await updateDoc(doc(db, "usuarios", uid), { nome: novoNome.trim() });
+        carregarTodosUsuarios(); // Recarrega a lista
       }
     };
 
+    window.alterarStatusUsuario = async (uid, novoStatus) => {
+      let msg = novoStatus === 'inativo' ? "Deseja realmente desativar o acesso deste utilizador?" : "Deseja aprovar/reativar este utilizador?";
+      if (confirm(msg)) {
+        await updateDoc(doc(db, "usuarios", uid), { status: novoStatus });
+        carregarTodosUsuarios(); // Recarrega a lista
+      }
+    };
+
+
     // --- FUNÇÕES DO QUADRO DE TAREFAS (FIRESTORE) ---
     function iniciarEscutaDasTarefas() {
-      unsubscribeSnapshot = onSnapshot(collection(db, "tarefas"), (snapshot) => {
+      unsubscribeTarefas = onSnapshot(collection(db, "tarefas"), (snapshot) => {
         document.getElementById("todo").innerHTML = "<h3>A Fazer</h3>";
         document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>";
         document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
@@ -363,7 +452,10 @@
     };
 
     window.changePriority = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { priority: sel.value }); };
-    window.changeAssignee = async (inp, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { assignee: inp.value.trim() }); };
+    
+    // Função alterada para lidar com o Select em vez de input de texto
+    window.changeAssignee = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { assignee: sel.value }); };
+    
     window.removeTask = async (taskId) => {
       if(confirm("Deseja excluir esta tarefa?")) await deleteDoc(doc(db, "tarefas", taskId));
     };
@@ -375,11 +467,23 @@
     function buildCardElement(taskData) {
       const card = document.createElement("div");
       card.className = `card priority-${taskData.priority}`; card.draggable = true; card.id = taskData.id; card.ondragstart = window.drag;
+      
+      // Gera as opções de setores do cartão atual baseadas no banco
+      let opcoesSetores = `<option value="">👤 Atribuir...</option>`;
+      setoresGlobais.forEach(setor => {
+        let selecionado = taskData.assignee === setor.nome ? "selected" : "";
+        opcoesSetores += `<option value="${setor.nome}" ${selecionado}>${setor.nome}</option>`;
+      });
+
       card.innerHTML = `
         <span class="task-text">${taskData.text}</span>
         <div class="tag-container">
           <select class="priority-select bg-${taskData.priority}" onchange="changePriority(this, '${taskData.id}')"><option value="vermelho" ${taskData.priority==='vermelho'?'selected':''}>Emergência</option><option value="laranja" ${taskData.priority==='laranja'?'selected':''}>Muito Urgente</option><option value="amarelo" ${taskData.priority==='amarelo'?'selected':''}>Urgente</option><option value="verde" ${taskData.priority==='verde'?'selected':''}>Pouco Urgente</option><option value="azul" ${taskData.priority==='azul'?'selected':''}>Não Urgente</option></select>
-          <input type="text" class="assignee-input" value="${taskData.assignee || ''}" placeholder="👤 Atribuir..." onchange="changeAssignee(this, '${taskData.id}')">
+          
+          <select class="assignee-select" onchange="changeAssignee(this, '${taskData.id}')" title="Alterar Responsável">
+            ${opcoesSetores}
+          </select>
+
           <span class="info-tag" title="Criador">✍️ ${taskData.creator}</span>
         </div>
         <span class="delete-btn" onclick="removeTask('${taskData.id}')">&times;</span>
