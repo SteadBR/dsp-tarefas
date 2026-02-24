@@ -123,7 +123,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="task-modal">
+  <div class="overlay" id="task-modal" style="display: none;">
     <div class="modal-box">
       <h2>Nova Atividade</h2>
       <input type="text" id="new-task-text" placeholder="Descreva a tarefa...">
@@ -163,7 +163,6 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-    // Removidas as importações de createUserWithEmailAndPassword e signInWithEmailAndPassword que não são mais usadas
     import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
     // ==========================================
