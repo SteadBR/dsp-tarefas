@@ -9,8 +9,8 @@
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px 30px; }
   
   /* Bloqueios Anti-Plágio Visuais */
-  * { user-select: none; -webkit-user-select: none; }
-  input, textarea, select { user-select: text; -webkit-user-select: text; }
+  * { user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+  input, textarea, select { user-select: text; -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; }
 
   /* --- Modais --- */
   .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; }
@@ -48,7 +48,7 @@
   .card { background-color: #2b2b36; padding: 15px; border-radius: 6px; cursor: grab; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 5px solid #5c5c77; position: relative; display: flex; flex-direction: column; gap: 10px; }
   .card:active { transform: scale(0.98); }
   
-  .task-title { font-size: 1.1rem; font-weight: bold; margin: 0 20px 0 0; color: #fff; }
+  .task-title { font-size: 1.1rem; font-weight: bold; margin: 0 20px 0 0; color: #fff; line-height: 1.2; }
   .task-desc { font-size: 0.85rem; color: #ccc; margin: 0; line-height: 1.4; }
   .task-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; }
   .tag-visual { background-color: #e1f5fe; color: #0277bd; font-size: 0.65rem; padding: 2px 6px; border-radius: 12px; font-weight: bold; }
@@ -67,18 +67,36 @@
   .assignee-select:disabled { cursor: not-allowed; opacity: 0.6; }
   .priority-select { font-weight: bold; text-transform: uppercase; appearance: none; }
   
-  /* Metadados e Atrasos */
   .meta-dates { font-size: 0.65rem; color: #888; display: flex; flex-direction: column; gap: 3px; background: #22222a; padding: 6px; border-radius: 4px; }
   .overdue-alert { color: #ff5252; font-weight: bold; animation: blink 2s infinite; }
   @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
-  /* Áreas Interativas */
-  .workers-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+  .workers-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; margin-bottom: 5px; }
   .worker-badge { font-size: 0.7rem; background-color: #3f51b5; color: white; padding: 3px 6px; border-radius: 10px; }
   
-  .comment-box { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; background: #1e1e24; padding: 10px; border-radius: 6px; }
-  .comment-box textarea { width: 95%; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #121212; color: #fff; font-size: 0.8rem; resize: vertical; min-height: 40px; }
-  .comment-display { background: #22222a; border-left: 3px solid #9c27b0; padding: 8px; border-radius: 4px; font-size: 0.8rem; color: #ddd; margin-top: 10px; }
+  /* --- Novos Estilos: Sub-tarefas e Chat --- */
+  .subtasks-container, .chat-container { background: #1e1e24; padding: 10px; border-radius: 6px; margin-top: 5px; border: 1px solid #333; }
+  .subtasks-container strong, .chat-container strong { font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  
+  .subtask-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #ddd; margin-bottom: 6px; }
+  .subtask-text { flex: 1; word-wrap: break-word; }
+  .subtask-text.completed { text-decoration: line-through; color: #666; }
+  .subtask-item input[type="checkbox"] { cursor: pointer; width: 14px; height: 14px; margin: 0; }
+  
+  .subtask-input-area, .chat-input-area { display: flex; gap: 5px; margin-top: 10px; }
+  .subtask-input-area input, .chat-input-area input { flex: 1; padding: 6px 8px; font-size: 0.75rem; border-radius: 4px; border: 1px solid #555; background: #121212; color: #fff; margin: 0; }
+  .subtask-input-area button, .chat-input-area button { background: #4CAF50; color: white; border: none; padding: 0 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; margin: 0; }
+  
+  .chat-messages { max-height: 130px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 5px; }
+  /* Personalização fina da barra de rolagem do chat */
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+  
+  .chat-message { background: #22222a; padding: 8px; border-radius: 4px; border-left: 3px solid #9c27b0; }
+  .chat-meta { display: block; font-size: 0.65rem; color: #888; margin-bottom: 4px; }
+  .chat-text { font-size: 0.8rem; color: #ddd; word-wrap: break-word; line-height: 1.3; }
+
+  /* ---------------------------------------- */
 
   .delete-btn { position: absolute; top: 8px; right: 8px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: #1a1a20; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
   .delete-btn:hover { background: #ff5252; color: white; }
@@ -96,6 +114,8 @@
   /* --- UI do Painel Admin --- */
   .admin-section { background-color: #2b2b36; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
   .user-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 15px 0; border-bottom: 1px dashed #444; flex-direction: column; gap: 10px; }
+  .user-item:last-child { border-bottom: none; }
+  .user-header { display: flex; justify-content: space-between; width: 100%; align-items: center; }
   .user-perms { background: #1a1a20; padding: 10px; border-radius: 6px; display: flex; gap: 10px; flex-direction: column; font-size: 0.85rem; color: #ccc; width: 100%; box-sizing: border-box; }
   .perm-group { display: flex; flex-wrap: wrap; gap: 15px; border-top: 1px solid #333; padding-top: 5px; margin-top: 5px; }
   .user-actions button { width: auto; padding: 6px 12px; margin: 0 0 0 5px; font-size: 0.8rem; }
@@ -152,17 +172,12 @@
 
       <div class="admin-section" id="bloco-usuarios" style="display: none;">
         <h3>Gestão de Usuários e Permissões</h3>
-        
         <div class="admin-filter-bar">
           <input type="text" id="admin-search-user" placeholder="Pesquisar por nome ou e-mail..." onkeyup="renderizarListaUsuarios()" style="flex: 2;">
           <select id="admin-filter-status" onchange="renderizarListaUsuarios()" style="flex: 1;">
-            <option value="all">Todas as Contas</option>
-            <option value="aprovado">Apenas Ativadas</option>
-            <option value="inativo">Apenas Desativadas</option>
-            <option value="pendente">Apenas Pendentes</option>
+            <option value="all">Todas as Contas</option><option value="aprovado">Apenas Ativadas</option><option value="inativo">Apenas Desativadas</option><option value="pendente">Apenas Pendentes</option>
           </select>
         </div>
-
         <div id="users-list"></div>
       </div>
 
@@ -177,7 +192,7 @@
       <div class="history-header-controls">
         <div>
           <label style="font-size: 0.85rem;">Exibir: </label>
-          <select id="history-limit" onchange="resetarPaginaERenderizar()" style="background:#2b2b36; color:white; border:1px solid #5c5c77; padding:6px; border-radius:4px; margin:0;">
+          <select id="history-limit" onchange="resetarPaginaERenderizar()" style="background:#2b2b36; color:white; border:1px solid #5c5c77; padding:6px; border-radius:4px; width: auto; margin:0;">
             <option value="10">10 tarefas</option><option value="25">25 tarefas</option><option value="50">50 tarefas</option><option value="9999">Todas</option>
           </select>
         </div>
@@ -189,8 +204,7 @@
       </div>
 
       <div id="history-list" style="margin-top: 20px;"></div>
-      
-      <center><button class="btn-cancel" style="width: 200px; margin-top:20px;" onclick="fecharHistorico()">Fechar Histórico</button></center>
+      <center><button class="btn-cancel" style="width: 200px; margin: 20px 0 0 0;" onclick="fecharHistorico()">Fechar Histórico</button></center>
     </div>
   </div>
 
@@ -198,7 +212,7 @@
     <div class="modal-box">
       <h2>Nova Atividade</h2>
       <input type="text" id="new-task-title" style="width: 90%; font-weight: bold;" placeholder="Título da Tarefa">
-      <input type="text" id="new-task-tags" style="width: 90%; font-size: 0.8rem;" placeholder="Tags Opcionais (Ex: Urgente, Revisão, Teste)...">
+      <input type="text" id="new-task-tags" style="width: 90%; font-size: 0.8rem;" placeholder="Tags Opcionais (Ex: Urgente, Revisão)...">
       <textarea id="new-task-desc" style="width: 90%;" placeholder="Descrição detalhada..."></textarea>
       
       <select id="new-task-assignee" style="width: 96%;"><option value="">Selecione o Setor</option></select>
@@ -276,7 +290,7 @@
     
     let tarefasGlobais = [];
     let setoresGlobais = [];
-    let usuariosMemory = []; // Para filtros no Admin
+    let usuariosMemory = []; 
     
     let unsubscribeTarefas = null; 
     let unsubscribeSetores = null;
@@ -289,83 +303,52 @@
       return `${d.toLocaleDateString('pt-BR')} às ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
     }
 
+    function gerarIdUnico() { return Date.now().toString() + Math.random().toString(36).substr(2, 5); }
+
     // --- AUTH ---
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        document.getElementById("login-overlay").style.display = "none";
-        verificarAcessoUsuario(user);
-      } else {
-        ocultarTudo();
-        document.getElementById("login-overlay").style.display = "flex";
-      }
+      if (user) { document.getElementById("login-overlay").style.display = "none"; verificarAcessoUsuario(user); } 
+      else { ocultarTudo(); document.getElementById("login-overlay").style.display = "flex"; }
     });
 
     async function verificarAcessoUsuario(user) {
-      const userRef = doc(db, "usuarios", user.uid);
-      const userSnap = await getDoc(userRef);
-
+      const userRef = doc(db, "usuarios", user.uid); const userSnap = await getDoc(userRef);
       if (!userSnap.exists()) {
         const isMasterAdmin = user.email === EMAIL_ADMIN_MESTRE;
         await setDoc(userRef, {
-          email: user.email,
-          status: isMasterAdmin ? 'aprovado' : 'pendente',
-          role: isMasterAdmin ? 'admin' : 'user',
+          email: user.email, status: isMasterAdmin ? 'aprovado' : 'pendente', role: isMasterAdmin ? 'admin' : 'user',
           nome: user.displayName || user.email.split('@')[0],
           permissoes: { gerenciarSetores: isMasterAdmin, concluirTarefas: isMasterAdmin, apagarTarefas: isMasterAdmin, alterarSetorTarefa: isMasterAdmin, atribuirSetoresUsuario: isMasterAdmin },
           setoresPermitidos: []
         });
         ouvirAlteracaoStatus(user.uid);
-      } else {
-        ouvirAlteracaoStatus(user.uid);
-      }
+      } else { ouvirAlteracaoStatus(user.uid); }
     }
 
     function ouvirAlteracaoStatus(uid) {
       if (unsubscribeUserCheck) unsubscribeUserCheck();
-      
       unsubscribeUserCheck = onSnapshot(doc(db, "usuarios", uid), (docSnap) => {
         const userData = docSnap.data();
-        
         if (userData.status === 'pendente' || userData.status === 'inativo') {
-          ocultarTudo();
-          document.getElementById("pending-overlay").style.display = "flex";
+          ocultarTudo(); document.getElementById("pending-overlay").style.display = "flex";
         } else if (userData.status === 'aprovado') {
-          ocultarTudo();
-          document.getElementById("main-app").style.display = "block";
-          
-          loggedUserName = userData.nome;
-          userRole = userData.role;
+          ocultarTudo(); document.getElementById("main-app").style.display = "block";
+          loggedUserName = userData.nome; userRole = userData.role; userSectors = userData.setoresPermitidos || [];
           userPerms = userData.permissoes || { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false, alterarSetorTarefa: false, atribuirSetoresUsuario: false };
-          userSectors = userData.setoresPermitidos || [];
-          
           document.getElementById("user-display").innerText = "👤 " + loggedUserName;
-          
-          if (userRole === 'admin' || userPerms.gerenciarSetores || userPerms.atribuirSetoresUsuario) {
-            document.getElementById("btn-admin").style.display = "inline-block";
-          } else {
-            document.getElementById("btn-admin").style.display = "none";
-          }
-          
-          iniciarEscutaSetores();
-          iniciarEscutaDasTarefas();
+          document.getElementById("btn-admin").style.display = (userRole === 'admin' || userPerms.gerenciarSetores || userPerms.atribuirSetoresUsuario) ? "inline-block" : "none";
+          iniciarEscutaSetores(); iniciarEscutaDasTarefas();
         }
       });
     }
 
     function ocultarTudo() {
-      document.getElementById("login-overlay").style.display = "none";
-      document.getElementById("main-app").style.display = "none";
-      document.getElementById("pending-overlay").style.display = "none";
-      document.getElementById("auth-error").style.display = "none";
-      if(unsubscribeTarefas) unsubscribeTarefas();
-      if(unsubscribeSetores) unsubscribeSetores();
+      document.getElementById("login-overlay").style.display = "none"; document.getElementById("main-app").style.display = "none";
+      document.getElementById("pending-overlay").style.display = "none"; document.getElementById("auth-error").style.display = "none";
+      if(unsubscribeTarefas) unsubscribeTarefas(); if(unsubscribeSetores) unsubscribeSetores();
     }
 
-    window.realizarLoginGoogle = async () => {
-      const errorDiv = document.getElementById("auth-error");
-      try { await signInWithPopup(auth, googleProvider); } 
-      catch (error) { errorDiv.innerText = "Erro no login: " + error.message; errorDiv.style.display = "block"; }
-    };
+    window.realizarLoginGoogle = async () => { try { await signInWithPopup(auth, googleProvider); } catch (error) { document.getElementById("auth-error").innerText = "Erro no login: " + error.message; document.getElementById("auth-error").style.display = "block"; } };
     window.realizarLogout = async () => { if(unsubscribeUserCheck) unsubscribeUserCheck(); await signOut(auth); window.location.reload(); };
 
     // --- PAINEL ADMIN ---
@@ -380,13 +363,8 @@
 
     function iniciarEscutaSetores() {
       unsubscribeSetores = onSnapshot(collection(db, "setores"), (snapshot) => {
-        setoresGlobais = [];
-        snapshot.forEach(doc => setoresGlobais.push({ id: doc.id, nome: doc.data().nome }));
-        atualizarDropdownsSetor();
-        if(document.getElementById("admin-modal").style.display === "flex") {
-          renderizarSetoresAdmin();
-          renderizarListaUsuarios();
-        }
+        setoresGlobais = []; snapshot.forEach(doc => setoresGlobais.push({ id: doc.id, nome: doc.data().nome })); atualizarDropdownsSetor();
+        if(document.getElementById("admin-modal").style.display === "flex") { renderizarSetoresAdmin(); renderizarListaUsuarios(); }
       });
     }
 
@@ -399,12 +377,7 @@
       });
     }
 
-    window.adicionarSetor = async () => {
-      const input = document.getElementById("novo-setor-nome");
-      if (!input.value.trim()) return alert("Digite um nome.");
-      await addDoc(collection(db, "setores"), { nome: input.value.trim() });
-      input.value = "";
-    };
+    window.adicionarSetor = async () => { const input = document.getElementById("novo-setor-nome"); if (!input.value.trim()) return alert("Digite um nome."); await addDoc(collection(db, "setores"), { nome: input.value.trim() }); input.value = ""; };
     window.excluirSetor = async (id) => { if(confirm("Deseja excluir este setor?")) await deleteDoc(doc(db, "setores", id)); };
 
     function renderizarSetoresAdmin() {
@@ -436,18 +409,14 @@
         let statusTag = user.status === 'pendente' ? '<span class="tag-status status-pendente">Aguardando</span>' : user.status === 'aprovado' ? '<span class="tag-status status-aprovado">Ativo</span>' : '<span class="tag-status status-inativo">Inativo</span>';
 
         let botoesHtml = `<button class="btn-edit" onclick="editarNomeUsuario('${uid}', '${user.nome}')">Nome</button>`;
-        if (userRole === 'admin') { // Só admin mestre pode mudar status/excluir
+        if (userRole === 'admin') { 
           if (user.status === 'pendente') botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Aprovar</button>`;
           else if (user.status === 'aprovado' && user.role !== 'admin') botoesHtml += `<button class="btn-disable" onclick="alterarStatusUsuario('${uid}', 'inativo')">Desativar</button>`;
           else if (user.status === 'inativo') botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Reativar</button>`;
-          
-          if (user.role !== 'admin') {
-             botoesHtml += `<button style="background:#ff5252;" onclick="excluirUsuario('${uid}')">Excluir Conta</button>`;
-          }
+          if (user.role !== 'admin') botoesHtml += `<button style="background:#ff5252;" onclick="excluirUsuario('${uid}')">Excluir Conta</button>`;
         }
 
         let isMaster = user.role === 'admin';
-        // Admin Mestre pode tudo. Quem tem permissão pode marcar as caixas (se não for admin que já tem tudo fixo)
         let disableCore = userRole !== 'admin' || isMaster ? 'disabled' : '';
         let disableSetores = (userRole === 'admin' || userPerms.atribuirSetoresUsuario) && !isMaster ? '' : 'disabled';
         
@@ -458,7 +427,7 @@
             <label><input type="checkbox" ${isMaster?'checked':''} ${disableCore} ${perms.concluirTarefas ? 'checked' : ''} onchange="togglePermissao('${uid}', 'concluirTarefas', this.checked)"> Concluir</label>
             <label><input type="checkbox" ${isMaster?'checked':''} ${disableCore} ${perms.apagarTarefas ? 'checked' : ''} onchange="togglePermissao('${uid}', 'apagarTarefas', this.checked)"> Excluir Cards</label>
             <label><input type="checkbox" ${isMaster?'checked':''} ${disableCore} ${perms.alterarSetorTarefa ? 'checked' : ''} onchange="togglePermissao('${uid}', 'alterarSetorTarefa', this.checked)"> Mudar Setor do Card</label>
-            <label><input type="checkbox" ${isMaster?'checked':''} ${disableCore} ${perms.atribuirSetoresUsuario ? 'checked' : ''} onchange="togglePermissao('${uid}', 'atribuirSetoresUsuario', this.checked)"> Delegar Setores a Usuários</label>
+            <label><input type="checkbox" ${isMaster?'checked':''} ${disableCore} ${perms.atribuirSetoresUsuario ? 'checked' : ''} onchange="togglePermissao('${uid}', 'atribuirSetoresUsuario', this.checked)"> Delegar Setores</label>
           </div>
         `;
 
@@ -470,54 +439,31 @@
         });
         checksSetores += `</div>`;
 
-        listaDiv.innerHTML += `
-          <div class="user-item">
-            <div class="user-header">
-              <div class="user-info">
-                <strong style="color: white; font-size: 1.1rem;">${user.nome} ${isMaster ? '⭐' : ''}</strong>
-                <span style="color: #888; font-size: 0.8rem;">${user.email} ${statusTag}</span>
-              </div>
-              <div class="user-actions">${botoesHtml}</div>
-            </div>
-            <div class="user-perms">${checksAcoes}${checksSetores}</div>
-          </div>
-        `;
+        listaDiv.innerHTML += `<div class="user-item"><div class="user-header"><div class="user-info"><strong style="color: white; font-size: 1.1rem;">${user.nome} ${isMaster ? '⭐' : ''}</strong><span style="color: #888; font-size: 0.8rem;">${user.email} ${statusTag}</span></div><div class="user-actions">${botoesHtml}</div></div><div class="user-perms">${checksAcoes}${checksSetores}</div></div>`;
       });
     };
 
     window.togglePermissao = async (uid, campo, valor) => { await updateDoc(doc(db, "usuarios", uid), { [`permissoes.${campo}`]: valor }); carregarTodosUsuarios(); };
-    window.toggleAcessoSetor = async (uid, nomeSetor, adicionar) => {
-      const userRef = doc(db, "usuarios", uid); const userSnap = await getDoc(userRef); let atuais = userSnap.data().setoresPermitidos || [];
-      if (adicionar && !atuais.includes(nomeSetor)) atuais.push(nomeSetor); else if (!adicionar) atuais = atuais.filter(s => s !== nomeSetor);
-      await updateDoc(userRef, { setoresPermitidos: atuais }); carregarTodosUsuarios();
-    };
-
+    window.toggleAcessoSetor = async (uid, nomeSetor, adicionar) => { const userRef = doc(db, "usuarios", uid); const userSnap = await getDoc(userRef); let atuais = userSnap.data().setoresPermitidos || []; if (adicionar && !atuais.includes(nomeSetor)) atuais.push(nomeSetor); else if (!adicionar) atuais = atuais.filter(s => s !== nomeSetor); await updateDoc(userRef, { setoresPermitidos: atuais }); carregarTodosUsuarios(); };
     window.editarNomeUsuario = async (uid, nomeAtual) => { const novoNome = prompt("Novo nome:", nomeAtual); if (novoNome && novoNome.trim()) { await updateDoc(doc(db, "usuarios", uid), { nome: novoNome.trim() }); carregarTodosUsuarios(); } };
     window.alterarStatusUsuario = async (uid, novoStatus) => { if (confirm("Confirmar alteração de status?")) { await updateDoc(doc(db, "usuarios", uid), { status: novoStatus }); carregarTodosUsuarios(); } };
-    window.excluirUsuario = async (uid) => { if(confirm("Atenção: Deseja EXCLUIR permanentemente esta conta do sistema?")) { await deleteDoc(doc(db, "usuarios", uid)); carregarTodosUsuarios(); } };
+    window.excluirUsuario = async (uid) => { if(confirm("Atenção: Deseja EXCLUIR permanentemente esta conta?")) { await deleteDoc(doc(db, "usuarios", uid)); carregarTodosUsuarios(); } };
 
     // --- QUADRO E HISTÓRICO ---
     function iniciarEscutaDasTarefas() {
       unsubscribeTarefas = onSnapshot(collection(db, "tarefas"), (snapshot) => {
-        tarefasGlobais = [];
-        snapshot.forEach(docSnap => { let t = docSnap.data(); t.id = docSnap.id; tarefasGlobais.push(t); });
-        renderizarTarefas();
-        if(document.getElementById("history-modal").style.display === "flex") renderizarHistorico();
+        tarefasGlobais = []; snapshot.forEach(docSnap => { let t = docSnap.data(); t.id = docSnap.id; tarefasGlobais.push(t); });
+        renderizarTarefas(); if(document.getElementById("history-modal").style.display === "flex") renderizarHistorico();
       });
     }
 
     window.renderizarTarefas = () => {
-      document.getElementById("todo").innerHTML = "<h3>A Fazer</h3>";
-      document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>";
-      document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
-
+      document.getElementById("todo").innerHTML = "<h3>A Fazer</h3>"; document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>"; document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
       const filtroPrio = document.getElementById("filter-priority").value, filtroSetor = document.getElementById("filter-sector").value;
       let filtradas = tarefasGlobais.filter(t => t.status !== 'historico');
-      
       if (userRole !== 'admin') filtradas = filtradas.filter(t => !t.assignee || t.assignee === "" || userSectors.includes(t.assignee));
       if (filtroPrio !== 'todos') filtradas = filtradas.filter(t => t.priority === filtroPrio);
       if (filtroSetor !== 'todos') filtradas = filtradas.filter(t => t.assignee === filtroSetor);
-
       filtradas.sort((a, b) => (configPrioridade[a.priority]?.ordem || 99) - (configPrioridade[b.priority]?.ordem || 99));
       filtradas.forEach(task => { const column = document.getElementById(task.status); if(column) column.appendChild(buildCardElement(task)); });
     };
@@ -528,29 +474,24 @@
     window.mudarPagina = (v) => { historyPage += v; renderizarHistorico(); };
 
     function renderizarHistorico() {
-      const div = document.getElementById("history-list"), limit = parseInt(document.getElementById("history-limit").value);
-      div.innerHTML = "";
-      
+      const div = document.getElementById("history-list"), limit = parseInt(document.getElementById("history-limit").value); div.innerHTML = "";
       let historico = tarefasGlobais.filter(t => t.status === 'historico');
       if (userRole !== 'admin') historico = historico.filter(t => !t.assignee || t.assignee === "" || userSectors.includes(t.assignee));
       if(historico.length === 0) { div.innerHTML = "<p style='color:#888; text-align:center;'>Nenhuma tarefa concluída ainda.</p>"; return; }
-      
       historico.sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
 
       const totalPages = Math.ceil(historico.length / limit) || 1;
       const start = (historyPage - 1) * limit, paginated = historico.slice(start, start + limit);
 
       document.getElementById("page-info").innerText = `Página ${historyPage} de ${totalPages}`;
-      document.getElementById("btn-prev").disabled = historyPage === 1;
-      document.getElementById("btn-next").disabled = historyPage >= totalPages;
+      document.getElementById("btn-prev").disabled = historyPage === 1; document.getElementById("btn-next").disabled = historyPage >= totalPages;
 
       paginated.forEach(task => {
         let statusIcon = task.completionStatus === '100% Concluído' ? '✅' : task.completionStatus === 'Parcialmente Concluído' ? '⚠️' : '❌';
         let participantes = (task.workers && task.workers.length > 0) ? task.workers.join(', ') : 'Nenhum';
-        
         let tagsHtml = (task.tags || []).map(t => `<span class="tag-visual">#${t}</span>`).join("");
-
         let conferidoTag = task.conferido ? `<span class="badge-conferido">CONFERIDO</span>` : "";
+        
         let btnConferir = "";
         if (userRole === 'admin') {
             if (task.conferido) btnConferir = `<button class="btn-action-task" style="background:#ff9800;" onclick="desmarcarConferido('${task.id}')">Desfazer Conferência</button>`;
@@ -558,43 +499,49 @@
         }
         let btnDelete = (userRole === 'admin' || userPerms.apagarTarefas) ? `<span class="delete-btn" title="Apagar Tarefa" onclick="removeTask('${task.id}')">&times;</span>` : "";
         
-        let commentHtml = task.doingComment ? `<div class="comment-display"><strong>Nota de Andamento:</strong><br>${task.doingComment}</div>` : '';
+        // Bloqueio visual para sub-tarefas e chat no histórico (Somente leitura)
+        let subtasksHtml = "";
+        const subs = task.subtasks || [];
+        if(subs.length > 0) {
+            let subsList = subs.map(s => `<div class="subtask-item"><input type="checkbox" ${s.isCompleted ? 'checked' : ''} disabled><span class="subtask-text ${s.isCompleted ? 'completed' : ''}">${s.text}</span></div>`).join('');
+            subtasksHtml = `<div class="subtasks-container"><strong>📋 Sub-tarefas</strong><div class="subtasks-list">${subsList}</div></div>`;
+        }
+
+        let chatHtml = "";
+        const comments = task.comments || [];
+        // Suporte legado para o comentário antigo
+        if (comments.length === 0 && task.doingComment) comments.push({ user: "Sistema (Antigo)", text: task.doingComment, timestamp: task.createdAt });
+        if(comments.length > 0) {
+            let chatList = comments.map(c => `<div class="chat-message"><span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span><span class="chat-text">${c.text}</span></div>`).join('');
+            chatHtml = `<div class="chat-container"><strong>💬 Diário da Tarefa</strong><div class="chat-messages">${chatList}</div></div>`;
+        }
 
         div.innerHTML += `
           <div class="card priority-${task.priority}" style="cursor: default; flex-direction: column; border-left-color: #555;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-              <h4 style="margin:0; color:#fff;">${task.title || task.text} ${conferidoTag}</h4>
-              ${btnDelete}
-            </div>
-            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;"><h4 style="margin:0; color:#fff;">${task.title || task.text} ${conferidoTag}</h4>${btnDelete}</div>
             <div class="task-tags">${tagsHtml}</div>
             <p style="margin:5px 0 0 0; font-size: 0.8rem; color: #888;">${task.description || ''}</p>
-            ${commentHtml}
+            
+            ${subtasksHtml}
+            ${chatHtml}
             
             <div style="background: #1e1e24; padding: 8px; border-radius: 4px; margin-top: 10px;">
               <strong style="font-size: 0.8rem; color: white;">${statusIcon} ${task.completionStatus || 'Finalizado'}</strong>
               <p style="margin: 3px 0 0 0; font-size: 0.8rem; color: #ccc; font-style: italic;">"${task.completionResponse || 'Sem detalhes adicionais.'}"</p>
             </div>
-
             <div class="tag-container" style="margin-top: 10px;">
-              <span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span>
-              <span class="info-tag">Equipe: ${participantes}</span>
-              <span class="info-tag" style="background: #2196f3; color: white;">Finalizado por: ${task.completedBy || 'Desconhecido'}</span>
+              <span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span><span class="info-tag">Equipe: ${participantes}</span>
+              <span class="info-tag" style="background: #2196f3; color: white;">Finalizou: ${task.completedBy || 'Desconhecido'}</span>
             </div>
-            
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-              <div class="meta-dates" style="margin: 0; background:transparent; padding:0;">
-                <span>Concluída em: <strong>${formatarData(task.completedAt)}</strong></span>
-              </div>
-              <div style="display: flex; gap: 5px;">
-                ${btnConferir}
-                <button onclick="reativarTarefa('${task.id}')" class="btn-action-task" style="background: #5c5c77;">Reativar</button>
-              </div>
+              <div class="meta-dates" style="margin: 0; background:transparent; padding:0;"><span>Concluída em: <strong>${formatarData(task.completedAt)}</strong></span></div>
+              <div style="display: flex; gap: 5px;">${btnConferir}<button onclick="reativarTarefa('${task.id}')" class="btn-action-task" style="background: #5c5c77;">Reativar</button></div>
             </div>
           </div>`;
       });
     }
 
+    // --- AÇÕES DO CARTÃO ---
     window.marcarConferido = async (taskId) => { await updateDoc(doc(db, "tarefas", taskId), { conferido: true }); };
     window.desmarcarConferido = async (taskId) => { await updateDoc(doc(db, "tarefas", taskId), { conferido: false }); };
 
@@ -603,36 +550,27 @@
       const desc = document.getElementById("new-task-desc").value;
       const assignee = document.getElementById("new-task-assignee").value;
       const priority = document.getElementById("new-task-priority").value;
-      
       const tagsInput = document.getElementById("new-task-tags").value;
       const arrayTags = tagsInput ? tagsInput.split(",").map(t => t.trim()).filter(t => t) : [];
-      
       if (!title.trim()) return alert("Dê um título para a tarefa!");
 
       const agora = Date.now();
-      let prazo = null;
-      if (priority !== 'sem_prazo') prazo = agora + (configPrioridade[priority].dias * 24 * 60 * 60 * 1000);
+      let prazo = priority !== 'sem_prazo' ? agora + (configPrioridade[priority].dias * 24 * 60 * 60 * 1000) : null;
 
       await addDoc(collection(db, "tarefas"), { 
         title: title, description: desc, assignee: assignee, priority: priority, 
         creator: loggedUserName, status: "todo", createdAt: agora, deadline: prazo,
-        workers: [], doingComment: "", tags: arrayTags
+        workers: [], tags: arrayTags, comments: [], subtasks: []
       });
       fecharModal();
     };
 
     window.handleDrop = async (ev) => {
       ev.preventDefault();
-      const taskId = ev.dataTransfer.getData("text");
-      const task = tarefasGlobais.find(t => t.id === taskId);
-      if(!task) return;
-
-      let targetColumn = ev.target;
-      while (!targetColumn.classList.contains('column')) { targetColumn = targetColumn.parentElement; }
-      
+      const taskId = ev.dataTransfer.getData("text"); const task = tarefasGlobais.find(t => t.id === taskId); if(!task) return;
+      let targetColumn = ev.target; while (!targetColumn.classList.contains('column')) { targetColumn = targetColumn.parentElement; }
       let updates = { status: targetColumn.id };
       if(targetColumn.id === 'doing' && !task.startedAt) updates.startedAt = Date.now();
-      
       await updateDoc(doc(db, "tarefas", taskId), updates);
     };
 
@@ -640,54 +578,58 @@
       const task = tarefasGlobais.find(t => t.id === taskId); let arrayWorkers = task.workers || [];
       if(!arrayWorkers.includes(loggedUserName)) { arrayWorkers.push(loggedUserName); await updateDoc(doc(db, "tarefas", taskId), { workers: arrayWorkers }); }
     };
-    
     window.sairDaTarefa = async (taskId) => {
       const task = tarefasGlobais.find(t => t.id === taskId); let arrayWorkers = task.workers || [];
-      arrayWorkers = arrayWorkers.filter(nome => nome !== loggedUserName);
-      await updateDoc(doc(db, "tarefas", taskId), { workers: arrayWorkers });
+      arrayWorkers = arrayWorkers.filter(nome => nome !== loggedUserName); await updateDoc(doc(db, "tarefas", taskId), { workers: arrayWorkers });
     };
 
-    window.salvarComentario = async (taskId) => {
-      const text = document.getElementById(`comment-${taskId}`).value;
-      await updateDoc(doc(db, "tarefas", taskId), { doingComment: text });
-      alert("Comentário atualizado!");
+    // Novas Ações: Chat e Sub-tarefas
+    window.adicionarComentario = async (taskId) => {
+      const input = document.getElementById(`chat-input-${taskId}`); const text = input.value.trim(); if(!text) return;
+      const task = tarefasGlobais.find(t => t.id === taskId); const comments = task.comments || [];
+      comments.push({ user: loggedUserName, text, timestamp: Date.now() });
+      await updateDoc(doc(db, "tarefas", taskId), { comments: comments });
+    };
+
+    window.adicionarSubtarefa = async (taskId) => {
+      const input = document.getElementById(`subtask-input-${taskId}`); const text = input.value.trim(); if(!text) return;
+      const task = tarefasGlobais.find(t => t.id === taskId); const subs = task.subtasks || [];
+      subs.push({ id: gerarIdUnico(), text, isCompleted: false });
+      await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs });
+    };
+
+    window.toggleSubtarefa = async (taskId, subtaskId) => {
+      const task = tarefasGlobais.find(t => t.id === taskId); const subs = task.subtasks || [];
+      const sub = subs.find(s => s.id === subtaskId);
+      if(sub) { sub.isCompleted = !sub.isCompleted; await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs }); }
+    };
+
+    window.excluirSubtarefa = async (taskId, subtaskId) => {
+      const task = tarefasGlobais.find(t => t.id === taskId); const subs = (task.subtasks || []).filter(s => s.id !== subtaskId);
+      await updateDoc(doc(db, "tarefas", taskId), { subtasks: subs });
     };
 
     window.abrirFinalizacao = (taskId) => {
-      currentTaskToFinish = taskId;
-      document.getElementById("finish-status").value = "100% Concluído";
-      document.getElementById("finish-response").value = "";
-      document.getElementById("finish-modal").style.display = "flex";
+      currentTaskToFinish = taskId; document.getElementById("finish-status").value = "100% Concluído"; document.getElementById("finish-response").value = ""; document.getElementById("finish-modal").style.display = "flex";
     };
-    
     window.fecharFinishModal = () => { document.getElementById("finish-modal").style.display = "none"; currentTaskToFinish = null; };
-
     window.confirmarFinalizacao = async () => {
       if(!currentTaskToFinish) return;
-      const statusFinal = document.getElementById("finish-status").value;
-      const resposta = document.getElementById("finish-response").value;
-      await updateDoc(doc(db, "tarefas", currentTaskToFinish), { status: 'historico', completedAt: Date.now(), completedBy: loggedUserName, completionStatus: statusFinal, completionResponse: resposta });
+      await updateDoc(doc(db, "tarefas", currentTaskToFinish), { status: 'historico', completedAt: Date.now(), completedBy: loggedUserName, completionStatus: document.getElementById("finish-status").value, completionResponse: document.getElementById("finish-response").value });
       fecharFinishModal();
     };
-    
     window.reativarTarefa = async (taskId) => { await updateDoc(doc(db, "tarefas", taskId), { status: 'done', conferido: false }); };
-
     window.changePriority = async (sel, taskId) => { 
-      const task = tarefasGlobais.find(t => t.id === taskId);
-      const newPrio = sel.value;
-      let updates = { priority: newPrio };
-      if (newPrio === 'sem_prazo') updates.deadline = null;
-      else if (task.createdAt) updates.deadline = task.createdAt + (configPrioridade[newPrio].dias * 24 * 60 * 60 * 1000);
+      const task = tarefasGlobais.find(t => t.id === taskId); const newPrio = sel.value; let updates = { priority: newPrio };
+      if (newPrio === 'sem_prazo') updates.deadline = null; else if (task.createdAt) updates.deadline = task.createdAt + (configPrioridade[newPrio].dias * 24 * 60 * 60 * 1000);
       await updateDoc(doc(db, "tarefas", taskId), updates); 
     };
     window.changeAssignee = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { assignee: sel.value }); };
     window.removeTask = async (taskId) => { if(confirm("Deseja excluir permanentemente esta tarefa?")) await deleteDoc(doc(db, "tarefas", taskId)); };
 
     window.abrirModal = () => { 
-      document.getElementById("task-modal").style.display = "flex"; 
-      document.getElementById("new-task-title").value = ""; 
-      document.getElementById("new-task-tags").value = ""; 
-      document.getElementById("new-task-desc").value = ""; 
+      document.getElementById("task-modal").style.display = "flex"; document.getElementById("new-task-title").value = ""; 
+      document.getElementById("new-task-tags").value = ""; document.getElementById("new-task-desc").value = ""; 
     };
     window.fecharModal = () => { document.getElementById("task-modal").style.display = "none"; };
     window.allowDrop = (ev) => { ev.preventDefault(); }; window.drag = (ev) => { ev.dataTransfer.getData("text"); ev.dataTransfer.setData("text", ev.target.id); };
@@ -707,15 +649,9 @@
       let prazoHtml = `<span>Prazo: Sem prazo definido</span>`;
       if (taskData.deadline && taskData.priority !== 'sem_prazo') {
         const diff = Date.now() - taskData.deadline;
-        if (diff > 0 && taskData.status !== 'historico') {
-          const diasAtraso = Math.ceil(diff / (1000 * 60 * 60 * 24));
-          prazoHtml = `<span class="overdue-alert">⚠️ Atrasado ${diasAtraso} dia(s)</span>`;
-        } else {
-          prazoHtml = `<span>Prazo: <strong>${new Date(taskData.deadline).toLocaleDateString('pt-BR')}</strong></span>`;
-        }
-      } else if (taskData.priority !== 'sem_prazo' && !taskData.createdAt) {
-         prazoHtml = `<span style="color:#ff9800;">⚠️ Tarefa antiga (Sem data geradora)</span>`;
-      }
+        if (diff > 0 && taskData.status !== 'historico') prazoHtml = `<span class="overdue-alert">⚠️ Atrasado ${Math.ceil(diff / 86400000)} dia(s)</span>`;
+        else prazoHtml = `<span>Prazo: <strong>${new Date(taskData.deadline).toLocaleDateString('pt-BR')}</strong></span>`;
+      } else if (taskData.priority !== 'sem_prazo' && !taskData.createdAt) prazoHtml = `<span style="color:#ff9800;">⚠️ Tarefa antiga (Sem data)</span>`;
 
       let btnConcluirHtml = "";
       if (taskData.status === 'done' && (userPerms.concluirTarefas || userRole === 'admin')) {
@@ -723,25 +659,54 @@
       }
 
       let workersHtml = "";
+      let isMe = (taskData.workers || []).includes(loggedUserName);
+
       if (taskData.status === 'doing') {
-        let btnParticipar = `<button class="btn-action-task btn-join" onclick="assumirTarefa('${taskData.id}')">🙋‍♂️ Assumir Tarefa</button>`;
-        const arrayWorkers = taskData.workers || [];
-        let caixaComentario = "";
+        let btnParticipar = isMe ? `<button class="btn-action-task" style="background:#555;" onclick="sairDaTarefa('${taskData.id}')">Sair da Tarefa</button>` : `<button class="btn-action-task btn-join" onclick="assumirTarefa('${taskData.id}')">🙋‍♂️ Assumir Tarefa</button>`;
+        let workersBadges = (taskData.workers || []).map(w => `<span class="worker-badge">${w}</span>`).join("");
         
-        if (arrayWorkers.includes(loggedUserName)) {
-          btnParticipar = `<button class="btn-action-task" style="background:#555;" onclick="sairDaTarefa('${taskData.id}')">Sair da Tarefa</button>`;
-          
-          caixaComentario = `
-            <div class="comment-box">
-              <label style="font-size: 0.75rem; color: #aaa;">Andamento / Comentário:</label>
-              <textarea id="comment-${taskData.id}" placeholder="Escreva aqui o que está sendo feito...">${taskData.doingComment || ''}</textarea>
-              <button class="btn-action-task" style="background: #2196f3; width: 100%;" onclick="salvarComentario('${taskData.id}')">Salvar Comentário</button>
-            </div>
-          `;
+        // --- SUBTAREFAS INTERATIVAS ---
+        let subtasksHtml = "";
+        const subs = taskData.subtasks || [];
+        if(subs.length > 0 || isMe) {
+            let subsList = subs.map(s => `
+                <div class="subtask-item">
+                    <input type="checkbox" ${s.isCompleted ? 'checked' : ''} ${!isMe ? 'disabled' : `onchange="toggleSubtarefa('${taskData.id}', '${s.id}')"`}>
+                    <span class="subtask-text ${s.isCompleted ? 'completed' : ''}">${s.text}</span>
+                    ${isMe ? `<span style="color:#ff5252; cursor:pointer; font-weight:bold; margin-left:auto;" onclick="excluirSubtarefa('${taskData.id}', '${s.id}')">&times;</span>` : ''}
+                </div>
+            `).join('');
+            
+            let addSubHtml = isMe ? `
+                <div class="subtask-input-area">
+                    <input type="text" id="subtask-input-${taskData.id}" placeholder="Nova sub-tarefa..." onkeydown="if(event.key==='Enter') adicionarSubtarefa('${taskData.id}')">
+                    <button type="button" onclick="adicionarSubtarefa('${taskData.id}')">+</button>
+                </div>
+            ` : '';
+            subtasksHtml = `<div class="subtasks-container"><strong>📋 Sub-tarefas</strong><div class="subtasks-list">${subsList}</div>${addSubHtml}</div>`;
         }
-        
-        let workersBadges = "";
-        arrayWorkers.forEach(w => { workersBadges += `<span class="worker-badge">${w}</span>`; });
+
+        // --- CHAT INTERATIVO ---
+        let chatHtml = "";
+        const comments = taskData.comments || [];
+        // Suporte legado
+        if (comments.length === 0 && taskData.doingComment) comments.push({ user: "Sistema (Antigo)", text: taskData.doingComment, timestamp: taskData.createdAt });
+        if(comments.length > 0 || isMe) {
+            let chatList = comments.map(c => `
+                <div class="chat-message">
+                    <span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span>
+                    <span class="chat-text">${c.text}</span>
+                </div>
+            `).join('');
+            
+            let addChatHtml = isMe ? `
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input-${taskData.id}" placeholder="Escreva uma nota..." onkeydown="if(event.key==='Enter') adicionarComentario('${taskData.id}')">
+                    <button type="button" onclick="adicionarComentario('${taskData.id}')">Enviar</button>
+                </div>
+            ` : '';
+            chatHtml = `<div class="chat-container"><strong>💬 Diário da Tarefa</strong><div class="chat-messages">${chatList}</div>${addChatHtml}</div>`;
+        }
         
         workersHtml = `
           <div style="border-top: 1px dashed #555; padding-top: 10px; margin-top: 5px;">
@@ -749,9 +714,26 @@
               ${btnParticipar}
               <div class="workers-list">${workersBadges}</div>
             </div>
-            ${caixaComentario}
+            ${subtasksHtml}
+            ${chatHtml}
           </div>
         `;
+      } else if (taskData.status === 'done') {
+        // MODO SOMENTE LEITURA PARA A COLUNA CONCLUÍDO
+        let subtasksHtml = "";
+        const subs = taskData.subtasks || [];
+        if(subs.length > 0) {
+            let subsList = subs.map(s => `<div class="subtask-item"><input type="checkbox" ${s.isCompleted ? 'checked' : ''} disabled><span class="subtask-text ${s.isCompleted ? 'completed' : ''}">${s.text}</span></div>`).join('');
+            subtasksHtml = `<div class="subtasks-container"><strong>📋 Sub-tarefas</strong><div class="subtasks-list">${subsList}</div></div>`;
+        }
+        let chatHtml = "";
+        const comments = taskData.comments || [];
+        if (comments.length === 0 && taskData.doingComment) comments.push({ user: "Sistema (Antigo)", text: taskData.doingComment, timestamp: taskData.createdAt });
+        if(comments.length > 0) {
+            let chatList = comments.map(c => `<div class="chat-message"><span class="chat-meta"><strong>${c.user}</strong> - ${formatarData(c.timestamp)}</span><span class="chat-text">${c.text}</span></div>`).join('');
+            chatHtml = `<div class="chat-container"><strong>💬 Diário da Tarefa</strong><div class="chat-messages">${chatList}</div></div>`;
+        }
+        if(subtasksHtml || chatHtml) workersHtml = `<div style="border-top: 1px dashed #555; padding-top: 10px; margin-top: 5px;">${subtasksHtml}${chatHtml}</div>`;
       }
 
       let btnDeleteHtml = "";
@@ -760,17 +742,13 @@
       }
 
       card.innerHTML = `
-        <h4 class="task-title">${taskData.title || taskData.text}</h4>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;"><h4 class="task-title">${taskData.title || taskData.text}</h4>${btnDeleteHtml}</div>
         <div class="task-tags">${tagsHtml}</div>
         ${taskData.description ? `<p class="task-desc">${taskData.description}</p>` : ''}
         
         <div class="tag-container" style="margin-top: 5px;">
           <select class="priority-select bg-${taskData.priority}" onchange="changePriority(this, '${taskData.id}')">
-            <option value="emergente" ${taskData.priority==='emergente'?'selected':''}>Emergente</option>
-            <option value="muito_urgente" ${taskData.priority==='muito_urgente'?'selected':''}>Muito Urg.</option>
-            <option value="urgente" ${taskData.priority==='urgente'?'selected':''}>Urgente</option>
-            <option value="pouco_urgente" ${taskData.priority==='pouco_urgente'?'selected':''}>Pouco Urg.</option>
-            <option value="sem_prazo" ${taskData.priority==='sem_prazo'?'selected':''}>Sem Prazo</option>
+            <option value="emergente" ${taskData.priority==='emergente'?'selected':''}>Emergente</option><option value="muito_urgente" ${taskData.priority==='muito_urgente'?'selected':''}>Muito Urg.</option><option value="urgente" ${taskData.priority==='urgente'?'selected':''}>Urgente</option><option value="pouco_urgente" ${taskData.priority==='pouco_urgente'?'selected':''}>Pouco Urg.</option><option value="sem_prazo" ${taskData.priority==='sem_prazo'?'selected':''}>Sem Prazo</option>
           </select>
           <select class="assignee-select" onchange="changeAssignee(this, '${taskData.id}')" ${blockSetorAttr}>${opcoesSetores}</select>
         </div>
@@ -783,7 +761,6 @@
 
         ${workersHtml}
         ${btnConcluirHtml}
-        ${btnDeleteHtml}
       `;
       return card;
     }
