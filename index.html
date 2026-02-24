@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel de Missões - Equipe</title>
+<title>DSP - Painel de Tarefas</title>
+<link rel="icon" href="https://i.imgur.com/eiwjL4h.png" type="image/png">
 <style>
-  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 30px; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px 30px; }
   
   /* --- Modais --- */
   .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; }
@@ -22,36 +23,59 @@
   #auth-error { color: #ff5252; font-size: 0.9rem; margin-top: 10px; display: none; text-align: center; }
 
   /* --- Estrutura do Quadro --- */
-  .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+  .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+  .logo-title { display: flex; align-items: center; gap: 15px; }
+  .logo-title img { height: 45px; }
   h2 { margin: 0; color: #ffffff; letter-spacing: 1px; }
   
   .controls-bar { display: flex; gap: 10px; align-items: center; background: #1e1e24; padding: 8px 15px; border-radius: 8px; border: 1px solid #333; }
   .controls-bar select { background: #2b2b36; color: white; border: 1px solid #5c5c77; padding: 6px; border-radius: 4px; outline: none; }
   
   .board { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
-  .column { background-color: #1e1e24; border-radius: 8px; width: 320px; padding: 15px; min-height: 500px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
-  .column h3 { text-align: center; margin-top: 0; margin-bottom: 10px; color: #9e9e9e; text-transform: uppercase; }
+  .column { background-color: #1e1e24; border-radius: 8px; width: 340px; padding: 15px; min-height: 500px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
+  .column h3 { text-align: center; margin-top: 0; margin-bottom: 5px; color: #9e9e9e; text-transform: uppercase; }
   
   /* --- Cartões --- */
-  .card { background-color: #2b2b36; padding: 15px 30px 15px 15px; border-radius: 6px; cursor: grab; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 5px solid #5c5c77; position: relative; display: flex; flex-direction: column; gap: 10px; }
+  .card { background-color: #2b2b36; padding: 15px; border-radius: 6px; cursor: grab; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 5px solid #5c5c77; position: relative; display: flex; flex-direction: column; gap: 10px; }
   .card:active { transform: scale(0.98); }
-  .task-text { font-size: 1rem; font-weight: 500; }
-  .priority-vermelho { border-left-color: #ff5252; } .priority-laranja { border-left-color: #ff9800; }
-  .priority-amarelo { border-left-color: #ffeb3b; } .priority-verde { border-left-color: #4caf50; } .priority-azul { border-left-color: #2196f3; }
-  .tag-container { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .info-tag { font-size: 0.75rem; color: #aaa; background-color: #1a1a20; padding: 4px 8px; border-radius: 4px; }
+  .task-text { font-size: 1rem; font-weight: 500; margin-right: 20px; }
   
-  .assignee-select, .priority-select { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; outline: none; border: none; cursor: pointer; }
-  .assignee-select { color: #aaa; background-color: #1a1a20; width: auto; max-width: 130px; }
+  /* Cores de Prioridade */
+  .priority-emergente { border-left-color: #ff5252; } 
+  .priority-muito_urgente { border-left-color: #ff9800; }
+  .priority-urgente { border-left-color: #ffeb3b; } 
+  .priority-pouco_urgente { border-left-color: #4caf50; } 
+  .priority-sem_prazo { border-left-color: #2196f3; }
+  
+  .bg-emergente { background-color: #ff5252; color: white; } 
+  .bg-muito_urgente { background-color: #ff9800; color: #121212; }
+  .bg-urgente { background-color: #ffeb3b; color: #121212; } 
+  .bg-pouco_urgente { background-color: #4caf50; color: white; } 
+  .bg-sem_prazo { background-color: #2196f3; color: white; }
+
+  .tag-container { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .info-tag { font-size: 0.7rem; color: #aaa; background-color: #1a1a20; padding: 4px 6px; border-radius: 4px; }
+  
+  .assignee-select, .priority-select { font-size: 0.7rem; padding: 4px 6px; border-radius: 4px; outline: none; border: none; cursor: pointer; }
+  .assignee-select { color: #aaa; background-color: #1a1a20; width: auto; max-width: 120px; }
   .assignee-select:hover { background-color: #22222a; color: #fff; }
   .priority-select { font-weight: bold; text-transform: uppercase; appearance: none; }
   
-  .bg-vermelho { background-color: #ff5252; color: white; } .bg-laranja { background-color: #ff9800; color: #121212; }
-  .bg-amarelo { background-color: #ffeb3b; color: #121212; } .bg-verde { background-color: #4caf50; color: white; } .bg-azul { background-color: #2196f3; color: white; }
+  /* Metadados do Cartão (Datas) */
+  .meta-dates { font-size: 0.65rem; color: #888; display: flex; flex-direction: column; gap: 3px; background: #22222a; padding: 6px; border-radius: 4px; }
+  .meta-dates strong { color: #aaa; }
+  .overdue-alert { color: #ff5252; font-weight: bold; animation: blink 2s infinite; }
+  @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
-  .delete-btn { position: absolute; top: 8px; right: 10px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
-  .btn-check-task { background-color: #4CAF50; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; margin-top: 5px; text-align: center; }
-  .btn-check-task:hover { background-color: #45a049; }
+  .workers-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+  .worker-badge { font-size: 0.7rem; background-color: #3f51b5; color: white; padding: 3px 6px; border-radius: 10px; }
+
+  .delete-btn { position: absolute; top: 8px; right: 8px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: #1a1a20; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
+  .delete-btn:hover { background: #ff5252; color: white; }
+  
+  .btn-action-task { background-color: #4CAF50; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; text-align: center; }
+  .btn-action-task:hover { background-color: #45a049; }
+  .btn-join { background-color: #9c27b0; } .btn-join:hover { background-color: #7b1fa2; }
 
   .add-btn { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
   .logout-btn { padding: 8px 15px; background-color: #ff5252; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
@@ -61,11 +85,10 @@
   /* --- UI do Painel Admin --- */
   .admin-section { background-color: #2b2b36; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
   .admin-section h3 { margin-top: 0; color: #FF9800; border-bottom: 1px solid #444; padding-bottom: 10px; }
-  
   .user-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #444; flex-wrap: wrap; gap: 10px; }
   .user-item:last-child { border-bottom: none; }
   .user-info { display: flex; flex-direction: column; gap: 3px; min-width: 200px; }
-  .user-perms { background: #1a1a20; padding: 8px 12px; border-radius: 6px; display: flex; gap: 15px; font-size: 0.85rem; color: #ccc; align-items: center; }
+  .user-perms { background: #1a1a20; padding: 8px 12px; border-radius: 6px; display: flex; gap: 15px; font-size: 0.85rem; color: #ccc; align-items: center; flex-wrap: wrap; }
   .user-actions button { width: auto; padding: 6px 12px; margin: 0 0 0 5px; font-size: 0.8rem; }
   .btn-edit { background-color: #2196f3; } .btn-approve { background-color: #4CAF50; } .btn-disable { background-color: #ff9800; }
   .tag-status { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
@@ -85,8 +108,9 @@
 
   <div class="overlay" id="login-overlay">
     <div class="modal-box">
+      <img src="https://i.imgur.com/eiwjL4h.png" alt="DSP Logo" style="height: 60px; margin-bottom: 10px;">
       <h2>Acesso Restrito</h2>
-      <p style="color: #aaa; margin-bottom: 25px;">Utilize a sua conta Google para entrar no painel de missões.</p>
+      <p style="color: #aaa; margin-bottom: 25px;">Utilize a sua conta Google para entrar no painel de tarefas.</p>
       <div id="auth-error"></div>
       <button class="auth-btn-google" onclick="realizarLoginGoogle()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
@@ -105,7 +129,7 @@
 
   <div class="overlay" id="admin-modal">
     <div class="modal-box large">
-      <h2>Painel de Administração</h2>
+      <h2>⚙️ Painel de Administração</h2>
       
       <div class="admin-section" id="bloco-setores" style="display: none;">
         <h3>Gestão de Setores</h3>
@@ -143,7 +167,11 @@
       <input type="text" id="new-task-text" style="width: 90%;" placeholder="Descreva a tarefa...">
       <select id="new-task-assignee" style="width: 96%;"><option value="">Selecione o Setor</option></select>
       <select id="new-task-priority" style="width: 96%;">
-        <option value="vermelho">Emergência</option><option value="laranja">Muito Urgente</option><option value="amarelo">Urgente</option><option value="verde" selected>Pouco Urgente</option><option value="azul">Não Urgente</option>
+        <option value="emergente">🔴 Emergente (5 dias)</option>
+        <option value="muito_urgente">🟠 Muito Urgente (10 dias)</option>
+        <option value="urgente">🟡 Urgente (15 dias)</option>
+        <option value="pouco_urgente" selected>🟢 Pouco Urgente (30 dias)</option>
+        <option value="sem_prazo">🔵 Sem Prazo</option>
       </select>
       <div style="display: flex; justify-content: center; gap: 10px; width: 96%; margin: 0 auto;">
         <button style="width: 50%;" onclick="handleCreateTask()">Guardar</button>
@@ -154,22 +182,25 @@
 
   <div id="main-app">
     <div class="header-container">
-      <h2>Painel Geral</h2>
-      
-      <div class="controls-bar">
-        <label for="filter-priority" style="font-size: 0.85rem; color: #aaa;">Filtro:</label>
-        <select id="filter-priority" onchange="renderizarTarefas()">
-          <option value="todos">Todas as Prioridades</option>
-          <option value="vermelho">🔴 Emergência</option>
-          <option value="laranja">🟠 Muito Urgente</option>
-          <option value="amarelo">🟡 Urgente</option>
-          <option value="verde">🟢 Pouco Urgente</option>
-          <option value="azul">🔵 Não Urgente</option>
-        </select>
+      <div class="logo-title">
+        <img src="https://i.imgur.com/eiwjL4h.png" alt="DSP Logo">
+        <h2>DSP - Painel de Tarefas</h2>
       </div>
+      
+      <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+        <div class="controls-bar">
+          <label for="filter-priority" style="font-size: 0.85rem; color: #aaa;">Filtro:</label>
+          <select id="filter-priority" onchange="renderizarTarefas()">
+            <option value="todos">Todas as Prioridades</option>
+            <option value="emergente">🔴 Emergente</option>
+            <option value="muito_urgente">🟠 Muito Urgente</option>
+            <option value="urgente">🟡 Urgente</option>
+            <option value="pouco_urgente">🟢 Pouco Urgente</option>
+            <option value="sem_prazo">🔵 Sem Prazo</option>
+          </select>
+        </div>
 
-      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-        <span id="user-display" style="color: #888; font-size: 0.9rem; margin-right: 10px;"></span>
+        <span id="user-display" style="color: #888; font-size: 0.9rem;"></span>
         <button class="add-btn history-btn" onclick="abrirHistorico()">✔️ Histórico</button>
         <button id="btn-admin" class="add-btn admin-btn" style="display: none;" onclick="abrirAdmin()">⚙️ Admin</button>
         <button class="add-btn" onclick="abrirModal()">+ Nova Tarefa</button>
@@ -208,7 +239,7 @@
     const googleProvider = new GoogleAuthProvider();
 
     let userRole = "user";
-    let userPerms = { gerenciarSetores: false, concluirTarefas: false };
+    let userPerms = { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false };
     let loggedUserName = ""; 
     
     let tarefasGlobais = [];
@@ -218,8 +249,20 @@
     let unsubscribeSetores = null;
     let unsubscribeUserCheck = null;
 
-    // --- ORDEM DE PRIORIDADE ---
-    const ordemPrioridade = { 'vermelho': 1, 'laranja': 2, 'amarelo': 3, 'verde': 4, 'azul': 5 };
+    // --- DIAS DE PRAZO E ORDENAÇÃO ---
+    const configPrioridade = {
+      'emergente': { dias: 5, ordem: 1, nome: 'Emergente' },
+      'muito_urgente': { dias: 10, ordem: 2, nome: 'Muito Urgente' },
+      'urgente': { dias: 15, ordem: 3, nome: 'Urgente' },
+      'pouco_urgente': { dias: 30, ordem: 4, nome: 'Pouco Urgente' },
+      'sem_prazo': { dias: 0, ordem: 5, nome: 'Sem Prazo' }
+    };
+
+    function formatarData(ms) {
+      if(!ms) return '--';
+      const d = new Date(ms);
+      return `${d.toLocaleDateString('pt-BR')} às ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+    }
 
     // --- AUTENTICAÇÃO E AUTORIZAÇÃO ---
     onAuthStateChanged(auth, async (user) => {
@@ -243,7 +286,7 @@
           status: isMasterAdmin ? 'aprovado' : 'pendente',
           role: isMasterAdmin ? 'admin' : 'user',
           nome: user.displayName || user.email.split('@')[0],
-          permissoes: { gerenciarSetores: isMasterAdmin, concluirTarefas: isMasterAdmin }
+          permissoes: { gerenciarSetores: isMasterAdmin, concluirTarefas: isMasterAdmin, apagarTarefas: isMasterAdmin }
         });
         ouvirAlteracaoStatus(user.uid);
       } else {
@@ -266,11 +309,10 @@
           
           loggedUserName = userData.nome;
           userRole = userData.role;
-          userPerms = userData.permissoes || { gerenciarSetores: false, concluirTarefas: false };
+          userPerms = userData.permissoes || { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false };
           
           document.getElementById("user-display").innerText = "👤 " + loggedUserName;
           
-          // Mostra botão Admin se for admin ou se tiver permissão de gerir setores
           if (userRole === 'admin' || userPerms.gerenciarSetores) {
             document.getElementById("btn-admin").style.display = "inline-block";
           } else {
@@ -324,7 +366,6 @@
     };
     window.fecharAdmin = () => { document.getElementById("admin-modal").style.display = "none"; };
 
-    // Setores
     function iniciarEscutaSetores() {
       unsubscribeSetores = onSnapshot(collection(db, "setores"), (snapshot) => {
         setoresGlobais = [];
@@ -347,9 +388,7 @@
       input.value = "";
     };
 
-    window.excluirSetor = async (id) => {
-      if(confirm("Deseja excluir este setor?")) await deleteDoc(doc(db, "setores", id));
-    };
+    window.excluirSetor = async (id) => { if(confirm("Deseja excluir este setor?")) await deleteDoc(doc(db, "setores", id)); };
 
     function renderizarSetoresAdmin() {
       const div = document.getElementById("sectors-list");
@@ -357,7 +396,6 @@
       setoresGlobais.forEach(s => { div.innerHTML += `<div class="sector-item">${s.nome} <span class="del-sec" onclick="excluirSetor('${s.id}')">&times;</span></div>`; });
     }
 
-    // Usuários
     async function carregarTodosUsuarios() {
       const listaDiv = document.getElementById("users-list");
       listaDiv.innerHTML = "Carregando...";
@@ -370,29 +408,29 @@
         const perms = user.permissoes || {};
         
         let statusTag = user.status === 'pendente' ? '<span class="tag-status status-pendente">Aguardando</span>' : 
-                        user.status === 'aprovado' ? '<span class="tag-status status-aprovado">Ativo</span>' : 
-                        '<span class="tag-status status-inativo">Inativo</span>';
+                        user.status === 'aprovado' ? '<span class="tag-status status-aprovado">Ativo</span>' : '<span class="tag-status status-inativo">Inativo</span>';
 
         let botoesHtml = `<button class="btn-edit" onclick="editarNomeUsuario('${uid}', '${user.nome}')">Alterar Nome</button>`;
         if (user.status === 'pendente') botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Aprovar</button>`;
         else if (user.status === 'aprovado' && user.role !== 'admin') botoesHtml += `<button class="btn-disable" onclick="alterarStatusUsuario('${uid}', 'inativo')">Desativar</button>`;
         else if (user.status === 'inativo') botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Reativar</button>`;
 
-        // Bloqueia edição de permissões se for Admin (admin já tem tudo)
         let disabledCheck = user.role === 'admin' ? 'disabled checked' : '';
         let chkSetor = perms.gerenciarSetores ? 'checked' : '';
         let chkConcluir = perms.concluirTarefas ? 'checked' : '';
+        let chkApagar = perms.apagarTarefas ? 'checked' : '';
 
         listaDiv.innerHTML += `
           <div class="user-item">
             <div class="user-info">
-              <strong style="color: white; font-size: 1.1rem;">${user.nome} ${user.role === 'admin' ? '⭐ (Admin Mestre)' : ''}</strong>
+              <strong style="color: white; font-size: 1.1rem;">${user.nome} ${user.role === 'admin' ? '⭐' : ''}</strong>
               <span style="color: #888; font-size: 0.8rem;">${user.email} ${statusTag}</span>
             </div>
             
             <div class="user-perms">
-              <label><input type="checkbox" ${disabledCheck} ${chkSetor} onchange="togglePermissao('${uid}', 'gerenciarSetores', this.checked)"> Gerenciar Setores</label>
-              <label><input type="checkbox" ${disabledCheck} ${chkConcluir} onchange="togglePermissao('${uid}', 'concluirTarefas', this.checked)"> Concluir Tarefas</label>
+              <label><input type="checkbox" ${disabledCheck} ${chkSetor} onchange="togglePermissao('${uid}', 'gerenciarSetores', this.checked)"> Setores</label>
+              <label><input type="checkbox" ${disabledCheck} ${chkConcluir} onchange="togglePermissao('${uid}', 'concluirTarefas', this.checked)"> Concluir</label>
+              <label><input type="checkbox" ${disabledCheck} ${chkApagar} onchange="togglePermissao('${uid}', 'apagarTarefas', this.checked)"> Apagar</label>
             </div>
 
             <div class="user-actions">${botoesHtml}</div>
@@ -401,46 +439,35 @@
       });
     }
 
-    window.togglePermissao = async (uid, campo, valor) => {
-      await updateDoc(doc(db, "usuarios", uid), { [`permissoes.${campo}`]: valor });
-    };
-
+    window.togglePermissao = async (uid, campo, valor) => { await updateDoc(doc(db, "usuarios", uid), { [`permissoes.${campo}`]: valor }); };
     window.editarNomeUsuario = async (uid, nomeAtual) => {
       const novoNome = prompt("Novo nome:", nomeAtual);
       if (novoNome && novoNome.trim()) { await updateDoc(doc(db, "usuarios", uid), { nome: novoNome.trim() }); carregarTodosUsuarios(); }
     };
-
     window.alterarStatusUsuario = async (uid, novoStatus) => {
       if (confirm("Confirmar alteração de status?")) { await updateDoc(doc(db, "usuarios", uid), { status: novoStatus }); carregarTodosUsuarios(); }
     };
-
 
     // --- QUADRO, FILTRO, ORDENAÇÃO E HISTÓRICO ---
     function iniciarEscutaDasTarefas() {
       unsubscribeTarefas = onSnapshot(collection(db, "tarefas"), (snapshot) => {
         tarefasGlobais = [];
-        snapshot.forEach(docSnap => {
-          let t = docSnap.data(); t.id = docSnap.id; tarefasGlobais.push(t);
-        });
+        snapshot.forEach(docSnap => { let t = docSnap.data(); t.id = docSnap.id; tarefasGlobais.push(t); });
         renderizarTarefas();
         if(document.getElementById("history-modal").style.display === "flex") renderizarHistorico();
       });
     }
 
     window.renderizarTarefas = () => {
-      // Limpa as colunas
       document.getElementById("todo").innerHTML = "<h3>A Fazer</h3>";
       document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>";
       document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
 
       const filtro = document.getElementById("filter-priority").value;
-      
-      // Filtra tarefas ativas (não histórico) e pela prioridade selecionada
       let filtradas = tarefasGlobais.filter(t => t.status !== 'historico');
       if(filtro !== 'todos') filtradas = filtradas.filter(t => t.priority === filtro);
 
-      // ORDENAÇÃO: Vermelho no topo, Azul no fim
-      filtradas.sort((a, b) => (ordemPrioridade[a.priority] || 99) - (ordemPrioridade[b.priority] || 99));
+      filtradas.sort((a, b) => (configPrioridade[a.priority]?.ordem || 99) - (configPrioridade[b.priority]?.ordem || 99));
 
       filtradas.forEach(task => {
         const column = document.getElementById(task.status);
@@ -458,17 +485,23 @@
       
       if(historico.length === 0) { div.innerHTML = "<p style='color:#888; text-align:center;'>Nenhuma tarefa concluída ainda.</p>"; return; }
       
-      // Ordena por prioridade também no histórico (ou poderia ser por data, se tivéssemos)
-      historico.sort((a, b) => (ordemPrioridade[a.priority] || 99) - (ordemPrioridade[b.priority] || 99));
+      // Ordena por data de conclusão (mais recentes primeiro)
+      historico.sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
 
       historico.forEach(task => {
         div.innerHTML += `
-          <div class="card priority-${task.priority}" style="cursor: default; flex-direction: row; justify-content: space-between; align-items: center;">
+          <div class="card priority-${task.priority}" style="cursor: default; flex-direction: row; justify-content: space-between; align-items: center; border-left-color: #555;">
             <div style="display: flex; flex-direction: column; gap: 5px;">
-              <span class="task-text" style="text-decoration: line-through; color: #aaa;">${task.text}</span>
-              <div class="tag-container"><span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span><span class="info-tag">Criado por: ${task.creator}</span></div>
+              <span class="task-text" style="text-decoration: line-through; color: #888;">${task.text}</span>
+              <div class="tag-container">
+                <span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span>
+                <span class="info-tag" style="background: #2196f3; color: white;">Finalizado por: ${task.completedBy || 'Desconhecido'}</span>
+              </div>
+              <div class="meta-dates" style="margin-top: 5px;">
+                <span>Concluída em: <strong>${formatarData(task.completedAt)}</strong></span>
+              </div>
             </div>
-            <button onclick="reativarTarefa('${task.id}')" style="background: #2196f3; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Desfazer</button>
+            <button onclick="reativarTarefa('${task.id}')" class="btn-action-task" style="background: #5c5c77;">Desfazer</button>
           </div>`;
       });
     }
@@ -479,35 +512,91 @@
       const priority = document.getElementById("new-task-priority").value;
       if (!text.trim()) return alert("Descreva a tarefa!");
 
-      await addDoc(collection(db, "tarefas"), { text: text, assignee: assignee, priority: priority, creator: loggedUserName, status: "todo" });
+      const agora = Date.now();
+      let prazo = null;
+      if (priority !== 'sem_prazo') {
+        prazo = agora + (configPrioridade[priority].dias * 24 * 60 * 60 * 1000);
+      }
+
+      await addDoc(collection(db, "tarefas"), { 
+        text: text, assignee: assignee, priority: priority, 
+        creator: loggedUserName, status: "todo",
+        createdAt: agora, deadline: prazo,
+        workers: [] 
+      });
       fecharModal();
     };
 
     window.handleDrop = async (ev) => {
       ev.preventDefault();
       const taskId = ev.dataTransfer.getData("text");
+      const task = tarefasGlobais.find(t => t.id === taskId);
+      if(!task) return;
+
       let targetColumn = ev.target;
       while (!targetColumn.classList.contains('column')) { targetColumn = targetColumn.parentElement; }
-      await updateDoc(doc(db, "tarefas", taskId), { status: targetColumn.id });
+      
+      let updates = { status: targetColumn.id };
+      
+      // Se moveu para Em Andamento pela 1ª vez
+      if(targetColumn.id === 'doing' && !task.startedAt) {
+        updates.startedAt = Date.now();
+      }
+      
+      await updateDoc(doc(db, "tarefas", taskId), updates);
     };
 
-    window.marcarComoConcluido = async (taskId) => {
-      if(confirm("Deseja mover esta tarefa para o histórico de concluídas?")) {
-        await updateDoc(doc(db, "tarefas", taskId), { status: 'historico' });
+    window.assumirTarefa = async (taskId) => {
+      const task = tarefasGlobais.find(t => t.id === taskId);
+      let arrayWorkers = task.workers || [];
+      if(!arrayWorkers.includes(loggedUserName)) {
+        arrayWorkers.push(loggedUserName);
+        await updateDoc(doc(db, "tarefas", taskId), { workers: arrayWorkers });
       }
     };
     
-    window.reativarTarefa = async (taskId) => {
-      await updateDoc(doc(db, "tarefas", taskId), { status: 'done' });
+    window.sairDaTarefa = async (taskId) => {
+      const task = tarefasGlobais.find(t => t.id === taskId);
+      let arrayWorkers = task.workers || [];
+      arrayWorkers = arrayWorkers.filter(nome => nome !== loggedUserName);
+      await updateDoc(doc(db, "tarefas", taskId), { workers: arrayWorkers });
     };
 
-    window.changePriority = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { priority: sel.value }); };
+    window.marcarComoConcluido = async (taskId) => {
+      if(confirm("Confirmar a conclusão desta missão?")) {
+        await updateDoc(doc(db, "tarefas", taskId), { 
+          status: 'historico', 
+          completedAt: Date.now(),
+          completedBy: loggedUserName 
+        });
+      }
+    };
+    
+    window.reativarTarefa = async (taskId) => { await updateDoc(doc(db, "tarefas", taskId), { status: 'done' }); };
+
+    window.changePriority = async (sel, taskId) => { 
+      const task = tarefasGlobais.find(t => t.id === taskId);
+      const newPrio = sel.value;
+      let updates = { priority: newPrio };
+      
+      // Recalcula o prazo ao mudar de prioridade
+      if (newPrio === 'sem_prazo') {
+        updates.deadline = null;
+      } else if (task.createdAt) {
+        updates.deadline = task.createdAt + (configPrioridade[newPrio].dias * 24 * 60 * 60 * 1000);
+      }
+      await updateDoc(doc(db, "tarefas", taskId), updates); 
+    };
+    
     window.changeAssignee = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { assignee: sel.value }); };
-    window.removeTask = async (taskId) => { if(confirm("Deseja excluir permanentemente?")) await deleteDoc(doc(db, "tarefas", taskId)); };
+    
+    window.removeTask = async (taskId) => { 
+      if(confirm("Deseja excluir permanentemente esta tarefa?")) await deleteDoc(doc(db, "tarefas", taskId)); 
+    };
 
     window.abrirModal = () => { document.getElementById("task-modal").style.display = "flex"; document.getElementById("new-task-text").value = ""; };
     window.fecharModal = () => { document.getElementById("task-modal").style.display = "none"; };
-    window.allowDrop = (ev) => { ev.preventDefault(); }; window.drag = (ev) => { ev.dataTransfer.setData("text", ev.target.id); };
+    window.allowDrop = (ev) => { ev.preventDefault(); }; window.drag = (ev) => { ev.dataTransfer.getData("text"); ev.dataTransfer.setData("text", ev.target.id); };
 
     function buildCardElement(taskData) {
       const card = document.createElement("div");
@@ -516,21 +605,74 @@
       let opcoesSetores = `<option value="">👤 Atribuir...</option>`;
       setoresGlobais.forEach(s => { opcoesSetores += `<option value="${s.nome}" ${taskData.assignee===s.nome?'selected':''}>${s.nome}</option>`; });
 
-      // O botão de concluir SÓ aparece se a tarefa estiver na coluna 'done' E o utilizador tiver a permissão (ou for admin)
+      // Lógica de Prazos e Atrasos
+      let prazoHtml = `<span>Prazo: Sem prazo definido</span>`;
+      if (taskData.deadline && taskData.priority !== 'sem_prazo') {
+        const diff = Date.now() - taskData.deadline;
+        if (diff > 0 && taskData.status !== 'historico') {
+          const diasAtraso = Math.ceil(diff / (1000 * 60 * 60 * 24));
+          prazoHtml = `<span class="overdue-alert">⚠️ Atrasado ${diasAtraso} dia(s)</span>`;
+        } else {
+          prazoHtml = `<span>Prazo: <strong>${new Date(taskData.deadline).toLocaleDateString('pt-BR')}</strong></span>`;
+        }
+      }
+
+      // Lógica do botão Concluir
       let btnConcluirHtml = "";
       if (taskData.status === 'done' && (userPerms.concluirTarefas || userRole === 'admin')) {
-        btnConcluirHtml = `<button class="btn-check-task" onclick="marcarComoConcluido('${taskData.id}')">✔ Finalizar Tarefa</button>`;
+        btnConcluirHtml = `<button class="btn-action-task" onclick="marcarComoConcluido('${taskData.id}')">✔ Finalizar Missão</button>`;
+      }
+
+      // Lógica de Participantes (Em Andamento)
+      let workersHtml = "";
+      if (taskData.status === 'doing') {
+        let btnParticipar = `<button class="btn-action-task btn-join" onclick="assumirTarefa('${taskData.id}')">🙋‍♂️ Assumir Tarefa</button>`;
+        const arrayWorkers = taskData.workers || [];
+        
+        if (arrayWorkers.includes(loggedUserName)) {
+          btnParticipar = `<button class="btn-action-task" style="background:#555;" onclick="sairDaTarefa('${taskData.id}')">Sair da Tarefa</button>`;
+        }
+        
+        let workersBadges = "";
+        arrayWorkers.forEach(w => { workersBadges += `<span class="worker-badge">${w}</span>`; });
+        
+        workersHtml = `
+          <div style="border-top: 1px dashed #555; padding-top: 10px; margin-top: 5px;">
+            ${btnParticipar}
+            <div class="workers-list">${workersBadges}</div>
+          </div>
+        `;
+      }
+
+      // Botão Excluir (Só aparece se tiver permissão)
+      let btnDeleteHtml = "";
+      if (userRole === 'admin' || userPerms.apagarTarefas) {
+        btnDeleteHtml = `<span class="delete-btn" title="Apagar Tarefa" onclick="removeTask('${taskData.id}')">&times;</span>`;
       }
 
       card.innerHTML = `
         <span class="task-text">${taskData.text}</span>
+        
         <div class="tag-container">
-          <select class="priority-select bg-${taskData.priority}" onchange="changePriority(this, '${taskData.id}')"><option value="vermelho" ${taskData.priority==='vermelho'?'selected':''}>Emergência</option><option value="laranja" ${taskData.priority==='laranja'?'selected':''}>Muito Urgente</option><option value="amarelo" ${taskData.priority==='amarelo'?'selected':''}>Urgente</option><option value="verde" ${taskData.priority==='verde'?'selected':''}>Pouco Urgente</option><option value="azul" ${taskData.priority==='azul'?'selected':''}>Não Urgente</option></select>
+          <select class="priority-select bg-${taskData.priority}" onchange="changePriority(this, '${taskData.id}')">
+            <option value="emergente" ${taskData.priority==='emergente'?'selected':''}>Emergente</option>
+            <option value="muito_urgente" ${taskData.priority==='muito_urgente'?'selected':''}>Muito Urgente</option>
+            <option value="urgente" ${taskData.priority==='urgente'?'selected':''}>Urgente</option>
+            <option value="pouco_urgente" ${taskData.priority==='pouco_urgente'?'selected':''}>Pouco Urgente</option>
+            <option value="sem_prazo" ${taskData.priority==='sem_prazo'?'selected':''}>Sem Prazo</option>
+          </select>
           <select class="assignee-select" onchange="changeAssignee(this, '${taskData.id}')">${opcoesSetores}</select>
-          <span class="info-tag" title="Criador">✍️ ${taskData.creator}</span>
         </div>
+
+        <div class="meta-dates">
+          <span>Criado por <strong>${taskData.creator}</strong> em ${formatarData(taskData.createdAt)}</span>
+          ${taskData.startedAt ? `<span>Iniciado em: <strong>${formatarData(taskData.startedAt)}</strong></span>` : ''}
+          ${prazoHtml}
+        </div>
+
+        ${workersHtml}
         ${btnConcluirHtml}
-        <span class="delete-btn" onclick="removeTask('${taskData.id}')">&times;</span>
+        ${btnDeleteHtml}
       `;
       return card;
     }
