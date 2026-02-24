@@ -8,28 +8,13 @@
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 30px; }
   
   /* --- Modais --- */
-  .overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(18, 18, 18, 0.95); z-index: 1000;
-    display: flex; justify-content: center; align-items: center;
-  }
-  .modal-box {
-    background-color: #1e1e24; padding: 40px; border-radius: 10px;
-    border: 1px solid #333; text-align: center; width: 350px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;
-  }
-  .modal-box.large { width: 650px; text-align: left; padding: 30px; }
+  .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+  .modal-box { background-color: #1e1e24; padding: 40px; border-radius: 10px; border: 1px solid #333; text-align: center; width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; }
+  .modal-box.large { width: 750px; text-align: left; padding: 30px; }
   .modal-box h2 { margin-top: 0; margin-bottom: 20px; text-align: center; }
-  .modal-box input[type="text"], .modal-box select {
-    width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px;
-    border: 1px solid #5c5c77; background-color: #2b2b36; color: white;
-  }
+  .modal-box input[type="text"], .modal-box select { width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #5c5c77; background-color: #2b2b36; color: white; }
   
-  /* --- Botões --- */
-  .modal-box button {
-    padding: 10px 20px; background-color: #4CAF50; color: white; border: none;
-    border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 45%;
-  }
+  .modal-box button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 45%; }
   .modal-box button:hover { background-color: #45a049; }
   .auth-btn-google { background-color: #4285F4 !important; width: 100% !important; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 12px !important; }
   .auth-btn-google:hover { background-color: #357ae8 !important; }
@@ -37,17 +22,18 @@
   #auth-error { color: #ff5252; font-size: 0.9rem; margin-top: 10px; display: none; text-align: center; }
 
   /* --- Estrutura do Quadro --- */
-  .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+  .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
   h2 { margin: 0; color: #ffffff; letter-spacing: 1px; }
+  
+  .controls-bar { display: flex; gap: 10px; align-items: center; background: #1e1e24; padding: 8px 15px; border-radius: 8px; border: 1px solid #333; }
+  .controls-bar select { background: #2b2b36; color: white; border: 1px solid #5c5c77; padding: 6px; border-radius: 4px; outline: none; }
+  
   .board { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
-  .column { background-color: #1e1e24; border-radius: 8px; width: 320px; padding: 15px; min-height: 500px; border: 1px solid #333; }
-  .column h3 { text-align: center; margin-top: 0; margin-bottom: 20px; color: #9e9e9e; text-transform: uppercase; }
+  .column { background-color: #1e1e24; border-radius: 8px; width: 320px; padding: 15px; min-height: 500px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
+  .column h3 { text-align: center; margin-top: 0; margin-bottom: 10px; color: #9e9e9e; text-transform: uppercase; }
   
   /* --- Cartões --- */
-  .card { 
-    background-color: #2b2b36; padding: 15px 30px 15px 15px; border-radius: 6px; margin-bottom: 12px; 
-    cursor: grab; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 5px solid #5c5c77; position: relative; display: flex; flex-direction: column; gap: 10px;
-  }
+  .card { background-color: #2b2b36; padding: 15px 30px 15px 15px; border-radius: 6px; cursor: grab; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 5px solid #5c5c77; position: relative; display: flex; flex-direction: column; gap: 10px; }
   .card:active { transform: scale(0.98); }
   .task-text { font-size: 1rem; font-weight: 500; }
   .priority-vermelho { border-left-color: #ff5252; } .priority-laranja { border-left-color: #ff9800; }
@@ -64,27 +50,27 @@
   .bg-amarelo { background-color: #ffeb3b; color: #121212; } .bg-verde { background-color: #4caf50; color: white; } .bg-azul { background-color: #2196f3; color: white; }
 
   .delete-btn { position: absolute; top: 8px; right: 10px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
-  .add-btn { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+  .btn-check-task { background-color: #4CAF50; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; margin-top: 5px; text-align: center; }
+  .btn-check-task:hover { background-color: #45a049; }
+
+  .add-btn { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
   .logout-btn { padding: 8px 15px; background-color: #ff5252; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
   .admin-btn { background-color: #FF9800; } .admin-btn:hover { background-color: #e68a00; }
+  .history-btn { background-color: #2196f3; } .history-btn:hover { background-color: #1976D2; }
   
   /* --- UI do Painel Admin --- */
   .admin-section { background-color: #2b2b36; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
   .admin-section h3 { margin-top: 0; color: #FF9800; border-bottom: 1px solid #444; padding-bottom: 10px; }
   
-  /* Lista de Utilizadores */
-  .user-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #444; }
+  .user-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #444; flex-wrap: wrap; gap: 10px; }
   .user-item:last-child { border-bottom: none; }
-  .user-info { display: flex; flex-direction: column; gap: 3px; }
+  .user-info { display: flex; flex-direction: column; gap: 3px; min-width: 200px; }
+  .user-perms { background: #1a1a20; padding: 8px 12px; border-radius: 6px; display: flex; gap: 15px; font-size: 0.85rem; color: #ccc; align-items: center; }
   .user-actions button { width: auto; padding: 6px 12px; margin: 0 0 0 5px; font-size: 0.8rem; }
-  .btn-edit { background-color: #2196f3; } .btn-edit:hover { background-color: #1976D2; }
-  .btn-approve { background-color: #4CAF50; } .btn-disable { background-color: #ff9800; }
+  .btn-edit { background-color: #2196f3; } .btn-approve { background-color: #4CAF50; } .btn-disable { background-color: #ff9800; }
   .tag-status { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-  .status-pendente { background-color: #ff9800; color: #121212; }
-  .status-aprovado { background-color: #4caf50; color: white; }
-  .status-inativo { background-color: #ff5252; color: white; }
+  .status-pendente { background-color: #ff9800; color: #121212; } .status-aprovado { background-color: #4caf50; color: white; } .status-inativo { background-color: #ff5252; color: white; }
 
-  /* Adicionar Setor */
   .add-sector-container { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
   .add-sector-container input { margin: 0; width: 70%; }
   .add-sector-container button { margin: 0; width: 30%; }
@@ -92,7 +78,7 @@
   .sector-item span.del-sec { color: #ff5252; margin-left: 10px; cursor: pointer; font-weight: bold; }
 
   /* Controlo de Telas */
-  #main-app, #pending-overlay, #admin-modal, #task-modal { display: none; }
+  #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal { display: none; }
 </style>
 </head>
 <body>
@@ -100,7 +86,7 @@
   <div class="overlay" id="login-overlay">
     <div class="modal-box">
       <h2>Acesso Restrito</h2>
-      <p style="color: #aaa; margin-bottom: 25px;">Utilize a sua conta Google para entrar ou solicitar acesso ao painel de missões.</p>
+      <p style="color: #aaa; margin-bottom: 25px;">Utilize a sua conta Google para entrar no painel de missões.</p>
       <div id="auth-error"></div>
       <button class="auth-btn-google" onclick="realizarLoginGoogle()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
@@ -121,20 +107,18 @@
     <div class="modal-box large">
       <h2>Painel de Administração</h2>
       
-      <div class="admin-section">
+      <div class="admin-section" id="bloco-setores" style="display: none;">
         <h3>Gestão de Setores</h3>
         <div class="add-sector-container">
-          <input type="text" id="novo-setor-nome" placeholder="Nome do novo setor (Ex: Marketing, Arte)...">
+          <input type="text" id="novo-setor-nome" placeholder="Nome do novo setor...">
           <button onclick="adicionarSetor()">Adicionar</button>
         </div>
-        <div id="sectors-list">
-          </div>
+        <div id="sectors-list"></div>
       </div>
 
-      <div class="admin-section">
-        <h3>Gestão de Utilizadores</h3>
-        <div id="users-list">
-          </div>
+      <div class="admin-section" id="bloco-usuarios" style="display: none;">
+        <h3>Gestão de Utilizadores e Permissões</h3>
+        <div id="users-list"></div>
       </div>
 
       <div style="text-align: center;">
@@ -143,23 +127,24 @@
     </div>
   </div>
 
+  <div class="overlay" id="history-modal">
+    <div class="modal-box large">
+      <h2>Histórico de Concluídas ✔️</h2>
+      <div id="history-list" style="margin-top: 20px;"></div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button class="btn-cancel" style="width: 200px; margin: 0;" onclick="fecharHistorico()">Fechar Histórico</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="task-modal">
     <div class="modal-box">
       <h2>Nova Atividade</h2>
       <input type="text" id="new-task-text" style="width: 90%;" placeholder="Descreva a tarefa...">
-      
-      <select id="new-task-assignee" style="width: 96%;">
-        <option value="">Selecione o Setor/Responsável</option>
-        </select>
-
+      <select id="new-task-assignee" style="width: 96%;"><option value="">Selecione o Setor</option></select>
       <select id="new-task-priority" style="width: 96%;">
-        <option value="vermelho">Emergência</option>
-        <option value="laranja">Muito Urgente</option>
-        <option value="amarelo">Urgente</option>
-        <option value="verde" selected>Pouco Urgente</option>
-        <option value="azul">Não Urgente</option>
+        <option value="vermelho">Emergência</option><option value="laranja">Muito Urgente</option><option value="amarelo">Urgente</option><option value="verde" selected>Pouco Urgente</option><option value="azul">Não Urgente</option>
       </select>
-      
       <div style="display: flex; justify-content: center; gap: 10px; width: 96%; margin: 0 auto;">
         <button style="width: 50%;" onclick="handleCreateTask()">Guardar</button>
         <button style="width: 50%; margin-left: 0;" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
@@ -170,9 +155,23 @@
   <div id="main-app">
     <div class="header-container">
       <h2>Painel Geral</h2>
-      <div style="display: flex; gap: 15px; align-items: center;">
-        <span id="user-display" style="color: #888; font-size: 0.9rem;"></span>
-        <button id="btn-admin" class="add-btn admin-btn" style="display: none;" onclick="abrirAdmin()">Painel Admin</button>
+      
+      <div class="controls-bar">
+        <label for="filter-priority" style="font-size: 0.85rem; color: #aaa;">Filtro:</label>
+        <select id="filter-priority" onchange="renderizarTarefas()">
+          <option value="todos">Todas as Prioridades</option>
+          <option value="vermelho">🔴 Emergência</option>
+          <option value="laranja">🟠 Muito Urgente</option>
+          <option value="amarelo">🟡 Urgente</option>
+          <option value="verde">🟢 Pouco Urgente</option>
+          <option value="azul">🔵 Não Urgente</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <span id="user-display" style="color: #888; font-size: 0.9rem; margin-right: 10px;"></span>
+        <button class="add-btn history-btn" onclick="abrirHistorico()">✔️ Histórico</button>
+        <button id="btn-admin" class="add-btn admin-btn" style="display: none;" onclick="abrirAdmin()">⚙️ Admin</button>
         <button class="add-btn" onclick="abrirModal()">+ Nova Tarefa</button>
         <button class="logout-btn" onclick="realizarLogout()">Sair</button>
       </div>
@@ -208,13 +207,19 @@
     const auth = getAuth(app); 
     const googleProvider = new GoogleAuthProvider();
 
+    let userRole = "user";
+    let userPerms = { gerenciarSetores: false, concluirTarefas: false };
     let loggedUserName = ""; 
+    
+    let tarefasGlobais = [];
+    let setoresGlobais = [];
+    
     let unsubscribeTarefas = null; 
     let unsubscribeSetores = null;
     let unsubscribeUserCheck = null;
-    
-    // Variável global para guardar os setores e usar nos cartões
-    let setoresGlobais = [];
+
+    // --- ORDEM DE PRIORIDADE ---
+    const ordemPrioridade = { 'vermelho': 1, 'laranja': 2, 'amarelo': 3, 'verde': 4, 'azul': 5 };
 
     // --- AUTENTICAÇÃO E AUTORIZAÇÃO ---
     onAuthStateChanged(auth, async (user) => {
@@ -237,7 +242,8 @@
           email: user.email,
           status: isMasterAdmin ? 'aprovado' : 'pendente',
           role: isMasterAdmin ? 'admin' : 'user',
-          nome: user.displayName || user.email.split('@')[0] 
+          nome: user.displayName || user.email.split('@')[0],
+          permissoes: { gerenciarSetores: isMasterAdmin, concluirTarefas: isMasterAdmin }
         });
         ouvirAlteracaoStatus(user.uid);
       } else {
@@ -258,14 +264,19 @@
           ocultarTudo();
           document.getElementById("main-app").style.display = "block";
           
-          loggedUserName = userData.nome; 
+          loggedUserName = userData.nome;
+          userRole = userData.role;
+          userPerms = userData.permissoes || { gerenciarSetores: false, concluirTarefas: false };
+          
           document.getElementById("user-display").innerText = "👤 " + loggedUserName;
           
-          if (userData.role === 'admin') {
+          // Mostra botão Admin se for admin ou se tiver permissão de gerir setores
+          if (userRole === 'admin' || userPerms.gerenciarSetores) {
             document.getElementById("btn-admin").style.display = "inline-block";
+          } else {
+            document.getElementById("btn-admin").style.display = "none";
           }
           
-          // Inicia escutas de dados do Firestore
           iniciarEscutaSetores();
           iniciarEscutaDasTarefas();
         }
@@ -293,11 +304,23 @@
       window.location.reload();
     };
 
-    // --- PAINEL DE ADMINISTRAÇÃO: SETORES E USUÁRIOS ---
+    // --- PAINEL DE ADMINISTRAÇÃO E PERMISSÕES ---
     window.abrirAdmin = async () => {
       document.getElementById("admin-modal").style.display = "flex";
-      carregarTodosUsuarios();
-      renderizarSetoresAdmin();
+      
+      if (userRole === 'admin' || userPerms.gerenciarSetores) {
+        document.getElementById("bloco-setores").style.display = "block";
+        renderizarSetoresAdmin();
+      } else {
+        document.getElementById("bloco-setores").style.display = "none";
+      }
+
+      if (userRole === 'admin') {
+        document.getElementById("bloco-usuarios").style.display = "block";
+        carregarTodosUsuarios();
+      } else {
+        document.getElementById("bloco-usuarios").style.display = "none";
+      }
     };
     window.fecharAdmin = () => { document.getElementById("admin-modal").style.display = "none"; };
 
@@ -306,126 +329,147 @@
       unsubscribeSetores = onSnapshot(collection(db, "setores"), (snapshot) => {
         setoresGlobais = [];
         snapshot.forEach(doc => setoresGlobais.push({ id: doc.id, nome: doc.data().nome }));
-        
-        // Atualiza os selects em toda a tela
         atualizarDropdownNovaTarefa();
-        // Renderiza no Admin se estiver aberto
-        if(document.getElementById("admin-modal").style.display === "flex") {
-          renderizarSetoresAdmin();
-        }
+        if(document.getElementById("admin-modal").style.display === "flex") renderizarSetoresAdmin();
       });
     }
 
     function atualizarDropdownNovaTarefa() {
       const select = document.getElementById("new-task-assignee");
-      select.innerHTML = '<option value="">Selecione o Setor/Responsável</option>';
-      setoresGlobais.forEach(setor => {
-        select.innerHTML += `<option value="${setor.nome}">${setor.nome}</option>`;
-      });
+      select.innerHTML = '<option value="">Selecione o Setor</option>';
+      setoresGlobais.forEach(setor => { select.innerHTML += `<option value="${setor.nome}">${setor.nome}</option>`; });
     }
 
     window.adicionarSetor = async () => {
       const input = document.getElementById("novo-setor-nome");
-      const nome = input.value.trim();
-      if (!nome) return alert("Digite um nome para o setor.");
-      await addDoc(collection(db, "setores"), { nome: nome });
+      if (!input.value.trim()) return alert("Digite um nome.");
+      await addDoc(collection(db, "setores"), { nome: input.value.trim() });
       input.value = "";
     };
 
     window.excluirSetor = async (id) => {
-      if(confirm("Tem certeza que deseja excluir este setor?")) {
-        await deleteDoc(doc(db, "setores", id));
-      }
+      if(confirm("Deseja excluir este setor?")) await deleteDoc(doc(db, "setores", id));
     };
 
     function renderizarSetoresAdmin() {
       const div = document.getElementById("sectors-list");
-      div.innerHTML = "";
-      if (setoresGlobais.length === 0) {
-        div.innerHTML = "<span style='color: #888;'>Nenhum setor cadastrado.</span>";
-        return;
-      }
-      setoresGlobais.forEach(setor => {
-        div.innerHTML += `<div class="sector-item">${setor.nome} <span class="del-sec" onclick="excluirSetor('${setor.id}')" title="Excluir">&times;</span></div>`;
-      });
+      div.innerHTML = setoresGlobais.length === 0 ? "<span style='color: #888;'>Nenhum setor.</span>" : "";
+      setoresGlobais.forEach(s => { div.innerHTML += `<div class="sector-item">${s.nome} <span class="del-sec" onclick="excluirSetor('${s.id}')">&times;</span></div>`; });
     }
 
     // Usuários
     async function carregarTodosUsuarios() {
       const listaDiv = document.getElementById("users-list");
       listaDiv.innerHTML = "Carregando...";
-
       const querySnapshot = await getDocs(collection(db, "usuarios"));
       listaDiv.innerHTML = "";
       
-      querySnapshot.forEach((documento) => {
-        const user = documento.data();
-        const uid = documento.id;
+      querySnapshot.forEach((docSnap) => {
+        const user = docSnap.data();
+        const uid = docSnap.id;
+        const perms = user.permissoes || {};
         
-        let statusTag = '';
-        if(user.status === 'pendente') statusTag = '<span class="tag-status status-pendente">Aguardando</span>';
-        else if(user.status === 'aprovado') statusTag = '<span class="tag-status status-aprovado">Ativo</span>';
-        else statusTag = '<span class="tag-status status-inativo">Inativo</span>';
+        let statusTag = user.status === 'pendente' ? '<span class="tag-status status-pendente">Aguardando</span>' : 
+                        user.status === 'aprovado' ? '<span class="tag-status status-aprovado">Ativo</span>' : 
+                        '<span class="tag-status status-inativo">Inativo</span>';
 
-        // Botões de Ação
         let botoesHtml = `<button class="btn-edit" onclick="editarNomeUsuario('${uid}', '${user.nome}')">Alterar Nome</button>`;
-        
-        if (user.status === 'pendente') {
-          botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Aprovar</button>`;
-        } else if (user.status === 'aprovado') {
-          // Evita que o Admin se desative acidentalmente
-          if (user.role !== 'admin') {
-            botoesHtml += `<button class="btn-disable" onclick="alterarStatusUsuario('${uid}', 'inativo')">Desativar</button>`;
-          }
-        } else if (user.status === 'inativo') {
-          botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Reativar</button>`;
-        }
+        if (user.status === 'pendente') botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Aprovar</button>`;
+        else if (user.status === 'aprovado' && user.role !== 'admin') botoesHtml += `<button class="btn-disable" onclick="alterarStatusUsuario('${uid}', 'inativo')">Desativar</button>`;
+        else if (user.status === 'inativo') botoesHtml += `<button class="btn-approve" onclick="alterarStatusUsuario('${uid}', 'aprovado')">Reativar</button>`;
+
+        // Bloqueia edição de permissões se for Admin (admin já tem tudo)
+        let disabledCheck = user.role === 'admin' ? 'disabled checked' : '';
+        let chkSetor = perms.gerenciarSetores ? 'checked' : '';
+        let chkConcluir = perms.concluirTarefas ? 'checked' : '';
 
         listaDiv.innerHTML += `
           <div class="user-item">
             <div class="user-info">
-              <strong style="color: white; font-size: 1.1rem;">${user.nome} ${user.role === 'admin' ? '⭐' : ''}</strong>
+              <strong style="color: white; font-size: 1.1rem;">${user.nome} ${user.role === 'admin' ? '⭐ (Admin Mestre)' : ''}</strong>
               <span style="color: #888; font-size: 0.8rem;">${user.email} ${statusTag}</span>
             </div>
-            <div class="user-actions">
-              ${botoesHtml}
+            
+            <div class="user-perms">
+              <label><input type="checkbox" ${disabledCheck} ${chkSetor} onchange="togglePermissao('${uid}', 'gerenciarSetores', this.checked)"> Gerenciar Setores</label>
+              <label><input type="checkbox" ${disabledCheck} ${chkConcluir} onchange="togglePermissao('${uid}', 'concluirTarefas', this.checked)"> Concluir Tarefas</label>
             </div>
+
+            <div class="user-actions">${botoesHtml}</div>
           </div>
         `;
       });
     }
 
+    window.togglePermissao = async (uid, campo, valor) => {
+      await updateDoc(doc(db, "usuarios", uid), { [`permissoes.${campo}`]: valor });
+    };
+
     window.editarNomeUsuario = async (uid, nomeAtual) => {
-      const novoNome = prompt("Digite o novo nome oficial do utilizador:", nomeAtual);
-      if (novoNome && novoNome.trim() !== "") {
-        await updateDoc(doc(db, "usuarios", uid), { nome: novoNome.trim() });
-        carregarTodosUsuarios(); // Recarrega a lista
-      }
+      const novoNome = prompt("Novo nome:", nomeAtual);
+      if (novoNome && novoNome.trim()) { await updateDoc(doc(db, "usuarios", uid), { nome: novoNome.trim() }); carregarTodosUsuarios(); }
     };
 
     window.alterarStatusUsuario = async (uid, novoStatus) => {
-      let msg = novoStatus === 'inativo' ? "Deseja realmente desativar o acesso deste utilizador?" : "Deseja aprovar/reativar este utilizador?";
-      if (confirm(msg)) {
-        await updateDoc(doc(db, "usuarios", uid), { status: novoStatus });
-        carregarTodosUsuarios(); // Recarrega a lista
-      }
+      if (confirm("Confirmar alteração de status?")) { await updateDoc(doc(db, "usuarios", uid), { status: novoStatus }); carregarTodosUsuarios(); }
     };
 
 
-    // --- FUNÇÕES DO QUADRO DE TAREFAS (FIRESTORE) ---
+    // --- QUADRO, FILTRO, ORDENAÇÃO E HISTÓRICO ---
     function iniciarEscutaDasTarefas() {
       unsubscribeTarefas = onSnapshot(collection(db, "tarefas"), (snapshot) => {
-        document.getElementById("todo").innerHTML = "<h3>A Fazer</h3>";
-        document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>";
-        document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
-
-        snapshot.forEach((docSnapshot) => {
-          const taskData = docSnapshot.data();
-          taskData.id = docSnapshot.id;
-          const card = buildCardElement(taskData);
-          const column = document.getElementById(taskData.status);
-          if(column) column.appendChild(card);
+        tarefasGlobais = [];
+        snapshot.forEach(docSnap => {
+          let t = docSnap.data(); t.id = docSnap.id; tarefasGlobais.push(t);
         });
+        renderizarTarefas();
+        if(document.getElementById("history-modal").style.display === "flex") renderizarHistorico();
+      });
+    }
+
+    window.renderizarTarefas = () => {
+      // Limpa as colunas
+      document.getElementById("todo").innerHTML = "<h3>A Fazer</h3>";
+      document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>";
+      document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
+
+      const filtro = document.getElementById("filter-priority").value;
+      
+      // Filtra tarefas ativas (não histórico) e pela prioridade selecionada
+      let filtradas = tarefasGlobais.filter(t => t.status !== 'historico');
+      if(filtro !== 'todos') filtradas = filtradas.filter(t => t.priority === filtro);
+
+      // ORDENAÇÃO: Vermelho no topo, Azul no fim
+      filtradas.sort((a, b) => (ordemPrioridade[a.priority] || 99) - (ordemPrioridade[b.priority] || 99));
+
+      filtradas.forEach(task => {
+        const column = document.getElementById(task.status);
+        if(column) column.appendChild(buildCardElement(task));
+      });
+    };
+
+    window.abrirHistorico = () => { document.getElementById("history-modal").style.display = "flex"; renderizarHistorico(); };
+    window.fecharHistorico = () => { document.getElementById("history-modal").style.display = "none"; };
+
+    function renderizarHistorico() {
+      const div = document.getElementById("history-list");
+      div.innerHTML = "";
+      const historico = tarefasGlobais.filter(t => t.status === 'historico');
+      
+      if(historico.length === 0) { div.innerHTML = "<p style='color:#888; text-align:center;'>Nenhuma tarefa concluída ainda.</p>"; return; }
+      
+      // Ordena por prioridade também no histórico (ou poderia ser por data, se tivéssemos)
+      historico.sort((a, b) => (ordemPrioridade[a.priority] || 99) - (ordemPrioridade[b.priority] || 99));
+
+      historico.forEach(task => {
+        div.innerHTML += `
+          <div class="card priority-${task.priority}" style="cursor: default; flex-direction: row; justify-content: space-between; align-items: center;">
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+              <span class="task-text" style="text-decoration: line-through; color: #aaa;">${task.text}</span>
+              <div class="tag-container"><span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span><span class="info-tag">Criado por: ${task.creator}</span></div>
+            </div>
+            <button onclick="reativarTarefa('${task.id}')" style="background: #2196f3; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Desfazer</button>
+          </div>`;
       });
     }
 
@@ -435,11 +479,7 @@
       const priority = document.getElementById("new-task-priority").value;
       if (!text.trim()) return alert("Descreva a tarefa!");
 
-      await addDoc(collection(db, "tarefas"), {
-        text: text, assignee: assignee, priority: priority,
-        creator: loggedUserName, 
-        status: "todo" 
-      });
+      await addDoc(collection(db, "tarefas"), { text: text, assignee: assignee, priority: priority, creator: loggedUserName, status: "todo" });
       fecharModal();
     };
 
@@ -451,16 +491,21 @@
       await updateDoc(doc(db, "tarefas", taskId), { status: targetColumn.id });
     };
 
-    window.changePriority = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { priority: sel.value }); };
+    window.marcarComoConcluido = async (taskId) => {
+      if(confirm("Deseja mover esta tarefa para o histórico de concluídas?")) {
+        await updateDoc(doc(db, "tarefas", taskId), { status: 'historico' });
+      }
+    };
     
-    // Função alterada para lidar com o Select em vez de input de texto
-    window.changeAssignee = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { assignee: sel.value }); };
-    
-    window.removeTask = async (taskId) => {
-      if(confirm("Deseja excluir esta tarefa?")) await deleteDoc(doc(db, "tarefas", taskId));
+    window.reativarTarefa = async (taskId) => {
+      await updateDoc(doc(db, "tarefas", taskId), { status: 'done' });
     };
 
-    window.abrirModal = () => { document.getElementById("task-modal").style.display = "flex"; document.getElementById("new-task-text").value = ""; document.getElementById("new-task-assignee").value = ""; };
+    window.changePriority = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { priority: sel.value }); };
+    window.changeAssignee = async (sel, taskId) => { await updateDoc(doc(db, "tarefas", taskId), { assignee: sel.value }); };
+    window.removeTask = async (taskId) => { if(confirm("Deseja excluir permanentemente?")) await deleteDoc(doc(db, "tarefas", taskId)); };
+
+    window.abrirModal = () => { document.getElementById("task-modal").style.display = "flex"; document.getElementById("new-task-text").value = ""; };
     window.fecharModal = () => { document.getElementById("task-modal").style.display = "none"; };
     window.allowDrop = (ev) => { ev.preventDefault(); }; window.drag = (ev) => { ev.dataTransfer.setData("text", ev.target.id); };
 
@@ -468,24 +513,23 @@
       const card = document.createElement("div");
       card.className = `card priority-${taskData.priority}`; card.draggable = true; card.id = taskData.id; card.ondragstart = window.drag;
       
-      // Gera as opções de setores do cartão atual baseadas no banco
       let opcoesSetores = `<option value="">👤 Atribuir...</option>`;
-      setoresGlobais.forEach(setor => {
-        let selecionado = taskData.assignee === setor.nome ? "selected" : "";
-        opcoesSetores += `<option value="${setor.nome}" ${selecionado}>${setor.nome}</option>`;
-      });
+      setoresGlobais.forEach(s => { opcoesSetores += `<option value="${s.nome}" ${taskData.assignee===s.nome?'selected':''}>${s.nome}</option>`; });
+
+      // O botão de concluir SÓ aparece se a tarefa estiver na coluna 'done' E o utilizador tiver a permissão (ou for admin)
+      let btnConcluirHtml = "";
+      if (taskData.status === 'done' && (userPerms.concluirTarefas || userRole === 'admin')) {
+        btnConcluirHtml = `<button class="btn-check-task" onclick="marcarComoConcluido('${taskData.id}')">✔ Finalizar Tarefa</button>`;
+      }
 
       card.innerHTML = `
         <span class="task-text">${taskData.text}</span>
         <div class="tag-container">
           <select class="priority-select bg-${taskData.priority}" onchange="changePriority(this, '${taskData.id}')"><option value="vermelho" ${taskData.priority==='vermelho'?'selected':''}>Emergência</option><option value="laranja" ${taskData.priority==='laranja'?'selected':''}>Muito Urgente</option><option value="amarelo" ${taskData.priority==='amarelo'?'selected':''}>Urgente</option><option value="verde" ${taskData.priority==='verde'?'selected':''}>Pouco Urgente</option><option value="azul" ${taskData.priority==='azul'?'selected':''}>Não Urgente</option></select>
-          
-          <select class="assignee-select" onchange="changeAssignee(this, '${taskData.id}')" title="Alterar Responsável">
-            ${opcoesSetores}
-          </select>
-
+          <select class="assignee-select" onchange="changeAssignee(this, '${taskData.id}')">${opcoesSetores}</select>
           <span class="info-tag" title="Criador">✍️ ${taskData.creator}</span>
         </div>
+        ${btnConcluirHtml}
         <span class="delete-btn" onclick="removeTask('${taskData.id}')">&times;</span>
       `;
       return card;
