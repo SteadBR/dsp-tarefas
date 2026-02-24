@@ -7,130 +7,156 @@
 <link rel="icon" href="https://i.imgur.com/eiwjL4h.png" type="image/png">
 <style>
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px 30px; }
+  
+  /* Bloqueios Anti-Plágio Visuais */
   * { user-select: none; -webkit-user-select: none; }
   input, textarea, select { user-select: text; -webkit-user-select: text; }
 
   /* --- Modais --- */
   .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; }
-  .modal-box { background-color: #1e1e24; padding: 40px; border-radius: 10px; border: 1px solid #333; text-align: center; width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; }
+  .modal-box { background-color: #1e1e24; padding: 40px; border-radius: 10px; border: 1px solid #333; text-align: center; width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; }
   .modal-box.large { width: 850px; text-align: left; padding: 30px; }
   .modal-box h2 { margin-top: 0; margin-bottom: 20px; text-align: center; }
   
-  .modal-box input[type="text"], .modal-box select, .modal-box textarea { width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #5c5c77; background-color: #2b2b36; color: white; font-family: inherit; }
+  .modal-box input[type="text"], .modal-box select, .modal-box textarea { 
+    width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px; 
+    border: 1px solid #5c5c77; background-color: #2b2b36; color: white; font-family: inherit;
+  }
+  .modal-box textarea { resize: vertical; min-height: 80px; }
+  
   .modal-box button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 45%; }
+  .modal-box button:hover { background-color: #45a049; }
+  .auth-btn-google { background-color: #4285F4 !important; width: 100% !important; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 12px !important; }
   .btn-cancel { background-color: #ff5252 !important; margin-left: 5%; }
 
-  /* --- Estrutura --- */
+  /* --- Estrutura Principal --- */
   .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #333; padding-bottom: 15px; }
   .logo-title { display: flex; align-items: center; gap: 15px; }
   .logo-title img { height: 45px; pointer-events: none; }
+  h2 { margin: 0; color: #ffffff; letter-spacing: 1px; }
   
   .board { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
   .column { background-color: #1e1e24; border-radius: 8px; width: 340px; padding: 15px; min-height: 500px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
+  .column h3 { text-align: center; margin-top: 0; margin-bottom: 5px; color: #9e9e9e; text-transform: uppercase; }
   
-  /* --- Cartões --- */
+  /* --- Cartões Restaurados --- */
   .card { background-color: #2b2b36; padding: 15px; border-radius: 6px; cursor: grab; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border-left: 5px solid #5c5c77; position: relative; display: flex; flex-direction: column; gap: 10px; }
-  .task-title { font-size: 1.1rem; font-weight: bold; margin: 0; color: #fff; }
+  .card:active { transform: scale(0.98); }
   
+  .task-title { font-size: 1.1rem; font-weight: bold; margin: 0; color: #fff; padding-right: 25px; }
+  .task-desc { font-size: 0.85rem; color: #ccc; margin: 0; line-height: 1.4; }
+  
+  /* Cores de Prioridade */
   .priority-emergente { border-left-color: #ff5252; } .priority-muito_urgente { border-left-color: #ff9800; }
   .priority-urgente { border-left-color: #ffeb3b; } .priority-pouco_urgente { border-left-color: #4caf50; } .priority-sem_prazo { border-left-color: #2196f3; }
+  .bg-emergente { background-color: #ff5252; color: white; } .bg-muito_urgente { background-color: #ff9800; color: #121212; }
+  .bg-urgente { background-color: #ffeb3b; color: #121212; } .bg-pouco_urgente { background-color: #4caf50; color: white; } .bg-sem_prazo { background-color: #2196f3; color: white; }
+
+  .tag-container { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .info-tag { font-size: 0.7rem; color: #aaa; background-color: #1a1a20; padding: 4px 6px; border-radius: 4px; }
   
-  .meta-dates { font-size: 0.65rem; color: #888; background: #22222a; padding: 6px; border-radius: 4px; }
+  .assignee-select, .priority-select { font-size: 0.7rem; padding: 4px 6px; border-radius: 4px; outline: none; border: none; cursor: pointer; }
+  .assignee-select { color: #aaa; background-color: #1a1a20; width: auto; }
+  .assignee-select:disabled { opacity: 0.6; cursor: not-allowed; }
+  .priority-select { font-weight: bold; text-transform: uppercase; appearance: none; }
+  
+  .meta-dates { font-size: 0.65rem; color: #888; background: #22222a; padding: 6px; border-radius: 4px; line-height: 1.4; }
   .overdue-alert { color: #ff5252; font-weight: bold; }
 
-  .delete-btn { position: absolute; top: 8px; right: 8px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: #1a1a20; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 1px solid #333; }
+  .delete-btn { position: absolute; top: 8px; right: 8px; color: #ff5252; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: #1a1a20; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
 
-  /* Histórico Específico */
-  .history-header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #1a1a20; padding: 10px; border-radius: 8px; }
-  .pagination-controls { display: flex; gap: 10px; align-items: center; }
-  .btn-page { background: #333; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
-  .btn-page:disabled { opacity: 0.3; cursor: not-allowed; }
+  /* Elementos de Interação */
+  .comment-box { display: flex; flex-direction: column; gap: 5px; margin-top: 5px; background: #1e1e24; padding: 8px; border-radius: 4px; }
+  .comment-box textarea { width: 95%; background: #121212; color: #fff; border: 1px solid #444; font-size: 0.75rem; padding: 5px; }
   
-  .btn-action-task { background-color: #4CAF50; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; text-align: center; }
-  .btn-conferido { background-color: #2196f3 !important; }
-  .badge-conferido { background: #2196f3; color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; margin-left: 10px; font-weight: bold; }
+  .btn-action-task { background-color: #4CAF50; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+  .badge-conferido { background: #2196f3; color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 5px; }
 
-  /* Controlo de Telas */
-  #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal, #finish-modal { display: none; }
+  /* Histórico e Paginação */
+  .history-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #1a1a20; padding: 10px; border-radius: 8px; border: 1px solid #333; }
+  .pagination-btns { display: flex; gap: 8px; align-items: center; }
+  .btn-page { background: #333; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+  .btn-page:disabled { opacity: 0.3; }
+
+  .add-btn { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 </style>
+<script>
+  document.addEventListener('contextmenu', event => event.preventDefault());
+  document.addEventListener('keydown', function(e) {
+    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) {
+      e.preventDefault();
+      return false;
+    }
+  });
+</script>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
   <div class="overlay" id="login-overlay">
     <div class="modal-box">
-      <img src="https://i.imgur.com/eiwjL4h.png" alt="DSP Logo" style="height: 60px; margin-bottom: 10px;">
+      <img src="https://i.imgur.com/eiwjL4h.png" alt="Logo" style="height: 60px; margin-bottom: 10px;">
       <h2>Acesso Restrito</h2>
-      <p style="color: #aaa; margin-bottom: 25px;">Utilize sua conta Google para entrar no painel de tarefas.</p>
-      <button class="auth-btn-google" onclick="realizarLoginGoogle()" style="background-color: #4285F4; color: white; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px;">
-        Entrar com o Google
-      </button>
+      <p style="color: #aaa; margin-bottom: 25px;">Utilize sua conta Google para entrar no painel.</p>
+      <button class="auth-btn-google" onclick="realizarLoginGoogle()">Entrar com o Google</button>
     </div>
   </div>
 
   <div class="overlay" id="pending-overlay">
     <div class="modal-box">
       <h2>Acesso Bloqueado ⏳</h2>
-      <p style="color: #aaa; margin-bottom: 25px;">Sua conta está aguardando aprovação ou foi desativada pelo administrador.</p>
-      <button onclick="realizarLogout()" style="background:#ff5252; color:white; border:none; padding:10px; border-radius:6px; cursor:pointer; width:100%;">Sair</button>
+      <p style="color: #aaa; margin-bottom: 25px;">Sua conta está aguardando aprovação ou foi desativada.</p>
+      <button onclick="realizarLogout()" class="btn-cancel" style="width:100%; margin:0;">Sair da Conta</button>
     </div>
   </div>
 
   <div class="overlay" id="history-modal">
     <div class="modal-box large">
-      <h2>Histórico de Tarefas Concluídas</h2>
-      
-      <div class="history-header-controls">
+      <h2>Histórico de Concluídas ✔️</h2>
+      <div class="history-controls">
         <div>
-          <label style="font-size: 0.85rem;">Exibir: </label>
-          <select id="history-limit" onchange="resetarPaginaERenderizar()" style="background:#2b2b36; color:white; border:1px solid #555; padding:4px; border-radius:4px;">
-            <option value="10">10 tarefas</option>
-            <option value="25">25 tarefas</option>
-            <option value="50">50 tarefas</option>
-            <option value="9999">Todas</option>
+          <label style="font-size:0.8rem;">Exibir: </label>
+          <select id="history-limit" onchange="resetarPaginaERenderizar()" style="width:auto; padding:4px; margin:0;">
+            <option value="10">10 tarefas</option><option value="25">25 tarefas</option><option value="50">50 tarefas</option><option value="9999">Todas</option>
           </select>
         </div>
-        <div class="pagination-controls">
+        <div class="pagination-btns">
           <button class="btn-page" id="btn-prev" onclick="mudarPagina(-1)">Anterior</button>
-          <span id="page-info" style="font-size: 0.85rem;">Página 1</span>
+          <span id="page-info" style="font-size:0.8rem;">Página 1</span>
           <button class="btn-page" id="btn-next" onclick="mudarPagina(1)">Próxima</button>
         </div>
       </div>
-
       <div id="history-list"></div>
-
-      <div style="text-align: center; margin-top: 20px;">
-        <button class="btn-cancel" style="width: 200px; margin: 0;" onclick="fecharHistorico()">Fechar Histórico</button>
-      </div>
+      <center><button class="btn-cancel" onclick="fecharHistorico()">Fechar</button></center>
     </div>
   </div>
 
-  <div class="overlay" id="admin-modal"><div class="modal-box large"><h2>⚙️ Administração</h2><div id="bloco-setores" style="display:none;"><h3>Setores</h3><div style="display:flex; gap:10px;"><input type="text" id="novo-setor-nome" placeholder="Novo Setor..."><button onclick="adicionarSetor()">Add</button></div><div id="sectors-list"></div></div><div id="bloco-usuarios" style="display:none;"><h3>Usuários e Permissões</h3><div id="users-list"></div></div><center><button class="btn-cancel" onclick="fecharAdmin()">Fechar</button></center></div></div>
-  <div class="overlay" id="task-modal"><div class="modal-box"><h2>Nova Atividade</h2><input type="text" id="new-task-title" placeholder="Título"><textarea id="new-task-desc" placeholder="Descrição"></textarea><select id="new-task-assignee"></select><select id="new-task-priority"><option value="emergente">🔴 Emergente</option><option value="muito_urgente">🟠 Muito Urgente</option><option value="urgente">🟡 Urgente</option><option value="pouco_urgente" selected>🟢 Pouco Urgente</option><option value="sem_prazo">🔵 Sem Prazo</option></select><button onclick="handleCreateTask()">Salvar</button><button class="btn-cancel" onclick="fecharModal()">Cancelar</button></div></div>
-  <div class="overlay" id="finish-modal"><div class="modal-box"><h2>Finalizar</h2><select id="finish-status"><option value="100% Concluído">✅ 100% Concluído</option><option value="Parcialmente Concluído">⚠️ Parcialmente Concluído</option><option value="Não Concluído">❌ Não Concluído</option></select><textarea id="finish-response" placeholder="Justificativa..."></textarea><button onclick="confirmarFinalizacao()">Confirmar</button><button class="btn-cancel" onclick="fecharFinishModal()">Voltar</button></div></div>
+  <div class="overlay" id="admin-modal"><div class="modal-box large"><h2>⚙️ Administração</h2><div id="bloco-setores" style="display:none;"><h3>Setores</h3><div style="display:flex; gap:10px;"><input type="text" id="novo-setor-nome" placeholder="Novo Setor..."><button onclick="adicionarSetor()">Adicionar</button></div><div id="sectors-list" style="margin-top:10px;"></div></div><div id="bloco-usuarios" style="display:none; margin-top:20px;"><h3>Usuários e Permissões</h3><div id="users-list"></div></div><center><button class="btn-cancel" onclick="fecharAdmin()">Fechar</button></center></div></div>
+  <div class="overlay" id="task-modal"><div class="modal-box"><h2>Nova Atividade</h2><input type="text" id="new-task-title" placeholder="Título"><textarea id="new-task-desc" placeholder="Descrição da tarefa..."></textarea><select id="new-task-assignee"></select><select id="new-task-priority"><option value="emergente">🔴 Emergente (5 dias)</option><option value="muito_urgente">🟠 Muito Urgente (10 dias)</option><option value="urgente">🟡 Urgente (15 dias)</option><option value="pouco_urgente" selected>🟢 Pouco Urgente (30 dias)</option><option value="sem_prazo">🔵 Sem Prazo</option></select><button onclick="handleCreateTask()">Salvar</button><button class="btn-cancel" onclick="fecharModal()">Cancelar</button></div></div>
+  <div class="overlay" id="finish-modal"><div class="modal-box"><h2>Finalizar Missão</h2><select id="finish-status"><option value="100% Concluído">✅ 100% Concluído</option><option value="Parcialmente Concluído">⚠️ Parcialmente Concluído</option><option value="Não Concluído">❌ Não Concluído</option></select><textarea id="finish-response" placeholder="Justificativa ou detalhes da conclusão..."></textarea><button onclick="confirmarFinalizacao()">Confirmar</button><button class="btn-cancel" onclick="fecharFinishModal()">Voltar</button></div></div>
 
-  <div id="main-app">
+  <div id="main-app" style="display:none;">
     <div class="header-container">
       <div class="logo-title"><img src="https://i.imgur.com/eiwjL4h.png" alt="Logo"><h2>DSP - Painel de Tarefas</h2></div>
-      <div style="display:flex; gap:10px; align-items:center;">
-        <select id="filter-priority" onchange="renderizarTarefas()"><option value="todos">Todas Prioridades</option><option value="emergente">🔴 Emergente</option><option value="muito_urgente">🟠 Muito Urgente</option><option value="urgente">🟡 Urgente</option><option value="pouco_urgente">🟢 Pouco Urgente</option><option value="sem_prazo">🔵 Sem Prazo</option></select>
-        <select id="filter-sector" onchange="renderizarTarefas()"><option value="todos">Todos Setores</option></select>
-        <span id="user-display" style="font-size:0.8rem; color:#888;"></span>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <select id="filter-priority" onchange="renderizarTarefas()" style="width:auto; padding:6px;"><option value="todos">Todas Prioridades</option><option value="emergente">🔴 Emergente</option><option value="muito_urgente">🟠 Muito Urgente</option><option value="urgente">🟡 Urgente</option><option value="pouco_urgente">🟢 Pouco Urgente</option><option value="sem_prazo">🔵 Sem Prazo</option></select>
+        <select id="filter-sector" onchange="renderizarTarefas()" style="width:auto; padding:6px;"><option value="todos">Todos Setores</option></select>
+        <span id="user-display" style="font-size:0.85rem; color:#888;"></span>
         <button class="add-btn" style="background:#2196f3;" onclick="abrirHistorico()">Histórico</button>
         <button id="btn-admin" class="add-btn" style="background:#ff9800; display:none;" onclick="abrirAdmin()">Admin</button>
         <button class="add-btn" onclick="abrirModal()">+ Nova</button>
-        <button onclick="realizarLogout()" style="background:#ff5252; color:white; border:none; padding:8px 15px; border-radius:6px; cursor:pointer;">Sair</button>
+        <button onclick="realizarLogout()" class="btn-cancel" style="padding:8px 15px; margin:0;">Sair</button>
       </div>
     </div>
     <div class="board">
-      <div class="column" id="todo"><h3>A Fazer</h3></div>
-      <div class="column" id="doing"><h3>Em Andamento</h3></div>
-      <div class="column" id="done"><h3>Concluído</h3></div>
+      <div class="column" id="todo" ondrop="handleDrop(event)" ondragover="allowDrop(event)"><h3>A Fazer</h3></div>
+      <div class="column" id="doing" ondrop="handleDrop(event)" ondragover="allowDrop(event)"><h3>Em Andamento</h3></div>
+      <div class="column" id="done" ondrop="handleDrop(event)" ondragover="allowDrop(event)"><h3>Concluído</h3></div>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
     const EMAIL_ADMIN_MESTRE = "leovitorjipa@gmail.com"; 
@@ -147,43 +173,38 @@
     let loggedUserName = "";
     let tarefasGlobais = [];
     let setoresGlobais = [];
-    let currentTaskToFinish = null;
-
-    // Paginação do Histórico
     let historyPage = 1;
+    let currentTaskToFinish = null;
 
     // --- AUTH ---
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userSnap = await getDoc(doc(db, "usuarios", user.uid));
-        if (!userSnap.exists()) {
+        const uRef = doc(db, "usuarios", user.uid);
+        const uSnap = await getDoc(uRef);
+        if (!uSnap.exists()) {
           const isM = user.email === EMAIL_ADMIN_MESTRE;
-          await setDoc(doc(db, "usuarios", user.uid), { email: user.email, status: isM?'aprovado':'pendente', role: isM?'admin':'user', nome: user.displayName || user.email.split('@')[0], permissoes: { gerenciarSetores:isM, concluirTarefas:isM, apagarTarefas:isM, alterarSetorTarefa:isM }, setoresPermitidos: [] });
+          await setDoc(uRef, { email: user.email, status: isM?'aprovado':'pendente', role: isM?'admin':'user', nome: user.displayName || user.email.split('@')[0], permissoes: { gerenciarSetores:isM, concluirTarefas:isM, apagarTarefas:isM, alterarSetorTarefa:isM }, setoresPermitidos: [] });
         }
-        ouvirStatus(user.uid);
+        onSnapshot(uRef, (snap) => {
+          const d = snap.data();
+          if (d.status === 'aprovado') {
+            loggedUserName = d.nome; userRole = d.role; userPerms = d.permissoes || {}; userSectors = d.setoresPermitidos || [];
+            document.getElementById("login-overlay").style.display = d.status==='aprovado'?'none':'flex';
+            document.getElementById("pending-overlay").style.display = d.status==='aprovado'?'none':'flex';
+            document.getElementById("main-app").style.display = "block";
+            document.getElementById("user-display").innerText = "👤 " + loggedUserName;
+            document.getElementById("btn-admin").style.display = (userRole === 'admin' || userPerms.gerenciarSetores) ? "inline-block" : "none";
+            iniciarDados();
+          } else {
+            document.getElementById("main-app").style.display = "none";
+            document.getElementById("pending-overlay").style.display = "flex";
+          }
+        });
       } else {
         document.getElementById("main-app").style.display = "none";
         document.getElementById("login-overlay").style.display = "flex";
       }
     });
-
-    function ouvirStatus(uid) {
-      onSnapshot(doc(db, "usuarios", uid), (snap) => {
-        const data = snap.data();
-        if (data.status === 'aprovado') {
-          loggedUserName = data.nome; userRole = data.role; userPerms = data.permissoes || {}; userSectors = data.setoresPermitidos || [];
-          document.getElementById("login-overlay").style.display = "none";
-          document.getElementById("pending-overlay").style.display = "none";
-          document.getElementById("main-app").style.display = "block";
-          document.getElementById("user-display").innerText = "👤 " + loggedUserName;
-          if (userRole === 'admin' || userPerms.gerenciarSetores) document.getElementById("btn-admin").style.display = "inline-block";
-          iniciarDados();
-        } else {
-          document.getElementById("main-app").style.display = "none";
-          document.getElementById("pending-overlay").style.display = "flex";
-        }
-      });
-    }
 
     function iniciarDados() {
       onSnapshot(collection(db, "setores"), (snap) => {
@@ -197,7 +218,6 @@
           if (userRole === 'admin' || userSectors.includes(s.nome)) sF.innerHTML += `<option value="${s.nome}">${s.nome}</option>`;
         });
       });
-
       onSnapshot(collection(db, "tarefas"), (snap) => {
         tarefasGlobais = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderizarTarefas();
@@ -205,14 +225,13 @@
       });
     }
 
-    // --- RENDERIZAR QUADRO ---
-    const prioridadeOrdem = { emergente:1, muito_urgente:2, urgente:3, pouco_urgente:4, sem_prazo:5 };
+    // --- RENDER ---
+    const pOrd = { emergente:1, muito_urgente:2, urgente:3, pouco_urgente:4, sem_prazo:5 };
     
     window.renderizarTarefas = () => {
       document.getElementById("todo").innerHTML = "<h3>A Fazer</h3>";
       document.getElementById("doing").innerHTML = "<h3>Em Andamento</h3>";
       document.getElementById("done").innerHTML = "<h3>Concluído</h3>";
-      
       const pF = document.getElementById("filter-priority").value;
       const sF = document.getElementById("filter-sector").value;
 
@@ -221,147 +240,112 @@
       if (pF !== 'todos') filtradas = filtradas.filter(t => t.priority === pF);
       if (sF !== 'todos') filtradas = filtradas.filter(t => t.assignee === sF);
 
-      filtradas.sort((a,b) => prioridadeOrdem[a.priority] - prioridadeOrdem[b.priority]);
+      filtradas.sort((a,b) => pOrd[a.priority] - pOrd[b.priority]);
       filtradas.forEach(t => document.getElementById(t.status).appendChild(criarCard(t)));
     };
 
-    // --- HISTÓRICO COM PAGINAÇÃO ---
-    window.abrirHistorico = () => { historyPage = 1; document.getElementById("history-modal").style.display = "flex"; renderizarHistorico(); };
-    window.fecharHistorico = () => { document.getElementById("history-modal").style.display = "none"; };
+    function criarCard(t) {
+      const c = document.createElement("div");
+      c.className = `card priority-${t.priority}`; c.draggable = true; c.id = t.id;
+      c.ondragstart = (e) => e.dataTransfer.setData("text", t.id);
+
+      let delay = "";
+      if (t.deadline && t.status !== 'historico') {
+        const diff = Date.now() - t.deadline;
+        delay = diff > 0 ? `<span class="overdue-alert">⚠️ Atraso: ${Math.ceil(diff/86400000)} dia(s)</span>` : `Prazo: ${new Date(t.deadline).toLocaleDateString()}`;
+      }
+      
+      let doingArea = "";
+      if (t.status === 'doing') {
+        const isMe = t.workers?.includes(loggedUserName);
+        doingArea = `<div class="comment-box"><button class="btn-action-task" style="background:${isMe?'#555':'#9c27b0'};" onclick="${isMe?'sair':'assumir'}('${t.id}')">${isMe?'Sair':'🙋‍♂️ Assumir'}</button><div style="display:flex; flex-wrap:wrap; gap:4px; margin:5px 0;">${(t.workers||[]).map(w=>`<span class="worker-badge" style="font-size:0.6rem; background:#3f51b5; color:white; padding:2px 6px; border-radius:10px;">${w}</span>`).join("")}</div>${isMe? `<textarea id="c-${t.id}">${t.doingComment||''}</textarea><button class="btn-action-task" onclick="salvarC('${t.id}')">Salvar</button>` : ''}</div>`;
+      }
+
+      c.innerHTML = `
+        <div style="display:flex; justify-content:space-between;"><h4 class="task-title">${t.title}</h4>${(userRole === 'admin' || userPerms.apagarTarefas) ? `<span class="delete-btn" onclick="removeTask('${t.id}')">&times;</span>` : ''}</div>
+        <p class="task-desc">${t.description}</p>
+        <div class="tag-container">
+          <select onchange="uP('${t.id}',this.value)" class="priority-select bg-${t.priority}"><option value="emergente" ${t.priority==='emergente'?'selected':''}>Emergente</option><option value="muito_urgente" ${t.priority==='muito_urgente'?'selected':''}>Muito Urgente</option><option value="urgente" ${t.priority==='urgente'?'selected':''}>Urgente</option><option value="pouco_urgente" ${t.priority==='pouco_urgente'?'selected':''}>Pouco Urgente</option><option value="sem_prazo" ${t.priority==='sem_prazo'?'selected':''}>Sem Prazo</option></select>
+          <select onchange="uS('${t.id}',this.value)" class="assignee-select" ${!(userRole==='admin'||userPerms.alterarSetorTarefa)?'disabled':''}><option value="">Geral</option>${setoresGlobais.map(s=>`<option value="${s.nome}" ${t.assignee===s.nome?'selected':''}>${s.nome}</option>`).join("")}</select>
+        </div>
+        <div class="meta-dates">Criado em: ${new Date(t.createdAt).toLocaleDateString()}<br>${delay}</div>
+        ${doingArea}
+        ${t.status==='done' && (userPerms.concluirTarefas || userRole==='admin') ? `<button class="btn-action-task" onclick="fina('${t.id}')">✔ Finalizar</button>`:''}
+      `;
+      return c;
+    }
+
+    // --- HISTÓRICO ---
     window.resetarPaginaERenderizar = () => { historyPage = 1; renderizarHistorico(); };
-    window.mudarPagina = (val) => { historyPage += val; renderizarHistorico(); };
+    window.mudarPagina = (v) => { historyPage += v; renderizarHistorico(); };
+    window.abrirHistorico = () => { historyPage = 1; document.getElementById("history-modal").style.display = "flex"; renderizarHistorico(); };
+    window.fecharHistorico = () => document.getElementById("history-modal").style.display = "none";
 
     function renderizarHistorico() {
       const list = document.getElementById("history-list");
       const limit = parseInt(document.getElementById("history-limit").value);
       list.innerHTML = "";
+      let hT = tarefasGlobais.filter(t => t.status === 'historico');
+      if (userRole !== 'admin') hT = hT.filter(t => !t.assignee || userSectors.includes(t.assignee));
+      hT.sort((a,b) => (b.completedAt || 0) - (a.completedAt || 0));
 
-      let historyTasks = tarefasGlobais.filter(t => t.status === 'historico');
-      if (userRole !== 'admin') historyTasks = historyTasks.filter(t => !t.assignee || userSectors.includes(t.assignee));
-      
-      // Ordenar por mais recente (completedAt)
-      historyTasks.sort((a,b) => (b.completedAt || 0) - (a.completedAt || 0));
-
-      const total = historyTasks.length;
-      const totalPages = Math.ceil(total / limit) || 1;
-      const start = (historyPage - 1) * limit;
-      const paginated = historyTasks.slice(start, start + limit);
-
-      document.getElementById("page-info").innerText = `Página ${historyPage} de ${totalPages}`;
+      const totalP = Math.ceil(hT.length / limit) || 1;
+      const paginated = hT.slice((historyPage-1)*limit, historyPage*limit);
+      document.getElementById("page-info").innerText = `Página ${historyPage} de ${totalP}`;
       document.getElementById("btn-prev").disabled = historyPage === 1;
-      document.getElementById("btn-next").disabled = historyPage >= totalPages;
-
-      if(paginated.length === 0) list.innerHTML = "<center>Nenhuma tarefa no histórico.</center>";
+      document.getElementById("btn-next").disabled = historyPage >= totalP;
 
       paginated.forEach(t => {
-        const card = document.createElement("div");
-        card.className = `card priority-${t.priority}`;
-        card.style.cursor = "default";
-        
-        let conferidoTag = t.conferido ? `<span class="badge-conferido">CONFERIDO</span>` : "";
-        let btnConferir = (userRole === 'admin' && !t.conferido) ? `<button class="btn-action-task btn-conferido" onclick="conferirTarefa('${t.id}')">Marcar Conferido</button>` : "";
-        let participantes = t.workers ? t.workers.join(", ") : "Nenhum";
-
-        card.innerHTML = `
-          <div style="display:flex; justify-content:space-between;">
-             <h4 class="task-title">${t.title} ${conferidoTag}</h4>
-             ${(userRole === 'admin' || userPerms.apagarTarefas) ? `<span class="delete-btn" onclick="removeTask('${t.id}')">&times;</span>` : ''}
-          </div>
-          <p style="font-size:0.85rem; color:#ccc; margin:0;">${t.description}</p>
-          <div class="tag-container">
-            <span class="info-tag">Setor: ${t.assignee || 'Geral'}</span>
-            <span class="info-tag">Finalizado por: ${t.completedBy}</span>
-          </div>
-          <div class="tag-container"><span class="info-tag">Participantes: ${participantes}</span></div>
-          <div style="background:#1a1a20; padding:8px; border-radius:4px; font-size:0.8rem;">
-            <strong>${t.completionStatus}:</strong> ${t.completionResponse}
-          </div>
+        const div = document.createElement("div");
+        div.className = `card priority-${t.priority}`; div.style.cursor = "default";
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between;"><h4 class="task-title">${t.title}${t.conferido?'<span class="badge-conferido">CONFERIDO</span>':''}</h4>${(userRole === 'admin' || userPerms.apagarTarefas)?`<span class="delete-btn" onclick="removeTask('${t.id}')">&times;</span>`:''}</div>
+          <p class="task-desc">${t.description}</p>
+          <div class="tag-container"><span class="info-tag">Finalizado por: ${t.completedBy}</span><span class="info-tag">Equipe: ${t.workers?t.workers.join(", "):"Nenhum"}</span></div>
+          <div style="background:#1a1a20; padding:8px; border-radius:4px; font-size:0.8rem; margin:5px 0;"><strong>${t.completionStatus}:</strong> ${t.completionResponse}</div>
           <div style="display:flex; justify-content:space-between; align-items:center;">
-             <div class="meta-dates">Concluído em: ${new Date(t.completedAt).toLocaleString()}</div>
-             <div style="display:flex; gap:5px;">
-               ${btnConferir}
-               <button class="btn-action-task" style="background:#555;" onclick="reativar('${t.id}')">Desfazer</button>
-             </div>
+            <div class="meta-dates">Concluído em: ${new Date(t.completedAt).toLocaleString()}</div>
+            <div style="display:flex; gap:5px;">
+              ${(userRole==='admin' && !t.conferido)? `<button class="btn-action-task" style="background:#2196f3;" onclick="conf('${t.id}')">Conferir</button>`:''}
+              <button class="btn-action-task" style="background:#555;" onclick="reativar('${t.id}')">Desfazer</button>
+            </div>
           </div>
         `;
-        list.appendChild(card);
+        list.appendChild(div);
       });
     }
 
-    // --- FUNÇÕES DE AÇÃO ---
-    window.conferirTarefa = async (id) => { if(confirm("Deseja marcar como conferido para pontuação?")) await updateDoc(doc(db, "tarefas", id), { conferido: true }); };
-    window.reativar = async (id) => { await updateDoc(doc(db, "tarefas", id), { status: 'done' }); };
-    window.removeTask = async (id) => { if(confirm("Excluir permanentemente?")) await deleteDoc(doc(db, "tarefas", id)); };
-
-    function criarCard(t) {
-      const card = document.createElement("div");
-      card.className = `card priority-${t.priority}`;
-      card.draggable = true;
-      card.id = t.id;
-      card.ondragstart = (e) => { e.dataTransfer.setData("text", t.id); };
-
-      let podeSetor = userRole === 'admin' || userPerms.alterarSetorTarefa;
-      let opcoes = setoresGlobais.map(s => `<option value="${s.nome}" ${t.assignee===s.nome?'selected':''}>${s.nome}</option>`).join("");
-      
-      let atraso = "";
-      if (t.deadline && t.status !== 'historico') {
-        const diff = Date.now() - t.deadline;
-        if (diff > 0) atraso = `<span class="overdue-alert">⚠️ Atraso: ${Math.ceil(diff/(1000*60*60*24))} dia(s)</span>`;
-        else atraso = `<span>Prazo: ${new Date(t.deadline).toLocaleDateString()}</span>`;
-      }
-
-      let areaDoing = "";
-      if (t.status === 'doing') {
-        const isMe = t.workers?.includes(loggedUserName);
-        areaDoing = `
-          <div style="border-top:1px dashed #555; padding-top:8px; display:flex; flex-direction:column; gap:8px;">
-            <button class="btn-action-task" style="background:${isMe?'#555':'#9c27b0'};" onclick="${isMe?'sair':'assumir'}('${t.id}')">${isMe?'Sair':'🙋‍♂️ Assumir'}</button>
-            <div style="display:flex; flex-wrap:wrap; gap:4px;">${(t.workers||[]).map(w=>`<span style="font-size:0.6rem; background:#3f51b5; padding:2px 6px; border-radius:10px;">${w}</span>`).join("")}</div>
-            ${isMe? `<textarea id="comm-${t.id}" placeholder="Comentário..." style="font-size:0.8rem; background:#121212; color:white; border:1px solid #444;">${t.doingComment||''}</textarea><button class="btn-action-task" onclick="salvarC('${t.id}')">Salvar</button>` : ''}
-          </div>`;
-      }
-
-      card.innerHTML = `
-        <div style="display:flex; justify-content:space-between;"><h4 class="task-title">${t.title}</h4>${(userRole === 'admin' || userPerms.apagarTarefas) ? `<span class="delete-btn" onclick="removeTask('${t.id}')">&times;</span>` : ''}</div>
-        <p style="font-size:0.85rem; color:#ccc; margin:0;">${t.description}</p>
-        <div class="tag-container">
-          <select onchange="uP('${t.id}', this.value)" class="priority-select bg-${t.priority}"><option value="emergente" ${t.priority==='emergente'?'selected':''}>Emergente</option><option value="muito_urgente" ${t.priority==='muito_urgente'?'selected':''}>Muito Urgente</option><option value="urgente" ${t.priority==='urgente'?'selected':''}>Urgente</option><option value="pouco_urgente" ${t.priority==='pouco_urgente'?'selected':''}>Pouco Urgente</option><option value="sem_prazo" ${t.priority==='sem_prazo'?'selected':''}>Sem Prazo</option></select>
-          <select onchange="uS('${t.id}', this.value)" class="assignee-select" ${!podeSetor?'disabled':''}><option value="">Geral</option>${opcoes}</select>
-        </div>
-        <div class="meta-dates">Criado em: ${new Date(t.createdAt).toLocaleDateString()}<br>${atraso}</div>
-        ${areaDoing}
-        ${t.status === 'done' && (userPerms.concluirTarefas || userRole === 'admin') ? `<button class="btn-action-task" onclick="fina('${t.id}')">✔ Finalizar</button>` : ''}
-      `;
-      return card;
-    }
-
-    // --- HELPERS DB ---
-    const configP = { emergente:5, muito_urgente:10, urgente:15, pouco_urgente:30, sem_prazo:0 };
-    window.uP = async (id, p) => { const agora = Date.now(); let pr = p==='sem_prazo'?null:agora+(configP[p]*24*60*60*1000); await updateDoc(doc(db,"tarefas",id),{priority:p, deadline:pr}); };
-    window.uS = async (id, s) => { await updateDoc(doc(db,"tarefas",id),{assignee:s}); };
+    // --- DB HELPERS ---
+    const cP = { emergente:5, muito_urgente:10, urgente:15, pouco_urgente:30, sem_prazo:0 };
+    window.uP = async (id, p) => { let pr = p==='sem_prazo'?null:Date.now()+(cP[p]*86400000); await updateDoc(doc(db,"tarefas",id),{priority:p, deadline:pr}); };
+    window.uS = async (id, s) => await updateDoc(doc(db,"tarefas",id),{assignee:s});
     window.assumir = async (id) => { let t = tarefasGlobais.find(x=>x.id===id); let w = t.workers||[]; if(!w.includes(loggedUserName)){ w.push(loggedUserName); await updateDoc(doc(db,"tarefas",id),{workers:w}); } };
     window.sair = async (id) => { let t = tarefasGlobais.find(x=>x.id===id); let w = (t.workers||[]).filter(x=>x!==loggedUserName); await updateDoc(doc(db,"tarefas",id),{workers:w}); };
-    window.salvarC = async (id) => { let c = document.getElementById(`comm-${id}`).value; await updateDoc(doc(db,"tarefas",id),{doingComment:c}); alert("Salvo!"); };
+    window.salvarC = async (id) => { await updateDoc(doc(db,"tarefas",id),{doingComment: document.getElementById(`c-${id}`).value}); alert("Salvo!"); };
     window.fina = (id) => { currentTaskToFinish = id; document.getElementById("finish-modal").style.display="flex"; };
-    window.fecharFinishModal = () => { document.getElementById("finish-modal").style.display="none"; };
+    window.fecharFinishModal = () => document.getElementById("finish-modal").style.display="none";
     window.confirmarFinalizacao = async () => { await updateDoc(doc(db,"tarefas",currentTaskToFinish),{ status:'historico', completedAt:Date.now(), completedBy:loggedUserName, completionStatus:document.getElementById("finish-status").value, completionResponse:document.getElementById("finish-response").value }); fecharFinishModal(); };
+    window.conf = async (id) => { if(confirm("Marcar como conferido?")) await updateDoc(doc(db,"tarefas",id),{conferido:true}); };
+    window.reativar = async (id) => await updateDoc(doc(db,"tarefas",id),{status:'done'});
+    window.removeTask = async (id) => { if(confirm("Excluir permanentemente?")) await deleteDoc(doc(db,"tarefas",id)); };
     window.handleCreateTask = async () => { 
-        const t = document.getElementById("new-task-title").value; const d = document.getElementById("new-task-desc").value; const a = document.getElementById("new-task-assignee").value; const p = document.getElementById("new-task-priority").value;
-        if(!t) return alert("Título!"); const ag = Date.now(); let pr = p==='sem_prazo'?null:ag+(configP[p]*24*60*60*1000);
-        await addDoc(collection(db,"tarefas"),{ title:t, description:d, assignee:a, priority:p, creator:loggedUserName, status:"todo", createdAt:ag, deadline:pr, workers:[] }); fecharModal();
+      const t = document.getElementById("new-task-title").value; if(!t) return alert("Título!");
+      const p = document.getElementById("new-task-priority").value;
+      await addDoc(collection(db,"tarefas"),{ title:t, description:document.getElementById("new-task-desc").value, assignee:document.getElementById("new-task-assignee").value, priority:p, creator:loggedUserName, status:"todo", createdAt:Date.now(), deadline:p==='sem_prazo'?null:Date.now()+(cP[p]*86400000), workers:[] });
+      fecharModal();
     };
-    
+
     // --- UI HELPERS ---
-    window.abrirModal = () => { document.getElementById("task-modal").style.display="flex"; };
-    window.fecharModal = () => { document.getElementById("task-modal").style.display="none"; };
-    window.realizarLogout = () => { signOut(auth); window.location.reload(); };
-    window.realizarLoginGoogle = () => { signInWithPopup(auth, googleProvider); };
+    window.abrirModal = () => document.getElementById("task-modal").style.display="flex";
+    window.fecharModal = () => document.getElementById("task-modal").style.display="none";
     window.abrirAdmin = () => { document.getElementById("admin-modal").style.display="flex"; carregarU(); renderS(); };
-    window.fecharAdmin = () => { document.getElementById("admin-modal").style.display="none"; };
+    window.fecharAdmin = () => document.getElementById("admin-modal").style.display="none";
+    window.realizarLoginGoogle = () => signInWithPopup(auth, googleProvider);
+    window.realizarLogout = () => { signOut(auth); window.location.reload(); };
     window.handleDrop = async (ev) => { ev.preventDefault(); const id = ev.dataTransfer.getData("text"); let col = ev.target; while(!col.classList.contains('column')) col = col.parentElement; await updateDoc(doc(db,"tarefas",id),{status:col.id}); };
     window.allowDrop = (e) => e.preventDefault();
 
-    // Funções Admin simplificadas (Baseadas na lógica anterior)
+    // ADMIN FUNCTIONS
     async function carregarU() {
       const list = document.getElementById("users-list");
       document.getElementById("bloco-usuarios").style.display = userRole==='admin'?'block':'none';
@@ -370,28 +354,25 @@
       list.innerHTML = "";
       snap.forEach(d => {
         const u = d.data(); const uid = d.id;
-        const item = document.createElement("div"); item.className = "user-item";
+        const item = document.createElement("div"); item.style.borderBottom="1px solid #444"; item.style.padding="10px";
         item.innerHTML = `
-          <div class="user-info"><strong>${u.nome}</strong><span>${u.email} (${u.status})</span></div>
-          <div class="user-perms">
-            <label><input type="checkbox" ${u.permissoes?.concluirTarefas?'checked':''} onchange="upU('${uid}','concluirTarefas',this.checked)"> Concluir</label>
-            <label><input type="checkbox" ${u.permissoes?.apagarTarefas?'checked':''} onchange="upU('${uid}','apagarTarefas',this.checked)"> Excluir</label>
-            <label><input type="checkbox" ${u.permissoes?.gerenciarSetores?'checked':''} onchange="upU('${uid}','gerenciarSetores',this.checked)"> Admin Setores</label>
-          </div>
-          <div class="user-actions">
-            <button onclick="stU('${uid}','aprovado')" style="background:#4caf50;">Aprovar</button>
-            <button onclick="stU('${uid}','inativo')" style="background:#ff9800;">Bloquear</button>
-          </div>
+          <strong>${u.nome}</strong> (${u.email}) - Status: ${u.status}<br>
+          <label><input type="checkbox" ${u.permissoes?.concluirTarefas?'checked':''} onchange="upU('${uid}','concluirTarefas',this.checked)"> Concluir</label> |
+          <label><input type="checkbox" ${u.permissoes?.apagarTarefas?'checked':''} onchange="upU('${uid}','apagarTarefas',this.checked)"> Excluir</label> |
+          <label><input type="checkbox" ${u.permissoes?.alterarSetorTarefa?'checked':''} onchange="upU('${uid}','alterarSetorTarefa',this.checked)"> Mudar Setor</label><br>
+          Setores: ${setoresGlobais.map(s=>`<label><input type="checkbox" ${u.setoresPermitidos?.includes(s.nome)?'checked':''} onchange="upS('${uid}','${s.nome}',this.checked)"> ${s.nome}</label>`).join(" ")}<br>
+          <button onclick="stU('${uid}','aprovado')">Aprovar</button> <button onclick="stU('${uid}','inativo')">Bloquear</button>
         `;
         list.appendChild(item);
       });
     }
-    window.upU = async (id, p, v) => { await updateDoc(doc(db,"usuarios",id),{ [`permissoes.${p}`]: v }); };
-    window.stU = async (id, s) => { await updateDoc(doc(db,"usuarios",id),{ status: s }); carregarU(); };
+    window.upU = async (id,p,v) => await updateDoc(doc(db,"usuarios",id),{[`permissoes.${p}`]:v});
+    window.upS = async (id,s,v) => { const uR=doc(db,"usuarios",id); const uS=await getDoc(uR); let list=uS.data().setoresPermitidos||[]; if(v) list.push(s); else list=list.filter(x=>x!==s); await updateDoc(uR,{setoresPermitidos:list}); };
+    window.stU = async (id,s) => { await updateDoc(doc(db,"usuarios",id),{status:s}); carregarU(); };
     function renderS() {
       document.getElementById("bloco-setores").style.display = (userRole==='admin'||userPerms.gerenciarSetores)?'block':'none';
       const list = document.getElementById("sectors-list"); list.innerHTML = "";
-      setoresGlobais.forEach(s => { list.innerHTML += `<div class="sector-item">${s.nome} <span onclick="exS('${s.id}')" style="color:red; cursor:pointer;">&times;</span></div>`; });
+      setoresGlobais.forEach(s => { list.innerHTML += `<div style="display:inline-block; background:#1a1a20; padding:5px 10px; border-radius:20px; margin:5px;">${s.nome} <span onclick="exS('${s.id}')" style="color:red; cursor:pointer;">&times;</span></div>`; });
     }
     window.adicionarSetor = async () => { const n = document.getElementById("novo-setor-nome").value; if(n) await addDoc(collection(db,"setores"),{nome:n}); document.getElementById("novo-setor-nome").value=""; };
     window.exS = async (id) => { if(confirm("Excluir setor?")) await deleteDoc(doc(db,"setores",id)); };
