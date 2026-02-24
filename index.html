@@ -57,7 +57,8 @@
   
   .assignee-select, .priority-select { font-size: 0.7rem; padding: 4px 6px; border-radius: 4px; outline: none; border: none; cursor: pointer; }
   .assignee-select { color: #aaa; background-color: #1a1a20; width: auto; max-width: 120px; }
-  .assignee-select:hover { background-color: #22222a; color: #fff; }
+  .assignee-select:hover:not(:disabled) { background-color: #22222a; color: #fff; }
+  .assignee-select:disabled { cursor: not-allowed; opacity: 0.6; } /* Estilo para quem não tem permissão de alterar o setor */
   .priority-select { font-weight: bold; text-transform: uppercase; appearance: none; }
   
   /* Metadados e Atrasos */
@@ -105,7 +106,7 @@
   .sector-item span.del-sec { color: #ff5252; margin-left: 10px; cursor: pointer; font-weight: bold; }
 
   /* Controlo de Telas */
-  #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal, #finish-modal { display: none; }
+  #main-app, #pending-overlay, #admin-modal, #task-modal, #history-modal, #finish-modal, #signup-name-modal { display: none; }
 </style>
 </head>
 <body>
@@ -120,6 +121,17 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
         Entrar com o Google
       </button>
+    </div>
+  </div>
+
+  <div class="overlay" id="signup-name-modal">
+    <div class="modal-box">
+      <h2>Finalize o seu Registo</h2>
+      <p style="color: #aaa; margin-bottom: 25px;">Para facilitar a sua identificação no painel, por favor, introduza o seu nome oficial ou como deseja ser chamado pela equipa.</p>
+      <input type="text" id="signup-name-input" placeholder="O seu Nome...">
+      <div style="display: flex; justify-content: center; width: 100%;">
+        <button style="width: 100%;" onclick="confirmarNomeCadastro()">Solicitar Acesso</button>
+      </div>
     </div>
   </div>
 
@@ -225,7 +237,7 @@
             <label for="filter-sector" style="font-size: 0.85rem; color: #aaa;">Setor:</label>
             <select id="filter-sector" onchange="renderizarTarefas()">
               <option value="todos">Todos os Meus Setores</option>
-              </select>
+            </select>
           </div>
         </div>
 
@@ -266,8 +278,8 @@
     const googleProvider = new GoogleAuthProvider();
 
     let userRole = "user";
-    let userPerms = { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false };
-    let userSectors = []; // Setores que o usuário tem acesso
+    let userPerms = { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false, alterarSetorTarefa: false };
+    let userSectors = []; 
     let loggedUserName = ""; 
     let currentTaskToFinish = null;
     
@@ -277,14 +289,17 @@
     let unsubscribeTarefas = null; 
     let unsubscribeSetores = null;
     let unsubscribeUserCheck = null;
+    
+    // Variável para guardar temporariamente os dados do Google de quem acabou de fazer o 1º login
+    window.tempUserForSignup = null;
 
     // --- DIAS DE PRAZO E ORDENAÇÃO ---
     const configPrioridade = {
-      'emergente': { dias: 5, ordem: 1, nome: 'Emergente' },
-      'muito_urgente': { dias: 10, ordem: 2, nome: 'Muito Urgente' },
-      'urgente': { dias: 15, ordem: 3, nome: 'Urgente' },
-      'pouco_urgente': { dias: 30, ordem: 4, nome: 'Pouco Urgente' },
-      'sem_prazo': { dias: 0, ordem: 5, nome: 'Sem Prazo' }
+      'emergente': { dias: 5, ordem: 1 },
+      'muito_urgente': { dias: 10, ordem: 2 },
+      'urgente': { dias: 15, ordem: 3 },
+      'pouco_urgente': { dias: 30, ordem: 4 },
+      'sem_prazo': { dias: 0, ordem: 5 }
     };
 
     function formatarData(ms) {
@@ -310,18 +325,50 @@
 
       if (!userSnap.exists()) {
         const isMasterAdmin = user.email === EMAIL_ADMIN_MESTRE;
-        await setDoc(userRef, {
-          email: user.email,
-          status: isMasterAdmin ? 'aprovado' : 'pendente',
-          role: isMasterAdmin ? 'admin' : 'user',
-          nome: user.displayName || user.email.split('@')[0],
-          permissoes: { gerenciarSetores: isMasterAdmin, concluirTarefas: isMasterAdmin, apagarTarefas: isMasterAdmin },
-          setoresPermitidos: [] // Nova lista de setores autorizados
-        });
-        ouvirAlteracaoStatus(user.uid);
+        
+        if (isMasterAdmin) {
+          // Se for o dono, passa direto sem perguntar o nome para não travar o processo inicial
+          await setDoc(userRef, {
+            email: user.email,
+            status: 'aprovado',
+            role: 'admin',
+            nome: user.displayName || 'Admin Mestre',
+            permissoes: { gerenciarSetores: true, concluirTarefas: true, apagarTarefas: true, alterarSetorTarefa: true },
+            setoresPermitidos: [] 
+          });
+          ouvirAlteracaoStatus(user.uid);
+        } else {
+          // INTERCEPTAÇÃO DO CADASTRO: Pausa e pede o nome!
+          window.tempUserForSignup = user;
+          ocultarTudo();
+          document.getElementById("signup-name-modal").style.display = "flex";
+          // Sugere o nome do Google para facilitar
+          document.getElementById("signup-name-input").value = user.displayName || user.email.split('@')[0];
+        }
       } else {
         ouvirAlteracaoStatus(user.uid);
       }
+    }
+
+    // Função ativada pelo botão "Solicitar Acesso" na tela do 1º login
+    window.confirmarNomeCadastro = async () => {
+      const nomeInput = document.getElementById("signup-name-input").value.trim();
+      if (!nomeInput) return alert("Por favor, introduza o seu nome.");
+      
+      const user = window.tempUserForSignup;
+      const userRef = doc(db, "usuarios", user.uid);
+      
+      await setDoc(userRef, {
+        email: user.email,
+        status: 'pendente',
+        role: 'user',
+        nome: nomeInput, // Usa o nome que ele acabou de digitar
+        permissoes: { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false, alterarSetorTarefa: false },
+        setoresPermitidos: []
+      });
+      
+      document.getElementById("signup-name-modal").style.display = "none";
+      ouvirAlteracaoStatus(user.uid);
     }
 
     function ouvirAlteracaoStatus(uid) {
@@ -339,7 +386,7 @@
           
           loggedUserName = userData.nome;
           userRole = userData.role;
-          userPerms = userData.permissoes || { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false };
+          userPerms = userData.permissoes || { gerenciarSetores: false, concluirTarefas: false, apagarTarefas: false, alterarSetorTarefa: false };
           userSectors = userData.setoresPermitidos || [];
           
           document.getElementById("user-display").innerText = "👤 " + loggedUserName;
@@ -358,6 +405,7 @@
 
     function ocultarTudo() {
       document.getElementById("login-overlay").style.display = "none";
+      document.getElementById("signup-name-modal").style.display = "none";
       document.getElementById("main-app").style.display = "none";
       document.getElementById("pending-overlay").style.display = "none";
       document.getElementById("auth-error").style.display = "none";
@@ -404,7 +452,7 @@
         atualizarDropdownsSetor();
         if(document.getElementById("admin-modal").style.display === "flex") {
           renderizarSetoresAdmin();
-          carregarTodosUsuarios(); // Atualiza as caixinhas nos usuários se um setor novo entrar
+          carregarTodosUsuarios();
         }
       });
     }
@@ -418,7 +466,6 @@
       
       setoresGlobais.forEach(setor => { 
         selectNova.innerHTML += `<option value="${setor.nome}">${setor.nome}</option>`; 
-        // No filtro, só mostra os setores que o usuário tem acesso (se não for admin)
         if (userRole === 'admin' || userSectors.includes(setor.nome)) {
           selectFiltro.innerHTML += `<option value="${setor.nome}">${setor.nome}</option>`;
         }
@@ -462,17 +509,16 @@
 
         let disabledCheck = user.role === 'admin' ? 'disabled checked' : '';
         
-        // Caixas de Ações
         let checksAcoes = `
           <div class="perm-group">
             <strong style="color:white; width: 100%;">Poderes Administrativos:</strong>
-            <label><input type="checkbox" ${disabledCheck} ${perms.gerenciarSetores ? 'checked' : ''} onchange="togglePermissao('${uid}', 'gerenciarSetores', this.checked)"> Setores Gerais</label>
+            <label><input type="checkbox" ${disabledCheck} ${perms.gerenciarSetores ? 'checked' : ''} onchange="togglePermissao('${uid}', 'gerenciarSetores', this.checked)"> Setores</label>
             <label><input type="checkbox" ${disabledCheck} ${perms.concluirTarefas ? 'checked' : ''} onchange="togglePermissao('${uid}', 'concluirTarefas', this.checked)"> Concluir</label>
             <label><input type="checkbox" ${disabledCheck} ${perms.apagarTarefas ? 'checked' : ''} onchange="togglePermissao('${uid}', 'apagarTarefas', this.checked)"> Apagar</label>
+            <label><input type="checkbox" ${disabledCheck} ${perms.alterarSetorTarefa ? 'checked' : ''} onchange="togglePermissao('${uid}', 'alterarSetorTarefa', this.checked)"> Mudar Setor</label>
           </div>
         `;
 
-        // Caixas de Setores Permitidos
         let checksSetores = `<div class="perm-group"><strong style="color:white; width: 100%;">Acesso aos Setores:</strong>`;
         if (setoresGlobais.length === 0) checksSetores += `<span style="color:#888;">Nenhum setor criado.</span>`;
         setoresGlobais.forEach(s => {
@@ -490,7 +536,6 @@
               </div>
               <div class="user-actions">${botoesHtml}</div>
             </div>
-            
             <div class="user-perms">
               ${checksAcoes}
               ${checksSetores}
@@ -502,7 +547,6 @@
 
     window.togglePermissao = async (uid, campo, valor) => { await updateDoc(doc(db, "usuarios", uid), { [`permissoes.${campo}`]: valor }); };
     
-    // Nova função para gerir o Array de Setores Permitidos
     window.toggleAcessoSetor = async (uid, nomeSetor, adicionar) => {
       const userRef = doc(db, "usuarios", uid);
       const userSnap = await getDoc(userRef);
@@ -542,12 +586,10 @@
       
       let filtradas = tarefasGlobais.filter(t => t.status !== 'historico');
       
-      // Filtra visualmente os setores que o usuário tem acesso (se não for admin)
       if (userRole !== 'admin') {
         filtradas = filtradas.filter(t => !t.assignee || t.assignee === "" || userSectors.includes(t.assignee));
       }
 
-      // Filtros do Dropdown superior
       if(filtroPrio !== 'todos') filtradas = filtradas.filter(t => t.priority === filtroPrio);
       if(filtroSetor !== 'todos') filtradas = filtradas.filter(t => t.assignee === filtroSetor);
 
@@ -568,7 +610,6 @@
       
       let historico = tarefasGlobais.filter(t => t.status === 'historico');
       
-      // Aplica restrição visual também no histórico
       if (userRole !== 'admin') {
         historico = historico.filter(t => !t.assignee || t.assignee === "" || userSectors.includes(t.assignee));
       }
@@ -579,6 +620,7 @@
 
       historico.forEach(task => {
         let statusIcon = task.completionStatus === '100% Concluído' ? '✅' : task.completionStatus === 'Parcialmente Concluído' ? '⚠️' : '❌';
+        let participantes = (task.workers && task.workers.length > 0) ? task.workers.join(', ') : 'Nenhum';
 
         div.innerHTML += `
           <div class="card priority-${task.priority}" style="cursor: default; flex-direction: row; justify-content: space-between; align-items: flex-start; border-left-color: #555;">
@@ -588,11 +630,12 @@
               
               <div style="background: #1e1e24; padding: 8px; border-radius: 4px; margin-top: 5px;">
                 <strong style="font-size: 0.8rem; color: white;">${statusIcon} ${task.completionStatus || 'Finalizado'}</strong>
-                <p style="margin: 3px 0 0 0; font-size: 0.8rem; color: #ccc; font-style: italic;">"${task.completionResponse || 'Sem detalhes adiconais.'}"</p>
+                <p style="margin: 3px 0 0 0; font-size: 0.8rem; color: #ccc; font-style: italic;">"${task.completionResponse || 'Sem detalhes adicionais.'}"</p>
               </div>
 
               <div class="tag-container" style="margin-top: 5px;">
                 <span class="info-tag">Atribuído: ${task.assignee || 'Nenhum'}</span>
+                <span class="info-tag">Equipa: ${participantes}</span>
                 <span class="info-tag" style="background: #2196f3; color: white;">Finalizado por: ${task.completedBy || 'Desconhecido'}</span>
               </div>
               <div class="meta-dates" style="margin-top: 5px;">
@@ -664,7 +707,6 @@
       alert("Comentário atualizado!");
     };
 
-    // Fluxo de Finalização Modal
     window.abrirFinalizacao = (taskId) => {
       currentTaskToFinish = taskId;
       document.getElementById("finish-status").value = "100% Concluído";
@@ -722,6 +764,10 @@
       const card = document.createElement("div");
       card.className = `card priority-${taskData.priority}`; card.draggable = true; card.id = taskData.id; card.ondragstart = window.drag;
       
+      // Controle de Permissão de Edição do Setor
+      let podeAlterarSetor = userRole === 'admin' || userPerms.alterarSetorTarefa;
+      let blockSetorAttr = podeAlterarSetor ? "" : "disabled title='Sem permissão para alterar setor'";
+
       let opcoesSetores = `<option value="">👤 Atribuir...</option>`;
       setoresGlobais.forEach(s => { opcoesSetores += `<option value="${s.nome}" ${taskData.assignee===s.nome?'selected':''}>${s.nome}</option>`; });
 
@@ -793,7 +839,7 @@
             <option value="pouco_urgente" ${taskData.priority==='pouco_urgente'?'selected':''}>Pouco Urg.</option>
             <option value="sem_prazo" ${taskData.priority==='sem_prazo'?'selected':''}>Sem Prazo</option>
           </select>
-          <select class="assignee-select" onchange="changeAssignee(this, '${taskData.id}')">${opcoesSetores}</select>
+          <select class="assignee-select" onchange="changeAssignee(this, '${taskData.id}')" ${blockSetorAttr}>${opcoesSetores}</select>
         </div>
 
         <div class="meta-dates">
